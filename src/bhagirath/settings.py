@@ -111,7 +111,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'bhagirath2.urls'
+ROOT_URLCONF = 'bhagirath.urls'
 
 TEMPLATE_DIRS = (
     findpath("templates"),
@@ -131,11 +131,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'bhagirath2.translation_interface',
+    'bhagirath.translation_interface',
     #'registration',
 )
 
-AUTH_PROFILE_MODULE = 'bhagirath2.UserProfile'
+AUTH_PROFILE_MODULE = 'bhagirath.UserProfile'
 
 handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
