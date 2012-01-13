@@ -1,0 +1,95 @@
+body {
+	background-image:url(../images/back.jpg); 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.gasket {
+	position: relative;
+	left:50px;
+	margin: 0 auto;
+	padding: 0;
+	width: 1100px;
+}
+
+#header {
+	width: 976px;
+}
+#header .inner {
+	position: relative;
+	width: 976px;
+	height: 106px;
+	}
+#header .inner h1 {
+	position: absolute;
+	top: 5px;
+	left: 22px;
+	width: 344px;
+	height: 67px;
+}
+#header .inner h1 a {
+	display: block;
+	width: 344px;
+	height: 67px;
+	text-indent: -2000px;
+}
+#header p.account {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	font-size: .7em;
+	line-height: 2em;
+	font-weight: bold;
+	color: #fff;
+	text-shadow: #1d534e 0 1px 1px;
+}
+#header p.account img {
+	margin: -4px 0 0 5px;
+	vertical-align: middle;
+}
+#header p.account strong { color: #f6e99e; }
+
+#header ul {
+	float: left;
+	clear: both;
+	width: 970px;
+	margin: 0 3px 0 3px;
+	background: #CBEAE7;
+	list-style-type:none;
+	padding:0px;
+}
+
+#header ul li {
+	float: left;
+	border-right: solid 1px #e7f5f4;
+}
+
+#header ul li a {
+	float: left;
+	display: block;
+	padding: 14px 20px 11px 20px;
+	border-right: solid 1px #A2D1CC;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: .75em;
+	color: #375552;
+	text-shadow: #dbefed 0 1px 1px;
+}
+#header ul li a:hover { text-decoration: underline; }
+#header ul li.your_account {
+	float: right;
+	border-right: none;
+	border-left: solid 1px #A2D1CC;
+}
+#header ul li.your_account a {
+	border-right: none;
+	border-left: solid 1px #e7f5f4;
+}
+
+#header ul li.active a {
+	color: #4F4213;
+	text-shadow: #f6e899 0 1px 1px;
+}
+
+
+

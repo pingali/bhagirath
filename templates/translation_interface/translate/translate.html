@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	    <title>Bhagirath - Translate</title>
+        <meta http-equiv="Content-type" content="text/html charset=utf-8"/>
+		<link rel="stylesheet" type="text/css" href="/media/stylesheets/translate.css" />
+		<script type="text/javascript" src="/media/scripts/jquery.js"></script>
+        <script type="text/javascript" src="/media/scripts/convert.js"></script>
+        <script type="text/javascript" src="/media/scripts/display.js"></script>
+        <script type="text/javascript" src="/media/scripts/predict.js"></script>
+        <script type="text/javascript" src="/media/scripts/animate.js"></script>
+        <script type="text/javascript" src="/media/scripts/jquery-1.3.2.min.js"></script>
+       
+</head>
+<script type="text/javascript" Language="JavaScript">
+	var fontSize = 1;
+	
+	function zoomOut() {
+		fontSize += 0.1;
+	    document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+	    document.getElementById("input").style.fontSize = fontSize + "em";
+	    document.getElementById("input").style.fontSize = fontSize + "em";
+	    document.getElementById("output").style.fontSize = fontSize + "em";
+	}
+	
+	function zoomIn() {
+	    fontSize -= 0.1;
+	    document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+	    document.getElementById("input").style.fontSize = fontSize + "em";
+	    document.getElementById("input").style.fontSize = fontSize + "em";
+	    document.getElementById("output").style.fontSize = fontSize + "em";
+	}
+	
+	function OnSubmit()	{
+		document.main_form.action = "/home/translate/{{curr_id}}/{{uid}}/done/"
+		return true;
+	}
+
+	function OnNext()  {
+		document.main_form.action = "/home/translate/{{uid}}/"
+	  	return true;
+	}
+			
+</script>
+
+<body>
+	<div id="header">
+		<ul>
+			<li><a href="/home/upload/">Upload file</a></li>
+			<li><a href="/signout/">Sign Out</a></li>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+	       	<button name="zoomin" id="zoomin" class="zoomin" align="right" value="+" onclick="zoomOut();">+</button>
+			<button name="zoomout" id="zoomout" class="zoomout" align="right" value="-" onclick="zoomIn();">-</button><br>
+		</ul>
+	</div>
+	<form name="main_form" id="main_form" action="." method="post" enctype="multipart/form-data" accept-charset="utf-8">
+	{%csrf_token%}
+	<div id="container">
+		<div id="main">
+			<table width="100%">
+				<tr>
+					<td>
+						<label style="color:#99CCFF;">English:<br/>
+						{% if form.original_sentence %} 
+						<textarea name="original_sentence" id="original_sentence">{{english}}</textarea>
+				   		{% endif %}
+				      	</label>
+					</td>
+					<td valign="top" align="left" rowspan="8"></td>
+					<td>
+						<label style=" color:#99CCFF;">Input:<br/>
+						<textarea name="input" id="input" onkeyup="Predict(this);">{{hindi}}</textarea>
+						</label>
+					</td>
+					<td valign="top" align="left" rowspan="8"></td>
+					<td>
+						<label style=" color:#99CCFF;">Output:<br/>
+						<textarea name="output" id="output"></textarea>
+		        		</label>
+		        	</td>	
+				</tr>	
+			</table>
+			<table width="100%"  style="font-size:.9em;">
+				<tr>
+					<td colspan=10 style="color:#FF9933;" >To Type Symbols like (, ), :, .(dot), _, ! etc... Escape them. i.e. use \: or \) or \. and so on.</td>
+				</tr>
+			</table>
+			<table width=100%>
+				<tr>	
+					<td align=center width=40% colspan=10>	
+					<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px; background-color:#252525;" cellspacing="0">
+					<tr>
+						<td colspan=10 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Consonants</td>
+					</tr>
+					<tr style="color: #E9AB17;">
+						<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0915;&#x094d;</td>
+						<td align=center>k</td>
+						<td align=center>&#x0916;&#x094d;</td>
+						<td align=center>kh</td>
+						<td align=center>&#x0917;&#x094d;</td>
+						<td align=center>g</td>
+						<td align=center>&#x0918;&#x094d;</td>
+						<td align=center>gh</td>
+						<td align=center>&#x0919;&#x094d;</td>
+						<td align=center>ng</td>
+					</tr>
+					<tr>
+						<td align=center>&#x091A;&#x094d;</td>
+						<td align=center>ch</td>
+						<td align=center>&#x091B;&#x094d;</td>
+						<td align=center>Ch</td>
+						<td align=center>&#x091C;&#x094d;</td>
+						<td align=center>j</td>
+						<td align=center>&#x091D;&#x094d;</td>
+						<td align=center>jh</td>
+						<td align=center>&#x091E;&#x094d;</td>
+						<td align=center>ny</td>
+					</tr>
+					<tr>
+						<td align=center>&#x091F;&#x094d;</td>
+						<td align=center>T</td>
+						<td align=center>&#x0920;&#x094d;</td>
+						<td align=center>Th</td>
+						<td align=center>&#x0921;&#x094d;</td>
+						<td align=center>D</td>
+						<td align=center>&#x0922;&#x094d;</td>
+						<td align=center>Dh</td>
+						<td align=center>&#x0923;&#x094d;</td>
+						<td align=center>N</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0924;&#x094d;</td>
+						<td align=center>t</td>
+						<td align=center>&#x0925;&#x094d;</td>
+						<td align=center>th</td>
+						<td align=center>&#x0926;&#x094d;</td>
+						<td align=center>d</td>
+						<td align=center>&#x0927;&#x094d;</td>
+						<td align=center>dh</td>
+						<td align=center>&#x0928;&#x094d;</td>
+						<td align=center>n</td>
+					</tr>
+					<tr>
+						<td align=center>&#x092A;&#x094d;</td>
+						<td align=center>p</td>
+						<td align=center>&#x092B;&#x094d;</td>
+						<td align=center>ph/f</td>
+						<td align=center>&#x092C;&#x094d;</td>
+						<td align=center>b</td>
+						<td align=center>&#x092D;&#x094d;</td>
+						<td align=center>bh</td>
+						<td align=center>&#x092E;&#x094d;</td>
+						<td align=center>m</td>
+					</tr>
+					<tr>
+						<td align=center>&#x092F;&#x094d;</td>
+						<td align=center>y</td>
+						<td align=center>&#x0930;&#x094d;</td>
+						<td align=center>r</td>
+						<td align=center>&#x0932;&#x094d;</td>
+						<td align=center>l</td>
+						<td align=center>&#x0933;&#x094d;</td>
+						<td align=center>L</td>
+						<td align=center>&#x0935;&#x094d;</td>
+						<td align=center>v/w</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0936;&#x094d;</td>
+						<td align=center>sh</td>
+						<td align=center>&#x0937;&#x094d;</td>
+						<td align=center>Sh</td>
+						<td align=center>&#x0938;&#x094d;</td>
+						<td align=center>s</td>
+						<td align=center>&#x0939;&#x094d;</td>
+						<td align=center>h</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align=center>&#x0915;&#x094D;&#x0937;&#x094d;</td>
+						<td align=center>ksh</td>
+						<td align=center>&#x091C;&#x094D;&#x091E;&#x094d;</td>
+						<td align=center>jny</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</table>
+				</td>
+				<td align=center width=20% colspan=4>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+					<tr>
+						<td colspan=4 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Vowels</td>
+					</tr>
+					<tr style="color: #E9AB17;">
+						<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0905;</td>
+						<td align=center>a</td>
+						<td align=center>&#x0906;</td>
+						<td align=center>aa</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0907;</td>
+						<td align=center>i</td>
+						<td align=center>&#x0908;</td>
+						<td align=center>ee/ii</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0909;</td>
+						<td align=center>u</td>
+						<td align=center>&#x090A;</td>
+						<td align=center>uu/oo</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0909;</td>
+						<td align=center>e</td>
+						<td align=center>&#x0910;</td>
+						<td align=center>ai/ei</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0913;</td>
+						<td align=center>o</td>
+						<td align=center>&#x0914;</td>
+						<td align=center>au/ou</td>
+					</tr>
+					<tr>
+						<td align=center>&#x090B;</td>
+						<td align=center>rri</td>
+						<td align=center>&#x090C;</td>
+						<td align=center>lra</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+				</td>
+				<td align=center width=15% colspan=2>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+				<tr>
+					<td colspan=2 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Specials</td>
+				</tr>
+				<tr style="color: #E9AB17;">
+					<td align=center>&nbsp;For</td>
+					<td align=center>Type</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0943;</td>
+					<td align=center>R</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0944;</td>
+					<td align=center>RR</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0949;</td>
+					<td align=center>ao</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0945;</td>
+					<td align=center>ae</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0950;</td>
+					<td align=center>AUM/OM</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+				</td>
+				<td align=center width=20% colspan=4>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+				<tr>
+					<td colspan=4 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Signs</td>
+				</tr>
+				<tr style="color: #E9AB17;">
+					<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+					<td align=center>Type&nbsp;&nbsp;</td>
+					<td align=center>For&nbsp;&nbsp;</td>
+					<td align=center>Type&nbsp;&nbsp;</td>
+				</tr>
+				<tr>
+					<td align=center>&#x094D;</td>
+					<td align=center>`</td>
+					<td align=center>&#x0901;</td>
+					<td align=center>.)</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0902;</td>
+					<td align=center>.</td>
+					<td align=center>&#x093C;</td>
+					<td align=center>!</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0903;</td>
+					<td align=center>:</td>
+					<td align=center>&#x093D;</td>
+					<td align=center>$</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0951;</td>
+					<td align=center>'</td>
+					<td align=center>&#x0952;</td>
+					<td align=center>_</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0953;</td>
+					<td align=center>&lt;</td>
+					<td align=center>&#x0954;</td>
+					<td align=center>&gt;</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0965;</td>
+					<td align=center>|</td>
+					<td align=center>&#x0964;</td>
+					<td align=center>||</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+				</td>
+				</tr>
+				<tr>
+					<td>
+						<button name="save" id="save" class="save" onclick="SaveWords(this, 'input');">Save All New Words</button><img src="/media/images/save.png"/>
+						<button name="reset" id="reset" class="reset" onclick="input.value=' '">Reset</button>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<button name="submit" id="submit" class="submit" onclick="return OnSubmit();">Submit</button>
+						<button name="next" id="next" value="next" class="next" onclick="return OnNext();" >Next</button>
+					</td>
+				</tr>
+		</table>
+		</form>
+		</div>
+		<div id="footer">
+		</div>
+	</div>
+</body>
+</html>

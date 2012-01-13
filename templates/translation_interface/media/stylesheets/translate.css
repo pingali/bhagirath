@@ -1,0 +1,291 @@
+*{
+    margin 0;
+    padding 0;
+}
+
+
+body{
+    font-family: Verdana, Arial;
+    line-height: 25px;
+    margin-top: 10px;
+    background-image: url(../images/back.jpg);
+    background-repeat: no-repeat;
+    background-color:#0B0B0B;
+}
+
+
+.box{
+    width: 160px;
+    background-repeat: no-repeat;
+    color: #7e2217;
+    text-align: center;
+    font-weight: bold;
+    font-variant: small-caps;
+    float: left;
+}
+
+#main{
+	width: 760px;
+	text-align: left;
+	float: clear;
+	z-index: 1;
+	position: relative;
+}
+
+#suggest{
+    text-align: left;
+    background-color: #202020;
+    color: #e18d1b;
+    font-size: .8em;
+    position: absolute;
+    z-index: 2;
+    border-style: groove;
+    border-width: 2px;
+    border-color: #000000;
+}
+
+.suggestWord{
+	background-color: transparent;
+    border-style: none;
+    color: #D87431;
+    text-decoration: none;
+}
+
+.suggestWordHighlight{
+    background-color: #D87431;
+    color: #202020;
+    border-style: none;
+    text-decoration: none;
+}
+
+.divWord{
+    background-color: #202020;
+    color: #e18d1b;
+	padding-left: 10px;
+	padding-right: 10px;
+    cursor: pointer;
+}
+
+.divWordHighlight{
+    background-color: #D87431;
+    color: #202020;
+	padding-left: 10px;
+	padding-right: 10px;
+    cursor: pointer;
+}
+
+
+a{
+    outline-style: none;
+    text-decoration: none;
+}
+
+
+
+button.help{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.help:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #33CCFF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.save{
+    color: #336600;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.save:hover{
+    color: #336600;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #99FF66;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.saved{
+    color: #990000;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #99FF66;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.reset{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.reset:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #33CCFF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.submit{
+    color: #336600;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.submit:hover{
+    color: #336600;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #99FF66;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.next{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.next:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #33CCFF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+
+button.search{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.search:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: .8em;
+    background-color: #33CCFF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+button.zoomout{
+    color: #FF9933;
+    font-variant: small-caps;
+    font-size: 1.2em;
+    background-color: #252525;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    position:relative;
+    top:10px;
+}
+
+button.zoomin{
+    color: #FF9933;
+    font-variant: small-caps;
+    font-size: 1.2em;
+    background-color: #252525;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+  position:relative;
+    top:10px;
+}
+
+textarea{
+	   width:400px;
+	   height:150px;
+	   border:1px solid #ccc;
+	   background-color:#E9E9E9;
+	   padding:6px;
+	   overflow:auto;
+	   font:normal 14px/19px arial;color:#000;
+	   font-size:17px;
+}
+
+#header ul {
+	margin-top:0px;
+	height:45px;
+	width: 1300px;
+	background: #CBEAE7;
+	list-style-type:none;
+	padding:0px;
+}
+#header ul li {
+	float: left;
+	border-right: solid 1px #e7f5f4;
+}
+#header ul li a {
+	height:20px;
+	display: block;
+	padding: 14px 20px 11px 20px;
+	border-right: solid 1px #A2D1CC;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: .75em;
+	color: #375552;
+	text-shadow: #dbefed 0 1px 1px;
+}
+#header ul li a:hover { text-decoration: underline; }
+
