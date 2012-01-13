@@ -1,4 +1,10 @@
 # Django settings for bhagirath project.
+import os, sys
+import logging 
+
+def findpath(path):
+    parent_dir = os.path.dirname(__file__)
+    return os.path.abspath(os.path.join(parent_dir,path))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,12 +17,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'bhagirathdata',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'root',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': findpath('bhagirathdata.db'),                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'TEST_CHARSET': 'utf-8',
         'DEFAULT_CHARSET': 'utf-8',
         'default-collation':'utf8_general_ci',
@@ -50,7 +56,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/home/reena/workspace/bhagirath/bhagirath/templates/translation_interface/media/'
+MEDIA_ROOT = findpath('templates/translation_interface/media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -105,9 +111,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'bhagirath.urls'
+ROOT_URLCONF = 'bhagirath2.urls'
 
-TEMPLATE_DIRS = ("/home/reena/workspace/bhagirath/bhagirath/templates"
+TEMPLATE_DIRS = (
+    findpath("templates"),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -124,31 +131,42 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'bhagirath.translation_interface',
+    'bhagirath2.translation_interface',
     #'registration',
 )
 
-AUTH_PROFILE_MODULE = 'bhagirath.UserProfile'
+AUTH_PROFILE_MODULE = 'bhagirath2.UserProfile'
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
+handler = logging.StreamHandler(sys.stderr)
+handler.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)-6s: %(name)s - %(levelname)s - %(message)s',
+                    #filename=logfile, 
+                    #filemode='a+',
+                    handlers=[handler],
+                    )
+
+#
+## A sample logging configuration. The only tangible logging
+## performed by this configuration is to send an email to
+## the site admins on every HTTP 500 error.
+## See http://docs.djangoproject.com/en/dev/topics/logging for
+## more details on how to customize your logging configuration.
+#LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': False,
+#    'handlers': {
+#        'mail_admins': {
+#            'level': 'ERROR',
+#            'class': 'django.utils.log.AdminEmailHandler'
+#        }
+#    },
+#    'loggers': {
+#        'django.request': {
+#            'handlers': ['mail_admins'],
+#            'level': 'ERROR',
+#            'propagate': True,
+#        },
+#    }
+#}
+#

@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
-
+from django.views.generic.simple import redirect_to
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -8,7 +8,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-     url(r'^login/$','translation_interface.views.home',name="home"),
+    url(r'^login/$','translation_interface.views.home',name="home"),
     url(r'^signup/$','translation_interface.views.processSignup',name="signup"),                  
     url(r'^signin/$','translation_interface.views.processSignin',name="signin"),
     url(r'^signout/$','translation_interface.views.processSignout',name="signout"),
@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^home/upload/process/$','translation_interface.views.processUpload',name="processUpload"),
     url(r'^home/translate/(?P<uid>\d+)/$','translation_interface.views.translate',name="translate"),
     url(r'^home/translate/(?P<id>\d+)/(?P<uid>\d+)/done/$','translation_interface.views.translationDone',name="translationDone"),
-    
+    ('^/?$', redirect_to, {"url": "/login"}),   
     # Examples:
     # url(r'^$', 'bhagirath.views.home', name='home'),
     # url(r'^bhagirath/', include('bhagirath.foo.urls')),
