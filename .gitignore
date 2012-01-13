@@ -1,0 +1,55 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+*~
+*#
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.db
+static/uploaded
+oauth2client/client-config.json
+
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+*.pid
+*.swp
+
+# Chrome extensions
+syntax:glob
+build
+*.pem
+.DS_Store
+target
+Icon?
+ehthumbs.db
+Thumbs.db
+*.crx
+*.zip
+pkg
