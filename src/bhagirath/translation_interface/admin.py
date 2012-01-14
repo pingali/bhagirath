@@ -1,6 +1,10 @@
 from django.contrib import admin
-from models import Task,Subtask,StaticMicrotask,Microtask,UserProfile,UserHistory
+from models import *
 
+admin.site.register(Action)
+admin.site.register(Language)
+admin.site.register(Session)
+admin.site.register(TransactionAction)
 admin.site.register(Task)
 admin.site.register(Subtask)
 admin.site.register(StaticMicrotask)

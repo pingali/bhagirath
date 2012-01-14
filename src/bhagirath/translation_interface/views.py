@@ -52,6 +52,8 @@ def processSignup(request):
         nuname = request.POST['username']
         nfname = request.POST['first_name']
         nlname = request.POST['last_name']
+        
+
         a = User.objects.all()
         if passwd1 == passwd2:
             if nemail and nuname and nfname and nlname:
@@ -81,7 +83,7 @@ def processSignup(request):
                 u.set_password(request.POST['password'])
                 u.save()
                 user = User.objects.get(username=request.POST['username'])
-                user.userprofile_set.create(language=request.POST['language'],maximum_load=0,current_load=0)
+                user.userprofile_set.create(language=request.POST['language'],ip_address = request.META['REMOTE_ADDR'],current_load=0)
             else:
                 data = {
                     'form': LoginForm(),
@@ -117,7 +119,7 @@ def processUpload(request):
             newtask.upload_timestamp = datetime.datetime.now()
             newtask.interest_tags = " "
             newtask.budget = 1
-            newtask.duration = datetime.datetime.now()+datetime.timedelta(365/12)
+            newtask.time_to_publish = datetime.datetime.now()+datetime.timedelta(365/12)
             newtask.dampening_factor = 0.5
             newtask.current_average_stability = 0.0
             save_instance(form, newtask)
