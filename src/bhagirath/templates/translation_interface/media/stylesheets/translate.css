@@ -236,7 +236,7 @@ button.zoomout{
     border-width: 1px;
     cursor: pointer;
     position:relative;
-    top:10px;
+    top:8px;
 }
 
 button.zoomin{
@@ -248,8 +248,8 @@ button.zoomin{
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
-  position:relative;
-    top:10px;
+    position:relative;
+    top:8px;
 }
 
 textarea{
