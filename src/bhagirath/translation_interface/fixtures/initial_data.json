@@ -1,0 +1,271 @@
+[
+    { 
+	"model": "translation_interface.language",
+	"pk": "1",
+	"fields": { 
+	    "language_name":  "Assamese"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "2",
+	"fields": { 
+	    "language_name":  "Bengali" 
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "3",
+	"fields": { 
+	    "language_name":  "Bodo"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "4",
+	"fields": { 
+	    "language_name":  "Dogri"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "5",
+	"fields": { 
+	    "language_name":  "Gujarati"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "6",
+	"fields": { 
+	    "language_name":  "Hindi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "7",
+	"fields": { 
+	    "language_name":  "Kannada"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "8",
+	"fields": { 
+	    "language_name":  "Kashmiri"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "9",
+	"fields": { 
+	    "language_name":  "Konkani"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "10",
+	"fields": { 
+	    "language_name":  "Malayalam"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "11",
+	"fields": { 
+	    "language_name":  "Manipuri or Meithei"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "12",
+	"fields": { 
+	    "language_name":  "Marathi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "13",
+	"fields": { 
+	    "language_name":  "Nepali"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "14",
+	"fields": { 
+	    "language_name":  "Oriya"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "15",
+	"fields": { 
+	    "language_name":  "Punjabi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "16",
+	"fields": { 
+	    "language_name":  "Sanskrit"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "17",
+	"fields": { 
+	    "language_name":  "Santali"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "18",
+	"fields": { 
+	    "language_name":  "Sindhi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "19",
+	"fields": { 
+	    "language_name":  "Tamil"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "20",
+	"fields": { 
+	    "language_name":  "Telugu"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "21",
+	"fields": { 
+	    "language_name":  "Urdu"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "22",
+	"fields": { 
+	    "language_name":  "Kokborok"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "23",
+	"fields": { 
+	    "language_name":  "Mizo"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "24",
+	"fields": { 
+	    "language_name":  "Khasi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "25",
+	"fields": { 
+	    "language_name":  "Garo"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "26",
+	"fields": { 
+	    "language_name":  "Angika"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "27",
+	"fields": { 
+	    "language_name":  "Bhojpuri"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "28",
+	"fields": { 
+	    "language_name":  "Magadhi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "29",
+	"fields": { 
+	    "language_name":  "Marwari"
+	}
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "30",
+	"fields": { 
+	    "language_name":  "Mewari"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "31",
+	"fields": { 
+	    "language_name":  "Shekhavati"
+	}
+    },
+
+    { 
+	"model": "translation_interface.language",
+	"pk": "32",
+	"fields": { 
+	    "language_name":  "Bhili"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "33",
+	"fields": { 
+	    "language_name":  "Gondi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "34",
+	"fields": { 
+	    "language_name":  "Kodava"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "35",
+	"fields": { 
+	    "language_name":  "Kutchi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "36",
+	"fields": { 
+	    "language_name":  "Tulu"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "37",
+	"fields": { 
+	    "language_name":  "Sankethi"
+	} 
+    },
+    { 
+	"model": "translation_interface.language",
+	"pk": "38",
+	"fields": { 
+	    "language_name":  "Mahl"
+	}
+    }
+
+
+]
