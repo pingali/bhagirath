@@ -26,7 +26,7 @@ class UserProfile(models.Model):
     city = models.CharField(verbose_name="City",
                             max_length = 50, 
                             help_text="City to which user belongs")
-    language = models.ForeignKey(Language,limit_choices_to=Language.objects.all())
+    language = models.ForeignKey(Language)
     contributor = models.BooleanField(default=False)
     translator = models.BooleanField(default=True)
     interests = models.CharField(verbose_name="Interests", 

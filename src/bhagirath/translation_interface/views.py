@@ -6,7 +6,7 @@ from django.forms import save_instance
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
 from forms import UploadForm,LoginForm,TranslateForm
-from models import Task,Microtask,UserHistory
+from models import Task,Microtask,UserHistory, Language
 import datetime
 
 def home(request): 
@@ -83,7 +83,9 @@ def processSignup(request):
                 u.set_password(request.POST['password'])
                 u.save()
                 user = User.objects.get(username=request.POST['username'])
-                user.userprofile_set.create(language=request.POST['language'],ip_address = request.META['REMOTE_ADDR'],current_load=0)
+                language=Language.objects.get(language_name=request.POST['language'])
+                user.userprofile_set.create(language=language,	
+		                            ip_address = request.META['REMOTE_ADDR'])
             else:
                 data = {
                     'form': LoginForm(),
