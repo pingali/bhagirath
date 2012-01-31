@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Bhagirath-Knowledge knows no language {% endblock %}
+
+{% block script %}
+
+<script type="text/javascript" Language="JavaScript">
+	function OnCreateAccount()	{
+		document.login_form.action = "/signup/"
+		return true;
+	}
+
+	function OnSignIn()  {
+		document.login_form.action = "/login/"
+	  	return true;
+	}
+	
+	function OnMouseOver(){
+		this.getElementByTagName("ul")[0].style.display="block"
+	}
+	
+	function OnMouseOut(){
+		this.getElementByTagName("ul")[0].style.display="none"
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div id="signin">
+	
+	<div class="sign_in">
+		<fieldset>
+				<p>
+				<button name="create_account" id="create_account" class="create_acc" onclick="OnCreateAccount();">Create Account</button>
+				<label>Username	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password</label>{{form.username}}
+				 &nbsp;&nbsp;&nbsp;&nbsp;{{form.password}}
+				<button name="sign_in" id="sign_in" class="login" onclick="OnSignIn();">Sign In</button></p>
+		</fieldset>
+	</div>
+	
+	<div class="goal">
+		<p><a><u>Mission</u></a> - To translate worlds knowledge into Indic languages</p>
+		<p><a><U>Vision</U></a> - To translate whole of wikipedia into all major Indic languages by 2015</p>
+	</div>
+	
+	<div class="news">
+		<h2>News</h2>
+		<fieldset>
+			<Marquee OnMouseOver="this.stop();" OnMouseOut="this.start();" direction="up" scrollamount="2">
+			<p>1.Upload file for translation</p>
+			<p>2.Translate content</p>
+			<p>3.Evaluate translation</p>
+			</Marquee>
+		</fieldset>
+	</div>
+	
+	<div class="user">
+		<h2>Top users this week</h2>
+		<fieldset>
+			<Marquee OnMouseOver="this.stop();" OnMouseOut="this.start();" direction="up" scrollamount="2">
+			</Marquee>
+		</fieldset>
+	</div>
+	
+	<div class="user">
+		<h2>Top users</h2>
+		<fieldset>
+			<Marquee OnMouseOver="this.stop();" OnMouseOut="this.start();" direction="up" scrollamount="2">
+			</Marquee>	
+		</fieldset>
+	</div>
+	<div class="stat">
+		<ul>
+			<li><a><h2>{{registered_users}}</h2><p>Registered users</p></a></li>
+			<li><a><h2>{{published_articles}}</h2><p>Articles translated</p></a></li>
+			<li><a><h2>{{translated_sentences}}</h2><p>Sentences translated</p></a></li>
+		</ul>
+	</div>
+</div>
+</form>
+{% endblock %}

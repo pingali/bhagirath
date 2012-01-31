@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% load adminmedia %}
+{% block title %}Bhagirath-Knowledge knows no language-Upload {% endblock %}
+{% block head %}
+	<script type="text/javascript" src="/my_admin/jsi18n/"></script>
+	<script type="text/javascript" src="/admin_media/js/calendar.js"></script>
+	<script type="text/javascript" src="/admin_media/js/admin/DateTimeShortcuts.js"></script>
+	<script type="text/javascript" src="/static/admin/js/core.js"></script><script type="text/javascript">
+		window.__admin_media_prefix__ = "{% filter escapejs %} {% admin_media_prefix %} {% endfilter %}";
+	</script>
+	{{ form.media }} 
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" Language="JavaScript">
+	function OnUpload()  {
+		document.upload_form.action = "/account/upload/done/"
+	  	return true;
+	}
+	
+	function OnCancel()  {
+		document.upload_form.action = "/account/upload/"
+	  	return true;
+	}
+	
+	function RadioClicked()  {
+		Animate('external');
+		Animate('internal');
+	}
+</script>
+{% endblock %}
+
+{% block menu %}
+	<ul>
+		<li><a href="/account/">Home</a></li>
+		<li><a href="/account/upload/">Upload File</a></li>
+		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
+		<li><a href="/account/evaluate/">Evaluate</a></li>
+		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
+		<li><a href="/logout/">Logout</a></li>
+	</ul>
+{% endblock %}
+
+{% block content %}
+<form action="." name="upload_form" enctype="multipart/form-data" method="post" enctype="multipart/form-data" accept-charset="utf-8" >		
+{%csrf_token%}
+<div id="upload">
+	<div class="up_load">
+		<h2>Upload your File here for Translation</h2>
+			<fieldset>
+				<p>
+					<label>Upload Type:</label>
+					<input type="radio" name="upload_type" value="link" onclick="RadioClicked();">Provide a URL</input>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="upload_type" value="file" onclick="RadioClicked();" checked>Attach a file</input>
+					<div id="external" style="display:none;">
+						<p>{{form.html_doc_name}}</p>
+					</div>
+					<div id="internal">
+						<p>{{form.html_doc_content}}</p>
+					</div>
+				</p>	
+				<p><label>Source Language:</label><input type="text" value="English" readonly="readonly"></input></p>
+				<p><label>Target Language</label>{{form.target_language}}</p>
+				<p><label>File Context:</label>{{form.interest_tags}}</p>
+                <p><label>Time to publish:</label>{{form.time_to_publish}}</p>
+ 				<p><label>Specifications:</label>
+					<input type="radio" name="default" value="default" onclick="">Default</input>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="specific" value="specific" onclick="helpClicked(this,'specifications');">Specific</input>
+	 				<div id="specifications" style="display:none;">
+						<label>Context size for task:</label><p>{{form.context_size}}</p>
+						<label>Age group of translators:</label><p>{{form.age_group_tag}}</p>
+						<label>Geographical region of translators:</label><p>{{form.geographical_region}}</p>
+					</div>
+		        </p>
+   				<button name="upload" id="upload" class="upload" onclick="OnUpload();">Upload</button>		
+   				<button name="cancel" id="cancel" class="upload" onclick="OnCancel();">Cancel</button>	
+			</fieldset>
+	</div>
+</div>
+</form>
+{% endblock %}

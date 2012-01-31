@@ -1,0 +1,57 @@
+
+
+#signup .sign_up {
+	float: left;
+	margin: 5px 20px 20px 160px;
+	width: 650px;
+	background:#FAF8CC;
+}
+
+#signup .sign_up h2 {
+	padding: 12px 0 10px 20px;
+	font-weight: bold;
+	font-size: .80em;
+	color: #242424;
+	background:#ECD872;
+	text-shadow: #fefceb 0 1px 1px;
+}
+
+#signup fieldset { 
+	padding: 20px 0 20px 0; 
+}
+
+#signup fieldset p {
+	margin: 0 20px 10px 20px;
+	font-weight: bold;
+	font-size: .70em;
+	color: #6e6e6e;
+}
+
+#signup fieldset label {
+	margin: 0 0 5px 0;
+	display: block;
+}
+
+button.signup{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: 0.8em;
+    background-color: #BFBFBF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    position:relative;
+    left:20px;
+}
+
+button.signup:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: 0.8em;
+    background-color: #33CCFF;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}

@@ -1,0 +1,201 @@
+[
+	 {
+    "model": "translation.master_agegroup", 
+	"pk": "1", 
+	"fields": { 
+	    "age_group_tag": "Below 20",
+	    "minimum_age": "0",
+	    "maximum_age": "19"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_agegroup", 
+	"pk": "2", 
+	"fields": { 
+	    "age_group_tag": "20-30",
+	    "minimum_age": "20",
+	    "maximum_age": "30"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_agegroup", 
+	"pk": "3", 
+	"fields": { 
+	  "age_group_tag": "31-40",
+	    "minimum_age": "31",
+	    "maximum_age": "40"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_agegroup", 
+	"pk": "4", 
+	"fields": { 
+	  "age_group_tag": "41-60",
+	    "minimum_age": "41",
+	    "maximum_age": "60"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_agegroup", 
+	"pk": "5", 
+	"fields": { 
+	  "age_group_tag": "Above 60",
+	    "minimum_age": "61",
+	    "maximum_age": "100"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "1", 
+	"fields": { 
+	    "category":  "Science", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "2", 
+	"fields": { 
+	    "category":  "Entertainment", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "3", 
+	"fields": { 
+	    "category":  "History", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_action", 
+	"pk": "1", 
+	"fields": { 
+	    "action":  "Upload"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_action", 
+	"pk": "2", 
+	"fields": { 
+	    "action":  "Translate" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_action", 
+	"pk": "3", 
+	"fields": { 
+	    "action":  "Evaluate" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_role", 
+	"pk": "1", 
+	"fields": { 
+	    "role": "Translator", 
+	    "role_condition": "On registration" 
+	} 
+    },
+    
+     { 
+	"model": "translation.master_role", 
+	"pk": "2", 
+	"fields": { 
+	    "role": "Contributor", 
+	    "role_condition": "Within 24 hours" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_role", 
+	"pk": "3", 
+	"fields": { 
+	    "role": "Evaluator", 
+	    "role_condition": "After 1000 points" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_rank", 
+	"pk": "1", 
+	"fields": { 
+	    "position": "Amatuer", 
+	    "percentile": "50" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_rank", 
+	"pk": "2", 
+	"fields": { 
+	    "position": "Active translator", 
+	    "percentile": "30" 
+	} 
+    },
+
+	{ 
+	"model": "translation.master_rank", 
+	"pk": "3", 
+	"fields": { 
+	    "position": "Senior translator", 
+	    "percentile": "15" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_rank", 
+	"pk": "4", 
+	"fields": { 
+	    "position": "Master translator", 
+	    "percentile": "4" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_rank", 
+	"pk": "5", 
+	"fields": { 
+	    "position": "Rockstar translator", 
+	    "percentile": "1" 
+	} 
+    },
+        
+	{ 
+	"model": "translation.master_language", 
+	"pk": "1", 
+	"fields": { 
+	    "language":  "English", 
+	    "region": "official language of US " 
+	} 
+    },
+ 
+    { 
+	"model": "translation.master_language", 
+	"pk": "2", 
+	"fields": { 
+	    "language":  "Hindi", 
+	    "region": "official language of Arunachal Pradesh, Andaman and Nicobar Islands,  Bihar, Chandigarh,  Chhattisgarh, Delhi,  Haryana,  Himachal Pradesh, Jharkhand, Madhya Pradesh, Rajasthan Uttar Pradesh and Uttaranchal " 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_language", 
+	"pk": "3", 
+	"fields": { 
+	    "language":  "Marathi", 
+	    "region": "official   language of Maharashtra " 
+	} 
+    }
+]
