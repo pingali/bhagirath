@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from bhagirath.centoid_score.Sentence import Sentence
-from bhagirath.centoid_score.SentenceTokenizer import SentenceTokenizer
-from bhagirath.centoid_score.SentenceMap import SentenceMap
-from bhagirath.centoid_score.WordCompararer import WordComparer
-from bhagirath.centoid_score.SSDistance import SSDistance
+from Sentence import Sentence
+from SentenceTokenizer import SentenceTokenizer
+from SentenceMap import SentenceMap
+from WordCompararer import WordComparer
+from SSDistance import SSDistance
 import sys, random
 
 """
@@ -229,15 +229,13 @@ class CentroidFinder(object):
             i += 1
         ## for-while
         #print maxscore
-        
-            
         i = 0
         while i < len(self.reputation):
-            if (maxscore==0):
-                self.normalizedreputation[i] = 0
+            if maxscore==0 :
+                normalizedreputation[i] = 0;
             else:
                 self.normalizedreputation[i] = int(100 * (self.reputation[i] / maxscore))
-            i += 1
+                i += 1
         return self.normalizedreputation
 
     @classmethod
