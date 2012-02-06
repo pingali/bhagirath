@@ -530,8 +530,16 @@ def translateDone(request,id,uid):
         if request.method == 'POST':
             try:
                 correction_episode = request.POST['cmd']
-                print correction_episode
-
+                epi = correction_episode.split(' ')
+                i = 0
+                list = []
+                for j in epi:
+                    if epi[i]=='' or epi[i]=='\n' or epi[i]=='\t' or epi[i]=='\t\t\t':
+                        pass
+                    else:
+                        list.append(epi[i])
+                    i += 1                
+                
                 engl = Microtask.objects.filter(pk=id)
                 eng = engl[0]
                 hist = UserHistory.objects.filter(microtask=eng)
