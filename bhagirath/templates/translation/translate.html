@@ -109,15 +109,14 @@
 		}
 		return memory;
 	}
-	
 	$(function() {
 	    editTxt('#original_sentence');
-
-	    $('span').live('mouseover', function() {
+		
+	    $('span').mouseover( function() {
 	        $(this).addClass('hlight');
 	    });
 	   
-	    $('span').live('mouseout', function() {
+	    $('span').mouseout( function() {
 	        $(this).removeClass('hlight');
 	    });
 	});
@@ -129,8 +128,7 @@
 	        for (i = 0; i < words.length; i++) {
 	            newHtml += '<span>' + words[i] + '</span> ';
 	        }     
-	        $(selector).text(newHtml);
-	        alert(newHtml);
+	        $(selector).html(newHtml);
 	    });
 	}
 
@@ -496,7 +494,7 @@
 	</fieldset>	
 	</div>
 </div>
-<div id="debug" style="visibility:hidden">
+<div id="debug" style="visibility:show">
 	<input id="ws" name="ws" type="checkbox" checked="checked"></input>
 	<input id="cmd" name="cmd" type="text"></input>
 	<pre id="output1"></pre>

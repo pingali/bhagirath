@@ -261,5 +261,6 @@ button.google_translate:hover{
     cursor: pointer;
 }
 
-.hlight{background-color:#ffcc00;}
 
+div.original .hlight{background-color:#ffcc00;}
+ 
