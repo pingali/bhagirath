@@ -1,3 +1,4 @@
-#Mon Jan 30 23:44:16 IST 2012
+#Mon Feb 06 12:53:00 IST 2012
 eclipse.preferences.version=1
 encoding//bhagirath/translation/migrations/0002_auto__del_master_backgroundtask__del_leaderboard__add_master_english2h.py=utf-8
+encoding//bhagirath/translation/migrations/0003_auto__add_field_userprofile_no_of_perfect_translations__add_field_stat.py=utf-8

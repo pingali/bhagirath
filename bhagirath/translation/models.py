@@ -142,6 +142,7 @@ class UserProfile(models.Model):
     total_translated_sentences = models.IntegerField() 
     total_evaluated_sentences = models.IntegerField()
     total_uploaded_tasks = models.IntegerField() 
+    no_of_perfect_translations = models.IntegerField() 
     rank = models.ForeignKey(Master_Rank,on_delete=models.SET_NULL,null=True) 
     ip_address = models.IPAddressField(null=True)
  
@@ -197,6 +198,7 @@ class StaticMicrotask(models.Model):
     translated_sentence = models.CharField(max_length=2000,null=True)
     transliterated_sentence = models.CharField(max_length=2000,null=True)
     machine_translation = models.CharField(max_length=2000,null=True)
+    user = models.ForeignKey(User,null=True)
     assigned = models.BooleanField(default=False)
     stability = models.FloatField(default=0.0,null=True)
     scoring_done = models.BooleanField(default=False)
