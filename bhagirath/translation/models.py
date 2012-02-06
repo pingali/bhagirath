@@ -152,7 +152,7 @@ class UserProfile(models.Model):
 class Session(models.Model):
     user = models.ForeignKey(User,on_delete=models.PROTECT)
     login_timestamp = models.DateTimeField(null=False)
-    logout_timestamp = models.DateTimeField(null=False)
+    logout_timestamp = models.DateTimeField(null=True)
 
     def __unicode__(self):
         return u"%s" %(self.id)

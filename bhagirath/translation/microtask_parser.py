@@ -6,7 +6,7 @@ RE = re.compile('Ltd|Inc|Mrs|Mr|Ms|Prof|Gen|Rep|Sen|Retd|Ltd|Inc|Mrs|Mr|Ms|Prof|
 
 def microtaskParser():
     data = ''
-    conn = sqlite3.connect("/home/ankita/git/bhagirath/src/bhagirath/bhagirath.db")
+    conn = sqlite3.connect("/home/ankita/git/bhagirath/bhagirath/bhagirath.db")
     
     with conn:
         c = conn.cursor()

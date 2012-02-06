@@ -1,14 +1,12 @@
 from django.template import RequestContext
 from django.contrib import auth
-from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
 from bhagirath.translation.forms import UploadForm,LoginForm,TranslateForm,SignUpForm
-from bhagirath.translation.models import Task,Microtask,UserHistory,StaticMicrotask,UserProfile,Master_AgeGroup,Master_Language,Master_InterestTags,Master_GeographicalRegion,Master_HindiWords,StatCounter
+from bhagirath.translation.models import *
 from django.conf import settings
 from django.contrib import messages
-import datetime
 import captcha
 import traceback
 import logging
@@ -38,7 +36,7 @@ def subtask(request):
     j = 0
     while  j< i:
         t = tasks[j]
-        s = '/home/ankita/Desktop/Articles/' + t.html_doc_name
+        s = '/home/ankita/Desktop/TRDDC_Wikipedia/Sample_Wiki_Articles/' + t.html_doc_name
         subtaskParser(s,t.id)
         j +=1
     
@@ -106,7 +104,6 @@ def aboutus(request):
             'published_articles':a
         }
     return render_to_response('login/aboutUs.html',data,context_instance=RequestContext(request))
- 
 
 def signup(request):
     data = {
@@ -135,7 +132,7 @@ def processSignup(request):
             f_first_name = request.POST['first_name']
             f_last_name = request.POST['last_name']
             f_date_of_birth = request.POST['date_of_birth']
-            f_city = request.POST['city']
+            f_city = request.POST['state']
             
             if request.POST.has_key('translator'):
                 f_translator = request.POST['translator']
@@ -150,6 +147,7 @@ def processSignup(request):
             else:
                 f_evaluator = False
                 
+            """ Age group tag calculation    
             dtob = datetime.datetime.strptime(f_date_of_birth,'%Y-%m-%d')   
             dob = dtob.date()
             age = datetime.date.today() - dob
@@ -167,7 +165,7 @@ def processSignup(request):
                     calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=60)
                 elif(f_age>60):
                     calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=100)
-                    
+            """        
             try:
                 a = User.objects.all()
                 count = 0
@@ -210,7 +208,7 @@ def processSignup(request):
                         u.save()
                         
                         user = User.objects.get(username__exact=f_username)
-                        user.userprofile_set.create(date_of_birth=f_date_of_birth, city=f_city,
+                        user.userprofile_set.create(date_of_birth=f_date_of_birth,no_of_perfect_translations = 0,
                                                     translator=f_translator,contributor=f_contributor,evaluator=f_evaluator,
                                                     ip_address=request.META['REMOTE_ADDR'])
                         
@@ -223,6 +221,15 @@ def processSignup(request):
                                 id = int(l)
                                 f_language = Master_Language.objects.get(pk=id)
                                 userpro.language.add(f_language)
+                                
+                        if request.POST.has_key('state'):     
+                            state = request.POST['state']            
+                            
+                            for l in state:
+                                id = int(l)
+                                f_state = Master_GeographicalRegion.objects.get(pk=id)
+                                userpro.state = f_state
+                                userpro.save()
                               
                         if request.POST.getlist('interests'):
                             all_interests = request.POST.getlist('interests')                
@@ -271,12 +278,15 @@ def processSignup(request):
     return HttpResponse("Y")
     
 def processSignin(request):
-    print request.POST
     uname = request.POST['username']
     passwd = request.POST['password']
     user = auth.authenticate(username=uname, password=passwd)
     if user is not None and user.is_active:
         auth.login(request, user)
+        s = Session()
+        s.user = user
+        s.login_timestamp = datetime.datetime.now()
+        s.save()
         msg = "Welcome,%s"%(request.user)   
         next = "/account/"
         messages.success(request,msg) 
@@ -285,7 +295,10 @@ def processSignin(request):
         messages.error(request, "Incorrect username or password!!!")   
     return HttpResponseRedirect(reverse('home'))
     
-def processSignout(request):     
+def processSignout(request):
+    s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
+    s.logout_timestamp = datetime.datetime.now()
+    s.save()
     auth.logout(request)
     sta = StatCounter.objects.all()
     if sta:
@@ -330,6 +343,12 @@ def upload(request):
             'form': UploadForm(),
             'uid':  uid,
              }
+        ta = TransactionAction()
+        ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
+        ta.user = user
+        ta.action = Master_Action.objects.filter(action="Upload")[0]
+        ta.action_timestamp = datetime.datetime.now()
+        ta.save()
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
         data = {
@@ -365,7 +384,7 @@ def uploadDone(request):
                     tm = datetime.datetime.time(tm)
                     timestamp = datetime.datetime.combine(dt, tm)
                     newtask.time_to_publish = timestamp
-                    newtask.source_language = Master_Language.objects.get(pk=request.POST['source_language'])
+                    newtask.source_language = Master_Language.objects.get(language="English")
                     newtask.target_language = target_language                 
                     if newtask.source_language == newtask.target_language:
                         data = {
@@ -401,6 +420,10 @@ def uploadDone(request):
                     'form': UploadForm(),
                     'uid': uid,
                    }
+            ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
+            ta.task = Task.objects.get(pk=newtask.id)
+            ta.action_timestamp = datetime.datetime.now()
+            ta.save()
             messages.success(request,"File uploaded sucessfully!!!")
             return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
     except:
@@ -433,6 +456,12 @@ def translate(request,uid):
                     'uid':uid
                 }
                 messages.error(request,"No sentence available for translation!!")
+                ta = TransactionAction()
+                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
+                ta.user = user
+                ta.action = Master_Action.objects.filter(action="Translate")[0]
+                ta.action_timestamp = datetime.datetime.now()
+                ta.save()
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
                 available_microtask = available_microtasks[0]
@@ -476,6 +505,12 @@ def translate(request,uid):
                 
                 available_microtask.assigned=True
                 available_microtask.save()
+                ta = TransactionAction()
+                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
+                ta.user = user
+                ta.action = Master_Action.objects.filter(action="Translate")[0]
+                ta.action_timestamp = datetime.datetime.now()
+                ta.save()
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
         except:
             log.exception("Load microtask for translation Failed!!!")
@@ -494,9 +529,9 @@ def translateDone(request,id,uid):
     if user.is_authenticated():
         if request.method == 'POST':
             try:
-                a = request.POST['cmd']
-                print a
-                print "hi"
+                correction_episode = request.POST['cmd']
+                print correction_episode
+
                 engl = Microtask.objects.filter(pk=id)
                 eng = engl[0]
                 hist = UserHistory.objects.filter(microtask=eng)
@@ -512,7 +547,15 @@ def translateDone(request,id,uid):
                 
                 #micro = Microtask.objects.get (id=engl)
                 #micro.delete()
-               
+              
+                ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
+                ta.task = h.task
+                ta.subtask = h.subtask
+                ta.static_microtask = h.static_microtask
+                ta.action_timestamp = datetime.datetime.now()
+                ta.save()
+                
+                
                 data = {
                         'form': TranslateForm(),
                         'uid': uid,
@@ -582,6 +625,12 @@ def context(request,id,uid):
 
 def evaluate(request):
     print "to be done"
+    ta = TransactionAction()
+    ta.session = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
+    ta.user = request.user
+    ta.action = Master_Action.objects.filter(action="Evaluate")[0]
+    ta.action_timestamp = datetime.datetime.now()
+    ta.save()
     return HttpResponseRedirect(reverse('account'))
     
 def evaluateDone(request):

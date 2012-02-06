@@ -197,5 +197,29 @@
 	    "language":  "Marathi", 
 	    "region": "official   language of Maharashtra " 
 	} 
+    },
+    
+    { 
+	"model": "translation.master_geographicalregion", 
+	"pk": "1", 
+	"fields": { 
+	    "geographical_region": "Madhya Pradesh"
+	} 
+    },
+ 
+    { 
+	"model": "translation.master_geographicalregion", 
+	"pk": "2", 
+	"fields": { 
+	    "geographical_region": "Maharashtra"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_geographicalregion", 
+	"pk": "3", 
+	"fields": { 
+	    "geographical_region": "Rajasthan"
+	} 
     }
 ]

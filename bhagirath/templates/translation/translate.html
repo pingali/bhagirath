@@ -161,12 +161,8 @@
 		document.main_form.action = "/account/translate/{{uid}}/"
 	  	return true;
 	}
-	
-	function RadioClicked() {
-		Go('context_size');
-	}		
-	
-	function Go(id) {
+
+	function Go() {
 		document.main_form.action = "/account/translate/{{uid}}/{{curr_id}}/context/"
 	  	return true;
 	}		
@@ -197,6 +193,14 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<button type="button" name="zoomin" id="zoomin" class="zoomin" value="+" onclick="zoomOut();">+</button>
 		<button type="button" name="zoomout" id="zoomout" class="zoomout" value="-" onclick="zoomIn();">-</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>View sentence context:</label>
+		<select name="context_size" id="context_size">
+		 	 <option value="0">No context</option>
+			 <option value="1">Little context</option>
+		   	 <option value="2">Elaborate context</option>
+		</select>
+		<button name="go" id="go" class="zoomout" value="go" onclick="Go();">Go!</button>
 	</p>
 	
 	<fieldset>
@@ -216,15 +220,6 @@
 				<td><label style=" color: #FF7359">View translation here:</label><br/>
 				<textarea name="output" id="output" readonly="readonly"></textarea></td>	
 			</tr>	
-			<tr>
-				<td>
-				    <input type="radio" name="context_size" id="context_size" value="0" onclick="RadioClicked();" checked>No context</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="radio" name="context_size" id="context_size" value="1" onclick="RadioClicked();">Little context</input>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="radio" name="context_size" id="context_size" value="2" onclick="RadioClicked();">Elaborate context</input>
-				</td>
-			</tr>
 		</table>
 		<table>
 			<tr>

@@ -588,7 +588,7 @@ def subtaskParser(filename,taskid):
     	string1 = string1 + ' ' + (''.join(str(i)))
     string1 = string1.replace('\'','\\\'')
     #string1 ="conn = MySQLdb.connect"
-    conn = sqlite3.connect("/home/ankita/git/bhagirath/src/bhagirath/bhagirath.db")
+    conn = sqlite3.connect("/home/ankita/git/bhagirath/bhagirath/bhagirath.db")
     with conn:
         c = conn.cursor()
         t = (tid,string1,False,0.0)
