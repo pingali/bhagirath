@@ -239,6 +239,7 @@ class UserHistory(models.Model):
     time_to_live = models.FloatField(default=100000.0,null=True)
     status_flag = models.CharField(max_length=10,choices=STATUS_FLAG_CHOICES,default="Raw")
     current_active_tag = models.BooleanField(default=False)
+    correction_episode = jsonfield.JSONField()
           
     def __unicode__(self):
         return u"%s" %(self.original_sentence)

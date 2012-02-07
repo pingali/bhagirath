@@ -7,6 +7,7 @@ from bhagirath.translation.forms import UploadForm,LoginForm,TranslateForm,SignU
 from bhagirath.translation.models import *
 from django.conf import settings
 from django.contrib import messages
+from django.core import serializers
 import captcha
 import traceback
 import logging
@@ -485,6 +486,7 @@ def translate(request,uid):
                 h.original_sentence = available_microtask.original_sentence 
                 h.assign_timestamp = datetime.datetime.now()
                 h.current_active_tag = 0
+                h.correction_episode = [{}]
                 h.save()
                 
                 s = StaticMicrotask.objects.get(id=s)
@@ -521,7 +523,7 @@ def translate(request,uid):
         messages.error(request,"Please login.You're not logged in!!!")
         return render_to_response('login/login.html',data,context_instance=RequestContext(request))
     
-        
+    
 def translateDone(request,id,uid):
     user = request.user    
     if user.is_authenticated():
@@ -548,6 +550,10 @@ def translateDone(request,id,uid):
                 h.current_active_tag = 1
                 h.change_flag = 1
                 h.status_flag = 'Reviewed'
+                h.correction_episode = list 
+                h.save()
+                data = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
+                h.correction_episode = data
                 h.save()
                 
                 #micro = Microtask.objects.get (id=engl)
