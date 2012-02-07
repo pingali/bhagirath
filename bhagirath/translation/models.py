@@ -9,7 +9,6 @@ class Master_HindiWords(models.Model):
                                 max_length=2000,
                                 null=False,
                                 unique=True)
-    transliterated = models.CharField(max_length=2000,null=True)
     pos = models.CharField(max_length=2000,null=False)
     
     def __unicode__(self):
@@ -196,7 +195,6 @@ class StaticMicrotask(models.Model):
     subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
     translated_sentence = models.CharField(max_length=2000,null=True)
-    transliterated_sentence = models.CharField(max_length=2000,null=True)
     machine_translation = models.CharField(max_length=2000,null=True)
     user = models.ForeignKey(User,null=True)
     assigned = models.BooleanField(default=False)
@@ -232,7 +230,6 @@ class UserHistory(models.Model):
     microtask = models.ForeignKey(Microtask,null=True,on_delete=models.SET_NULL,default=None)
     user = models.ForeignKey(User,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
-    transliterated_sentence = models.CharField(max_length=2000,null=True)
     translated_sentence = models.CharField(max_length=2000,null=True)
     assign_timestamp = models.DateTimeField(null=True)
     submission_timestamp = models.DateTimeField(null=True)

@@ -25,7 +25,6 @@ def hindiwords(request):
         p.original = j
         p.pos = "Noun"
         p.save()
-    
     return HttpResponse("DONE!!!") 
 
 def subtask(request):
@@ -39,7 +38,6 @@ def subtask(request):
         s = '/home/ankita/Desktop/TRDDC_Wikipedia/Sample_Wiki_Articles/' + t.html_doc_name
         subtaskParser(s,t.id)
         j +=1
-    
     return HttpResponse("DONE!!!") 
 
 def staticmicro(request):
@@ -467,7 +465,7 @@ def translate(request,uid):
                 available_microtask = available_microtasks[0]
                 s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
                 parent_static_microtask = StaticMicrotask.objects.get(id=s)
-                microtask_translation = parent_static_microtask.transliterated_sentence
+                microtask_translation = parent_static_microtask.translated_sentence
                 machine_translation = parent_static_microtask.machine_translation
                 other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
                 other_translations = ""
@@ -544,8 +542,7 @@ def translateDone(request,id,uid):
                 eng = engl[0]
                 hist = UserHistory.objects.filter(microtask=eng)
                 h = hist[0]
-                h.translated_sentence = request.POST['output']
-                h.transliterated_sentence = request.POST['input']
+                h.translated_sentence = request.POST['translated_sentence']
                 h.submission_timestamp = datetime.datetime.now()
                 h.stability = 0.0
                 h.current_active_tag = 1
@@ -562,7 +559,6 @@ def translateDone(request,id,uid):
                 ta.static_microtask = h.static_microtask
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
-                
                 
                 data = {
                         'form': TranslateForm(),
@@ -588,7 +584,7 @@ def context(request,id,uid):
                 count = request.POST['context_size']
                 english = Microtask.objects.get(id=id)
                 rec = Microtask.objects.get(id = english.id)
-                tra = request.POST['input']
+                prev_translation = request.POST['translated_sentence']
                 hist = UserHistory.objects.filter(user = uid, original_sentence = rec.original_sentence)
                 h = hist[0]
                 static = StaticMicrotask.objects.filter(original_sentence = rec.original_sentence)
@@ -620,7 +616,7 @@ def context(request,id,uid):
                     'english': rec.original_sentence,
                     'prev_context':prev_context,
                     'next_context':next_context,
-                    'hindi': tra,
+                    'hindi': prev_translation,
                     }        
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))     
             except:
