@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}Bhagirath-Knowledge knows no language {% endblock %}
+
+{% block script %}
+
+<script type="text/javascript" Language="JavaScript">
+	function OnMouseOver(){
+		this.getElementByTagName("ul")[0].style.display="block"
+	}
+	
+	function OnMouseOut(){
+		this.getElementByTagName("ul")[0].style.display="none"
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div id="leftcolumn"> 
+	<div class="module_menu">
+		<div>
+		<div>
+		<div>
+			<h2>Weekly leaderboard</h2>
+			<p>&nbsp; 1. User</p>
+			<p>&nbsp; 2. User</p>
+			<p>&nbsp; 3. User</p>
+			<p>&nbsp; 4. User</p>
+			<p>&nbsp; 5. User</p>
+		</div>
+		</div>
+		</div>
+    </div>
+
+	
+	<div class="module_menu">
+		<div>
+			<div>
+			<div>
+		  	<h2>News</h2>
+			<Marquee OnMouseOver="this.stop();" OnMouseOut="this.start();" direction="up" scrollamount="2">
+			<p>&nbsp;&nbsp;   1.Upload file</p>
+			<p>&nbsp;&nbsp;   2.Translate content</p>
+			<p>&nbsp;&nbsp;   3.Evaluate translation</p>
+			</Marquee>
+		</div>
+	</div>
+	</div>
+	</div>
+</div>
+  
+<div id="maincolumn">
+	{% block content1 %}{% endblock %}
+</div>
+  
+  
+  
+  <div id="rightcolumn"> 
+	<div class="moduletable_menu">
+		<div>
+		<div>
+		<div>
+			<h2>Overall leaderboard</h2>
+			<p>&nbsp; 1. User</p>
+			<p>&nbsp; 2. User</p>
+			<p>&nbsp; 3. User</p>
+			<p>&nbsp; 4. User</p>
+			<p>&nbsp; 5. User</p>
+		</div>
+		</div>
+		</div>
+    </div>
+
+	<div class="moduletable_menu">
+	 <div>
+	     <div>
+		  <div>
+			<h2>Statistics</h2>
+			<p><img src="/static/images/menu_arrow.png"/>  Registered users</p>
+			&nbsp;&nbsp;&nbsp;&nbsp;    {{registered_users}}
+			<p><img src="/static/images/menu_arrow.png"/>  Articles translated</p>
+			&nbsp;&nbsp;&nbsp;&nbsp;   {{published_articles}}
+			<p><img src="/static/images/menu_arrow.png"/>  Sentences translated</p>
+			&nbsp;&nbsp;&nbsp;&nbsp;   {{translated_sentences}}
+		</div>
+	    </div>
+	</div>
+     </div>
+</div>
+
+
+</form>
+{% endblock %}

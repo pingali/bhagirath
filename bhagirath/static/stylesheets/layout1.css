@@ -1,0 +1,89 @@
+#leftcolumn{
+	margin: 0px;
+	padding: 0px;
+	padding-left:3px;
+	width: 219px;
+	float:left;
+	
+}
+
+#rightcolumn{
+	margin: 0px;
+	padding: 0px;
+	padding-left:5px;
+	width: 219px;
+	float:right;
+	
+}
+
+#maincolumn{
+	width: 570px;
+	float:center;
+}
+
+#maincolumn .goal p {
+	font-family:Tahoma,Arial,Helvetica, sans-sarif;
+	font-weight: normal;
+	font-size: 15px;
+	color: #6e6e6e;
+}
+
+#leftcolumn div.module_menu, #leftcolumn div.module, #rightcolumn div.moduletable_text{
+	margin: 10px 0px;
+	margin-left:3px;
+	padding: 0px;
+	width: 211px;
+	background:#F8F8F8;
+	border:1px solid #cccccc;
+}
+
+#rightcolumn div.moduletable_menu, #rightcolumn div.moduletable, #rightcolumn div.moduletable_text{
+	margin: 10px 0px;
+	margin-right:3px;
+	padding: 0px;
+	width: 211px;
+	background:#F8F8F8;
+	border:1px solid #cccccc;
+}
+
+
+#leftcolumn div.module_menu  div div div, #leftcolumn div.module div div{
+	margin: 0px;
+	padding: 0px;
+	padding-bottom:5px;
+	width: 211px;
+	height:auto;
+	color:#333333;
+}
+
+#leftcolumn div.module_menu div div div div, #leftcolumn div.module div div div div{
+	background:none;
+	padding: 4px 8px;
+}
+
+#rightcolumn div.moduletable_menu  div div div, #rightcolumn div.moduletable div div{
+	margin: 0px;
+	padding: 0px;
+	padding-bottom:5px;
+	width: 211px;
+	height:auto;
+	color:#333333;
+}
+
+#rightcolumn div.moduletable_menu div div div div, #rightcolumn div.moduletable div div div div{
+	background:none;
+	padding: 4px 8px;
+}
+
+
+#leftcolumn h2,#rightcolumn h2{
+	text-align: center;
+	width: 207px;
+	line-height: 41px;
+	color:#4A4A4A;
+	font-size: 12px;
+	margin:1px;
+	background:url(../images/bg_h3.png);
+	text-shadow: #fefceb 0 1px 1px;
+}
+

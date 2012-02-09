@@ -1,0 +1,14 @@
+#maincolumn .lnk {
+	float: left;
+	margin-left: 60px;
+	margin-top: 40px;
+}
+
+#maincolumn .info {
+	float: left;
+	margin-left: 60px;
+	margin-top: 40px;
+	width: 283px;
+	background:#FDF7EF;
+}
+
