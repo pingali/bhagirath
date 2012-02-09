@@ -1,154 +1,20 @@
-#signin .news {
+#maincolumn .sign_in {
 	float: left;
-	margin: 5px 5px 10px 20px;
-	width: 300px;
+	margin-left: 60px;
+	margin-top: 40px;
+	width: 283px;
 	background:#FAF8CC;
 }
 
-#signin .news h2 {
+#maincolumn .sign_in h2 {
 	padding: 12px 0 10px 20px;
+	background: url(../images/signin_top.png) no-repeat;
 	font-weight: bold;
-	font-size: 20px;
-	color: #242424;
+	font-size: .80em;
+	color:#4A4A4A;
 	background:#ECD872;
-	text-shadow: #fefceb 0 1px 1px;
+	text-shadow: #e9fdfa 0 1px 1px;
 }
-
-#signin .user {
-	float: left;
-	margin: 5px 5px 10px 5px;
-	width: 300px;
-	background:#FAF8CC;
-}
-
-#signin .user h2 {
-	padding: 12px 0 10px 20px;
-	font-weight: bold;
-	font-size: 20px;
-	color: #242424;
-	background:#ECD872;
-	text-shadow: #fefceb 0 1px 1px;
-}
-
-#signin .goal p {
-	margin: 0 20px 10px 20px;
-	font-family:Tahoma,Arial,Helvetica, sans-sarif;
-	font-weight: normal;
-	font-size: 15px;
-	color: #6e6e6e;
-}
-
-#signin .goal a {
-	padding: 12px 0 10px 20px;
-	font-weight: bold;
-	font-size: 20px;
-	color: #005298;
-	text-shadow: #fefceb 0 1px 1px;
-}
-
-#signin .stat {
-	float: center;
-	margin: 5px 20px 10px 25px;
-	background:#E0FFFF;
-}
-
-#signin .stat ul li a h2 {
-	padding: 2px 0 1px 2px;
-	font-weight: bold;
-	font-size: 20px;
-	color: #005298;
-	text-shadow: #fefceb 0 1px 1px;
-}
-
-#signin .stat ul {
-	float: left;
-	clear: both;
-	width: 800px;
-	margin: 10px 43px 0 50px;
-	background: #E0FFFF;
-	list-style-type:none;
-	padding:0px;
-}
-
-#signin .stat ul li {
-	float: left;
-	border-right: solid 1px #e7f5f4;
-	font-size:25px;
-}
-
-#signin .stat ul li a {
-	float: left;
-	display: block;
-	padding: 14px 20px 11px 20px;
-	border-right: solid 1px #A2D1CC;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-weight: bold;
-	font-family:Tahoma,Arial,Helvetica, sans-sarif;
-	font-size: .75em;
-	color: #375552;
-	text-shadow: #dbefed 0 1px 1px;
-}
-
-#signin .sign_in {
-	float: left;
-	margin: 20px 20px 20px 70px;
-	width: 830px;
-	background: #E0FFFF;
-}
-
-#signin fieldset { 
-	padding: 20px 0 20px 0; 
-}
-
-#signin fieldset p {
-	margin: 0 20px 10px 20px;
-	font-family:Tahoma,Arial,Helvetica, sans-sarif;
-	font-weight: normal;
-	font-size: 15px;
-	color: #6e6e6e;
-}
-
-#signin fieldset label {
-	margin: 0 0 5px 0;
-	display: block;
-}
-
-#signin fieldset input {
-	padding: 3px;
-	width: 140px;
-}
-
-#signin fieldset p.button { margin-bottom: 0; }
-#signin fieldset p.button input { width: auto; }
-
-
-#signin .sign_in fieldset input { width: 200px; }
-
-button.create_acc{
-    float: left;
-    margin: 18px 80px 6px 0;
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 1.2em;
-    background-color: #33CCCC;
-    border-style: solid;
-    border-width: 1px;
-    cursor: pointer;
-    position:relative;
-    left:20px;
-}
-
-button.create_acc:hover{
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 1.2em;
-    background-color:#33CCFF ;
-    border-style: solid;
-    border-width: 1px;
-    cursor: pointer;
-}
-
 
 button.login{
     color: #245194;

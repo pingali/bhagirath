@@ -130,18 +130,23 @@ class WeeklyLeaderboard(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
     date_of_birth = models.DateField(null=False)
-    state = models.ForeignKey(Master_GeographicalRegion,on_delete=models.SET_NULL,null=True,default=None)
-    language = models.ManyToManyField(Master_Language,blank=True, null=True,default=None)
+    district = models.ForeignKey(Master_GeographicalRegion,on_delete=models.SET_NULL,null=True,default=None)
+    education_qualification = models.TextField(verbose_name="Educational qualification", 
+                                               help_text="User's educational qualification",
+                                               null = True)
+    medium_of_education_during_school = models.ForeignKey(Master_Language,blank=True, null=True,default=None, related_name="%(app_label)s_%(class)s_related_medium_of_education")
+    language = models.ManyToManyField(Master_Language,blank=True, null=True,default=None, related_name="%(app_label)s_%(class)s_related_language")
+    #competence_for_each_language 
     translator = models.BooleanField(default=True)
     contributor = models.BooleanField(default=False)
     evaluator = models.BooleanField(default=False)
     interests = models.ManyToManyField(Master_InterestTags,blank=True, null=True,default=None)
     overall_score  = models.IntegerField(default=0)
     prev_week_score = models.IntegerField(default=0)
-    total_translated_sentences = models.IntegerField() 
-    total_evaluated_sentences = models.IntegerField()
-    total_uploaded_tasks = models.IntegerField() 
-    no_of_perfect_translations = models.IntegerField() 
+    total_translated_sentences = models.IntegerField(default=0) 
+    total_evaluated_sentences = models.IntegerField(default=0)
+    total_uploaded_tasks = models.IntegerField(default=0)
+    no_of_perfect_translations = models.IntegerField(default=0)
     rank = models.ForeignKey(Master_Rank,on_delete=models.SET_NULL,null=True) 
     ip_address = models.IPAddressField(null=True)
  
@@ -158,7 +163,7 @@ class Session(models.Model):
     
 class Task(models.Model):
     html_doc_name = models.URLField(verify_exists=True,null=True,verbose_name="URL referring to file") 
-    html_doc_content = models.FileField(upload_to='task_uploads',null=True)
+    html_doc_content = models.FileField(upload_to='task_uploads/%Y/%m/%d',null=True)
     upload_timestamp = models.DateTimeField(default=datetime.datetime.now)
     time_to_publish = models.DateTimeField('Time to publish',null=True)
     source_language = models.ForeignKey(Master_Language,related_name="source_language",on_delete=models.PROTECT)
@@ -179,7 +184,8 @@ class Task(models.Model):
  
     def __unicode__(self):
         return u"%s" % (self.id)
-  
+
+        
 class Subtask(models.Model):
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
     original_data = models.FileField(upload_to='subtask_original_uploads',null=False)

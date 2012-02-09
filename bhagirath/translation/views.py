@@ -131,7 +131,9 @@ def processSignup(request):
             f_first_name = request.POST['first_name']
             f_last_name = request.POST['last_name']
             f_date_of_birth = request.POST['date_of_birth']
-            f_city = request.POST['state']
+            f_city = request.POST['district']
+            f_education_qualification = request.POST['education_qualification']  
+            f_medium_of_education_during_school = request.POST['medium_of_education_during_school']
             
             if request.POST.has_key('translator'):
                 f_translator = request.POST['translator']
@@ -207,9 +209,9 @@ def processSignup(request):
                         u.save()
                         
                         user = User.objects.get(username__exact=f_username)
-                        user.userprofile_set.create(date_of_birth=f_date_of_birth,no_of_perfect_translations = 0,
-                                                    translator=f_translator,contributor=f_contributor,evaluator=f_evaluator,
-                                                    ip_address=request.META['REMOTE_ADDR'])
+                        user.userprofile_set.create(date_of_birth=f_date_of_birth,
+                                                    education_qualification=f_education_qualification,ip_address=request.META['REMOTE_ADDR'], 
+                                                    translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
                         
                         userpro = UserProfile.objects.get(user=user)
                         
@@ -220,14 +222,23 @@ def processSignup(request):
                                 id = int(l)
                                 f_language = Master_Language.objects.get(pk=id)
                                 userpro.language.add(f_language)
-                                
-                        if request.POST.has_key('state'):     
-                            state = request.POST['state']            
+                        
+                        if request.POST.has_key('medium_of_education_during_school'):     
+                            medium_of_education_during_school = request.POST['medium_of_education_during_school']            
                             
-                            for l in state:
+                            for l in medium_of_education_during_school:
                                 id = int(l)
-                                f_state = Master_GeographicalRegion.objects.get(pk=id)
-                                userpro.state = f_state
+                                f_medium_of_education_during_school = Master_Language.objects.get(pk=id)
+                                userpro.medium_of_education_during_school = f_medium_of_education_during_school
+                                userpro.save()
+                              
+                        if request.POST.has_key('district'):     
+                            district = request.POST['district']            
+                            
+                            for l in district:
+                                id = int(l)
+                                f_district = Master_GeographicalRegion.objects.get(pk=id)
+                                userpro.district = f_district
                                 userpro.save()
                               
                         if request.POST.getlist('interests'):
@@ -321,9 +332,20 @@ def processSignout(request):
 def account(request):
     user = request.user
     uid = user.pk
+
     if user.is_authenticated():
+        user_pro = UserProfile.objects.filter(user = uid)
+        user_profile = user_pro[0]
+        total_translated_sentences = user_profile.total_translated_sentences 
+        no_of_perfect_translations = user_profile.no_of_perfect_translations 
+        total_uploaded_tasks = user_profile.total_uploaded_tasks 
+        total_evaluated_sentences = user_profile.total_evaluated_sentences
         data = {
-                'uid':uid
+                'uid':uid,
+                'scount':total_translated_sentences,
+                'ccount': no_of_perfect_translations,
+                'ucount':total_uploaded_tasks,
+                'ecount':total_evaluated_sentences, 
         } 
         return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
     else:

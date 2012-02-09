@@ -54,9 +54,12 @@ class SignUpForm(forms.models.ModelForm):
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField( widget=forms.PasswordInput)
-    state = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
+    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
     language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all(), widget=forms.CheckboxSelectMultiple())
-    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())     
+    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())
+    education_qualification = forms.CharField(max_length=100)
+    medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
+    #competence_for_each_language      
     captcha = ReCaptchaField(label="Please enter text you see or hear")
 
     def __init__(self, *args, **kwargs):      
@@ -114,9 +117,10 @@ class UploadForm(forms.models.ModelForm):
         model = Task
         exclude = ('upload_timestamp','budget','dampening_factor','current_average_stability')
         widgets = {
-                   'html_doc_content':forms.ClearableFileInput,
+
                    'time_to_publish': SplitDateTimeJSField(required=False,)
                   }
+    html_doc_content = forms.FileField(help_text="Task"),
     html_doc_name = forms.CharField(max_length=1000)
     upload_type = ChoiceField(widget=RadioSelect, choices=UPLOAD_CHOICES)         
     specifications = ChoiceField(widget=RadioSelect, choices=SPECIFICATION_CHOICES)

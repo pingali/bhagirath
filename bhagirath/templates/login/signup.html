@@ -39,7 +39,9 @@
 				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Confirm Password:</label>
 				 {{form.password}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.confirm_password}}</p>
     			<p><label>Date of Birth:</label>{{form.date_of_birth}}</p>
-    			<p><label>State:</label>{{form.state|capfirst}}</p>
+    			<p><label>District:</label>{{form.district|capfirst}}</p>
+    			<p><label>Educational Qualification:</label>{{form.education_qualification}}</p>
+    			<p><label>Medium of education during school:</label>{{form.medium_of_education_during_school}}</p>
       			<p><label>Interests:</label>{{form.interests}}</p>
     			<p>{{form.translator|default_if_none:"on"}}Translator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

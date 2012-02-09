@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout1.html" %}
 {% block menu %}
 	<ul>
 		<li><a href="/account/">Home</a></li>
@@ -8,4 +8,22 @@
 		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
 		<li><a href="/logout/">Logout</a></li>
 	</ul>
+{% endblock %}
+
+{% block content1 %}
+<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div id="maincolumn">
+	<div class="info">
+		<p>Number of sentences translated : {{scount}}</p>
+		<p>&nbsp;</p>
+		<p>Number of tasks uploaded : {{ucount}}</p>
+		<p>&nbsp;</p>
+		<p>Number of correct translations : {{ccount}}</p>
+		<p>&nbsp;</p>		
+		<p>Number of sentences evaluated : {{ecount}}</p>
+		<p>&nbsp;</p>		
+	</div>
+</div>
+</form>
 {% endblock %}
