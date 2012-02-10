@@ -150,6 +150,10 @@ INSTALLED_APPS = (
     'south'
 )
 
+FIXTURE_DIRS = (
+   findpath('fixtures'),
+)
+
 AUTH_PROFILE_MODULE = 'bhagirath.UserProfile'
 
 ##############################################################
