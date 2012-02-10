@@ -14,28 +14,25 @@
 </script>
 {% endblock %}
 
-{% block content %}
-<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-{%csrf_token%}
-<div id="leftcolumn"> 
-	<div class="module_menu">
-		<div>
-		<div>
-		<div>
-			<h2>Weekly leaderboard</h2>
-			<p>&nbsp; 1. User</p>
-			<p>&nbsp; 2. User</p>
-			<p>&nbsp; 3. User</p>
-			<p>&nbsp; 4. User</p>
-			<p>&nbsp; 5. User</p>
-		</div>
-		</div>
-		</div>
-    </div>
+{% block left_panel_content %}
+	<div id="leftcolumn"> 
+		<div class="module_menu">
+			<div>
+			<div>
+			<div>
+				<h2>Weekly leaderboard</h2>
+				<p>&nbsp; 1. User</p>
+				<p>&nbsp; 2. User</p>
+				<p>&nbsp; 3. User</p>
+				<p>&nbsp; 4. User</p>
+				<p>&nbsp; 5. User</p>
+			</div>
+			</div>
+			</div>
+    	</div>
 
-	
-	<div class="module_menu">
-		<div>
+		<div class="module_menu">
+			<div>
 			<div>
 			<div>
 		  	<h2>News</h2>
@@ -44,18 +41,14 @@
 			<p>&nbsp;&nbsp;   2.Translate content</p>
 			<p>&nbsp;&nbsp;   3.Evaluate translation</p>
 			</Marquee>
+			</div>
+			</div>
+			</div>
 		</div>
 	</div>
-	</div>
-	</div>
-</div>
-  
-<div id="maincolumn">
-	{% block content1 %}{% endblock %}
-</div>
-  
-  
-  
+{% endblock %}
+ 
+{% block right_panel_content %}  
   <div id="rightcolumn"> 
 	<div class="moduletable_menu">
 		<div>
@@ -88,7 +81,4 @@
 	</div>
      </div>
 </div>
-
-
-</form>
 {% endblock %}

@@ -180,7 +180,7 @@
 	</ul>
 {% endblock %}
 
-{% block content %}
+{% block center_panel_content %}
 <form name="main_form" id="main_form" action="." method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 {%csrf_token%}
 <div id="translate">
@@ -244,7 +244,7 @@
 	</fieldset>	
 	</div>
 </div>
-<div id="debug" style="visibility:show">
+<div id="debug" style="visibility:hidden">
 	<input id="ws" name="ws" type="checkbox" checked="checked"></input>
 	<input id="cmd" name="cmd" type="text"></input>
 	<pre id="output1"></pre>

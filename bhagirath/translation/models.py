@@ -89,7 +89,26 @@ class Master_Rank(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.position)
+ 
+class Master_EducationQualification(models.Model): 
+    education_qualification = models.TextField(verbose_name="Educational qualification", 
+                                               help_text="User's educational qualification",
+                                               unique=True,
+                                               null = False)
+    def __unicode__(self):
+        return u"%s" % (self.education_qualification)
+
+ 
+class Master_EducationDomain(models.Model):
+    education_qualification = models.ForeignKey(Master_EducationQualification,on_delete=models.PROTECT)
+    domain = models.TextField(verbose_name="Domain of education", 
+                              help_text="User's educational domain",
+                              unique=True,
+                              null = False)
+    def __unicode__(self):
+        return u"%s" % (self.domain) 
     
+
 class Master_Language(models.Model): 
     language = models.TextField(verbose_name="Language", 
                                 help_text="Language",
@@ -101,6 +120,13 @@ class Master_Language(models.Model):
        
     def __unicode__(self):
         return u"%s" % (self.language)
+
+class Master_LanguageExpertise(models.Model): 
+    language = models.ForeignKey(Master_Language,on_delete=models.PROTECT)
+    expertise = models.IntegerField()
+       
+    def __unicode__(self):
+        return u"%s%s" % (self.language,self.expertise)
     
 class StatCounter(models.Model):
     registered_users = models.IntegerField() 
@@ -131,12 +157,11 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
     date_of_birth = models.DateField(null=False)
     district = models.ForeignKey(Master_GeographicalRegion,on_delete=models.SET_NULL,null=True,default=None)
-    education_qualification = models.TextField(verbose_name="Educational qualification", 
-                                               help_text="User's educational qualification",
-                                               null = True)
+    education_qualification = models.ForeignKey(Master_EducationQualification,on_delete=models.SET_NULL,null=True,default=None)
+    domain = models.ForeignKey(Master_EducationDomain,on_delete=models.SET_NULL,null=True,default=None)
     medium_of_education_during_school = models.ForeignKey(Master_Language,blank=True, null=True,default=None, related_name="%(app_label)s_%(class)s_related_medium_of_education")
     language = models.ManyToManyField(Master_Language,blank=True, null=True,default=None, related_name="%(app_label)s_%(class)s_related_language")
-    #competence_for_each_language 
+    competence_for_each_language = models.ManyToManyField(Master_LanguageExpertise,blank=True, null=True,default=None)
     translator = models.BooleanField(default=True)
     contributor = models.BooleanField(default=False)
     evaluator = models.BooleanField(default=False)

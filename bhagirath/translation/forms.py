@@ -1,11 +1,10 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.admin import widgets   
 from captcha.fields import ReCaptchaField
 from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
-from bhagirath.translation.models import Task,UserHistory,Master_Language,UserProfile,Master_GeographicalRegion,Master_AgeGroup,Master_InterestTags
+from bhagirath.translation.models import *
 
 class SplitDateTimeJSField(forms.SplitDateTimeField):
     def __init__(self, *args, **kwargs):
@@ -57,7 +56,8 @@ class SignUpForm(forms.models.ModelForm):
     district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
     language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all(), widget=forms.CheckboxSelectMultiple())
     interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())
-    education_qualification = forms.CharField(max_length=100)
+    education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
+    domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
     #competence_for_each_language      
     captcha = ReCaptchaField(label="Please enter text you see or hear")

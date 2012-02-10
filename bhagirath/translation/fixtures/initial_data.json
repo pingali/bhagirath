@@ -53,7 +53,7 @@
 	"model": "translation.master_interesttags", 
 	"pk": "1", 
 	"fields": { 
-	    "category":  "Science", 
+	    "category":  "Sports", 
 	    "need_evaluation": "False" 
 	} 
     },
@@ -62,7 +62,7 @@
 	"model": "translation.master_interesttags", 
 	"pk": "2", 
 	"fields": { 
-	    "category":  "Entertainment", 
+	    "category":  "Television", 
 	    "need_evaluation": "False" 
 	} 
     },
@@ -71,7 +71,97 @@
 	"model": "translation.master_interesttags", 
 	"pk": "3", 
 	"fields": { 
+	    "category":  "Movies", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "4", 
+	"fields": { 
+	    "category":  "Music", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "5", 
+	"fields": { 
+	    "category":  "Personalities", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "6", 
+	"fields": { 
+	    "category":  "Cities of the World", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "7", 
+	"fields": { 
+	    "category":  "Wonders from India", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "8", 
+	"fields": { 
 	    "category":  "History", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "9", 
+	"fields": { 
+	    "category":  "Natural Phenomenon", 
+	    "need_evaluation": "False" 
+	} 
+    },
+     
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "10", 
+	"fields": { 
+	    "category":  "Religion", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+     { 
+	"model": "translation.master_interesttags", 
+	"pk": "11", 
+	"fields": { 
+	    "category":  "Science", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "12", 
+	"fields": { 
+	    "category":  "Medicine", 
+	    "need_evaluation": "False" 
+	} 
+    },
+    
+    { 
+	"model": "translation.master_interesttags", 
+	"pk": "13", 
+	"fields": { 
+	    "category":  "Business", 
 	    "need_evaluation": "False" 
 	} 
     },
