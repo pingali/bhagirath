@@ -108,10 +108,10 @@
 	    });
 	    $(this).find("span").attr("id", "eng").mouseout( function() {
 	        $(this).removeClass('hlight');
-	        
+	        $('#meaning').remove();
 	    });
 	 });
-	document.getElementById("original_sentence").removeChild(dict);
+	
 	}
 	
 	 function appendSpan_prev_context() {
@@ -124,9 +124,11 @@
 	    $('#prev_context').html(newHtml2);
 	    $(this).find("span").attr("id", "prev_con").mouseover( function() {
 	        $(this).addClass('hlight');
+	        getWord($(this).text());
 	    });
 	    $(this).find("span").attr("id", "prev_con").mouseout( function() {
 	        $(this).removeClass('hlight');
+	        $('#meaning').remove();
 	    });   
 	 });
 	 }
@@ -141,14 +143,16 @@
 	    $('#next_context').html(newHtml3);      
 	    $(this).find("span").attr("id", "next_con").mouseover( function() {
 	        $(this).addClass('hlight');
+	        getWord($(this).text());
 	    });
 	   $(this).find("span").attr("id", "next_con").mouseout( function() {
 	        $(this).removeClass('hlight');
+	        $('#meaning').remove();
 	    });   
 	});
 	}
 	
-	function getWord(word){
+	function getWord(find){
 		var dictionary = $('#dict').text().split(',');
 		var lines = ''; //will contain each line in text as array.	
 		var word = $('#word').text().split(',');

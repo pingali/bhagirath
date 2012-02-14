@@ -264,4 +264,16 @@ button.google_translate:hover{
 .hlight{background-color:#ffcc00;color:#B0B0B0;}
 .eng_bold{font-weight:bold;}
 
- 
+ .meaning
+{
+  background-color:#CCCCCC;
+  color:#000033;
+  width:100px;
+  font-size:10pt;
+  border-width: 1px;  
+}
+
+.hide_meaning {
+	display:none;
+	visibility:hidden;
+}

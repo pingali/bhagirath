@@ -569,6 +569,7 @@ def translate(request,uid):
                 meaning = ''
                 while k < count:
                     mean = Master_English2Hindi.objects.filter(english_word = dict[k])
+                    
                     if mean:
                         i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
                         m = 0
@@ -707,8 +708,9 @@ def load_context(request,id,uid):
                         t = StaticMicrotask.objects.get(id=st)
                         next_context = next_context + t.original_sentence + ". "
                     c += 1
-                
-                dict = rec.original_sentence.split(' ')
+                    
+                sentence =  rec.original_sentence + prev_context + next_context
+                dict = sentence.split(' ')
                 count = len(dict)
                 k = 0
                 word = ''
