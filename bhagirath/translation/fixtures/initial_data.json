@@ -287,5 +287,313 @@
 	    "language":  "Marathi", 
 	    "region": "official   language of Maharashtra " 
 	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "1", 
+	"fields": { 
+	    "language": "2",
+	    "expertise": "1"
+	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "2", 
+	"fields": { 
+	    "language": "2",
+	    "expertise": "2"
+	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "3", 
+	"fields": { 
+	    "language": "2",
+	    "expertise": "3"
+	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "4", 
+	"fields": { 
+	    "language": "3",
+	    "expertise": "1"
+	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "5", 
+	"fields": { 
+	    "language": "3",
+	    "expertise": "2"
+	} 
+    },
+    
+    {
+    "model": "translation.master_languageexpertise", 
+	"pk": "6", 
+	"fields": { 
+	    "language": "3",
+	    "expertise": "3"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "1", 
+	"fields": { 
+	    "original_sentence": "Shiva bearing the Descent of the Ganges River, as the goddess Parvati,the sageBhageerathan, and the bull Nandi look on.",
+	    "google_translation": "शिव गंगा नदी के गिरते असर, देवी पार्वती, sageBhageerathan के रूप में, और बैल नंदी पर देखो.",
+	    "user_translation": "शिव गंगा नदी का उतरन सँभालते हुए, उन्हें देवी पारवती, स्वामी भागीराथान और नंदी बैल देख रहे हैं."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "2", 
+	"fields": { 
+	    "original_sentence": "Bhageeratha was a great king in Hindu mythology who brought the River Ganges to Earth.",
+	    "google_translation": "Bhageeratha हिंदू पौराणिक कथाओं में एक महान राजा है जो पृथ्वी पर गंगा नदी लाया था.",
+	    "user_translation": "भागीरथ हिंदी पौराणिक कथाओं के एक बड़े रजा थे जिन्होंने गंगा नदी को धरती पर लाया."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "3", 
+	"fields": { 
+	    "original_sentence": "Bhageeratha was the king of Kosala, a kingdom in ancient India.",
+	    "google_translation": "Bhageeratha कोशल प्राचीन भारत में एक राज्य का राजा था.",
+	    "user_translation": "भागीरथ प्राचीन भारत के कोसला राज्य के राजा थे. "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "4", 
+	"fields": { 
+	    "original_sentence": "He was a descendent of the great king Sagara of the Suryavamsa, or Sun Dynasty.",
+	    "google_translation": "Suryavamsa के महान राजा सागर, या सूर्य राजवंश के वंशज था.",
+	    "user_translation": "वे सूर्यवंशी राजा सागर जो थे उनके वंशज थे."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "5", 
+	"fields": { 
+	    "original_sentence": "He was one of the forefathers of Lord Rama, of the Ramayana, the epic in which Bhageeratha's tale is primarily recounted.",
+	    "google_translation": "वह भगवान राम के पूर्वजों की एक रामायण महाकाव्य Bhageeratha कहानी जिसमें मुख्य रूप से recounted है.",
+	    "user_translation": "वह रामायण, जिस महाकाव्य की कहानी मुख्यतः ब्यौरा हैं, के राम के पूर्वजों मई से एक थे."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "6", 
+	"fields": { 
+	    "original_sentence": "He lost his father when he was just a child, and was raised by his mother.",
+	    "google_translation": "वह अपने पिता को खो दिया जब वह सिर्फ एक बच्चा था, और उसकी माँ द्वारा उठाया गया था.",
+	    "user_translation": "वे बचपन में ही अपने पिता को खो चुके थे और उनकी माँ ने उन्हें पल पोसकर बड़ा किया. "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "7", 
+	"fields": { 
+	    "original_sentence": "Bhageeratha was very intelligent, virtuous and kind hearted.",
+	    "google_translation": "Bhageeratha बहुत बुद्धिमान, धार्मिक और दयालु था. ",
+	    "user_translation": "भागीरथ बहुत बुद्धिमान, धार्मिक और दयालु थे. "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "8", 
+	"fields": { 
+	    "original_sentence": "When he came of age, Bhageeratha ascended to the throne of the kingdom of Kosala, today located in the Indian state of Uttar Pradesh. ",
+	    "google_translation": "जब वह उम्र के आया था, Bhageeratha कोशल के राज्य के सिंहासन पर चढ़ा, आज उत्तर प्रदेश के भारतीय राज्य में स्थित है.",
+	    "user_translation": "जब वह बड़े हुआ तो वे कोसला राज्य, जो भारत के उत्तर प्रदेश राज्य में स्थित है, वहां के सिंहासन मैं विराजमान हुए."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "9", 
+	"fields": { 
+	    "original_sentence": "He was a pious, benevolent ruler who adhered to his duties as a king as prescribed by dharma.",
+	    "google_translation": "वह एक पवित्र, उदार शासक जो एक राजा के रूप में धर्म द्वारा निर्धारित के रूप में अपने कर्तव्यों का पालन किया गया था.",
+	    "user_translation": "वे पवित्र, उदार शासक थे जो अपने कर्तव्यों को एक धर्मं का पालन करनेवाले राजा के अनुसार निभाते थे. "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "10", 
+	"fields": { 
+	    "original_sentence": "When king Sagara chose to perform the Ashwamedha yagna, his royal agents lost track of the sacrificial horse.",
+	    "google_translation": "जब राजा सागर अश्वमेध यज्ञ के लिए चुना है, अपने शाही एजेंटों बलि घोड़े का ट्रैक खो दिया है.",
+	    "user_translation": "जब राजा सागर ने अश्वमेध यज्ञ करना चुना तोह उनके राजकीय प्रतिनिधि बलिदान का घोडा खो बैठे.  "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "11", 
+	"fields": { 
+	    "original_sentence": "Sagara ordered his sixty thousand sons by Sumati to track down the horse.",
+	    "google_translation": "सागर सुमति द्वारा अपने साठ हजार बेटों का आदेश दिया करने के लिए नीचे घोड़ा ट्रैक. ",
+	    "user_translation": "सागर ने सुमति द्वारा जन्मे साठ हज़ार बेटों को घोड़े को खोजनेका आदेश दिया. "
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "12", 
+	"fields": { 
+	    "original_sentence": "The proud and mercurial princes raged across Bharat, burning down forests and uprooting life and property to find the horse. ",
+	    "google_translation": "गर्व और चंचल प्रधानों भारत भर में नाराजगी जताई, नीचे जल जंगलों और जीवन और संपत्ति के लिए घोड़े को खोजने के uprooting.",
+	    "user_translation": "घमंडी और चंचल राज्कुमारोंने घोडा धुंडने के लिए वनों को जलाकर और जीवन तहस नहस करते हुए समूचे भारत में अपनी त्राहि फैलाई."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "13", 
+	"fields": { 
+	    "original_sentence": "They finally arrived at a quiet spot where the SageKapila was sitting in meditation.Besides him was tied the white horse.",
+	    "google_translation": "वे अंत में एक शांत जगह है जहां SageKapila ध्यान में बैठा हुआ था पर पहुंचे.इसके अलावा उसे सफेद घोड़ा बंधा हुआ था.",
+	    "user_translation": "आखिर वे एक शांत जगह पहुंचे जहाँ संत कपिला ध्यान में विलीन थे.उनके बाजु में वह सफ़ेद घोडा बंधा हुआ था."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "14", 
+	"fields": { 
+	    "original_sentence": "The enraged princes condemned Kapila as a thief and attacked him.",
+	    "google_translation": "ख़फ़ा प्रधानों एक चोर के रूप में कपिला की निंदा की और उस पर हमला किया.",
+	    "user_translation": "गुस्सैल राजकुमारों ने कपिला को चोर समझा और उनपर हमला किया."
+	} 
+    },
+    
+    { 
+	"model": "translation.master_sampletranslations", 
+	"pk": "15", 
+	"fields": { 
+	    "original_sentence": "Using his terrible mystic power, Kapila instantly turned the princes into ashes.",
+	    "google_translation": "उसकी भयानक रहस्यवादी शक्ति का प्रयोग, कपिला तुरन्त राख में बदल गया प्रधानों.",
+	    "user_translation": "अपनी अतभूत शक्तियूं का प्रयोग करते हुआ कपिला ने राजकुमारों ने तुरंत रख कर दिया."
+	} 
+    },
+   
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "1", 
+	"fields": { 
+	    "education_qualification": "Below 10th"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "2", 
+	"fields": { 
+	    "education_qualification": "12th"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "3", 
+	"fields": { 
+	    "education_qualification": "Diploma"
+	} 
+    },
+
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "4", 
+	"fields": { 
+	    "education_qualification": "Bachelors"
+	} 
+    }, 
+    
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "5", 
+	"fields": { 
+	    "education_qualification": "Masters"
+	} 
+    },  
+    
+    { 
+	"model": "translation.master_educationqualification", 
+	"pk": "6", 
+	"fields": { 
+	    "education_qualification": "Doctorate"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "1", 
+	"fields": { 
+	   "domain":"Engineering"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "2", 
+	"fields": { 
+	   "domain":"Science"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "3", 
+	"fields": { 
+	    "domain":"Arts"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "4", 
+	"fields": { 
+	    "domain":"Commerce"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "5", 
+	"fields": { 
+	    "domain":"Law"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "6", 
+	"fields": { 
+	    "domain":"Architecture"
+	} 
+    },
+    
+    { 
+	"model": "translation.master_educationdomain", 
+	"pk": "7", 
+	"fields": { 
+	    "domain":"Medical"
+	} 
     }
 ]

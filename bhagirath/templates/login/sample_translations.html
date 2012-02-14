@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block script %}
+<script>
+function Back() {
+	document.sample_translations_form.action = "/sample_translations/{{prev_id}}/"
+	return true;
+}		
+
+function Next() {
+	document.sample_translations_form.action = "/sample_translations/{{next_id}}/"
+	return true;
+}		
+</script>
+{% endblock %}
+
+{% block center_panel_other_content %}
+<form action="." name="sample_translations_form" id="sample_translations_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div class="trans">
+		<p class="heading">Sample Translations:<p>
+		<table width="100%">
+			<tr>
+				<td><label style="color: #FF7359">Original Sentence:</label><br/><div class="original">{{original_sentence}}</div></td>
+				<td valign="top" align="left" rowspan="8"></td>
+				<td><label style=" color: #FF7359">Google Translation:</label><br/><div class="original">{{google_translation}}</div></td>
+				<td valign="top" align="left" rowspan="8"></td>
+				<td><label style=" color: #FF7359">User Translation:</label><br/><div class="original">{{user_translation}}</div></td>	
+			</tr>	
+		</table>
+		<table class="btn">
+			<tr>
+				<td><button name="next" id="next" class="next" value="next" onclick="Next();">Next</button></td>
+				<td><button name="back" id="back" class="next" value="next" onclick="Back();">Back</button></td>
+			</tr>
+		</table>		
+</div>
+</form>
+{% endblock %}

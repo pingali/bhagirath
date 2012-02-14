@@ -11,59 +11,161 @@ body {
 	width: 1100px;	
 }
 
+#header {
+	clear: both;
+	float: left;
+	position: relative;
+	width: 970px;
+    	background: #C2EBFF;
+        border-bottom: 1px solid #E5E5E5;
+	border-radius: 20px 20px 0 0;
+	left:3px;
+}
+
+#header p.account {
+    color: #000000;
+    font-size: 0.9em;
+    text-align: right;
+}
+
+#header p.account a {
+    color: #FF4500;
+    text-decoration: none;
+    margin-right:15px;
+    margin-top:15px;
+}
+
+#header h1 {
+    color:#000047;
+    height: 35px;
+    width: 544px;
+    margin-left:15px;
+    font-family:times,sans-serif;
+    font-size:25pt; 
+}
+
+#header ul {
+	bottom: 0px;
+	right: 6px;
+	position: absolute;
+	list-style-type:none;
+}
+
+#header ul li {
+	 float: left;
+	 margin: 0 0 0 3px;
+}
+
+#header ul li a { 
+	background: none repeat scroll 0 0 #888888;
+        color: #FFFFFF;
+        display: block;
+        float: left;
+        font-size: 0.8em;
+        font-weight: bold;
+        height: 25px;
+        padding: 13px 15px 0;
+        text-decoration: none;
+        text-shadow: 0 0 5px #000000;
+}
+#header ul li.active a {
+    background: none repeat scroll 0 0 #FA6F00;
+    text-shadow: 0 1px 2px #7F4100;
+}
+
+#center_panel {
+	float: left;
+	clear: both;
+	width: 700px;
+	height:480px;
+}
+
+#right_panel {
+	float: right;
+	clear: both;
+	width: 270px;
+	height:480px;
+}
+
+
+#news {
+    background: none repeat scroll 0 0 #FFC7B2;
+    border-radius: 20px 20px 0 0;
+    bottom: 0;
+    height: 40px;
+    position: fixed;
+    width: 970px;
+    z-index: 999;
+    left:180px;
+}
+.news_space {
+    padding: 10px 20px 0 52px;
+}
+.news_space span {
+    color: #804833;
+    font-size: 15px;
+    font-weight: bold;
+}
+.co_b {
+    color: #4C2B1F;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
 #content{
 	position: absolute;
-	top: 145px;
+	top: 113px;
 	left: 3px;
 	width: 970px;
-	height:1000px;
+	height:1500px;
 	background: #FFFFFF;
 }
 
 #content .messages .debug{
 	float: center;
-	margin: 20px 20px 20px 73px;
+	list-style-type:none;
 	width: 480px;
 	background:#CCCCFF;
 	padding: 12px 0 10px 20px;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: 13px;
 	color: #242424;
 	text-shadow: #fefceb 0 1px 1px;
 }
 
 #content .messages .info{
 	float: center;
-	margin: 20px 20px 20px 73px;
+	list-style-type:none;
 	width: 480px;
 	background:#CCCCFF;
 	padding: 12px 0 10px 20px;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: 13px;
 	color: #242424;
 	text-shadow: #fefceb 0 1px 1px;
 }
 
 #content .messages .warning{
 	float: center;
-	margin: 20px 20px 20px 73px;
+	list-style-type:none;
 	width: 480px;
 	background:#FFB2B2;
 	padding: 12px 0 10px 20px;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: 13px;
 	color: #242424;
 	text-shadow: #fefceb 0 1px 1px;
 }
 
 #content .messages .error{
 	float: center;
-	margin: 20px 20px 20px 73px;
+	list-style-type:none;
 	width: 480px;
 	background:#FFB2B2;
 	padding: 12px 0 10px 20px;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: 13px;
 	color: #242424;
 	text-shadow: #fefceb 0 1px 1px;
 }
@@ -71,71 +173,13 @@ body {
 
 #content .messages .success{
 	float: center;
-	margin: 20px 20px 20px 73px;
+	list-style-type:none;
 	width: 480px;
-	background:#BDFF59;
+	background:#E0FFA3;
 	padding: 12px 0 10px 20px;
 	font-weight: bold;
-	font-size: 0.9em;
+	font-size: 13px;
 	color: #242424;
 	text-shadow: #fefceb 0 1px 1px;
 }
-
-#header {
-	width: 976px;
-}
-
-#header .inner {
-	position: relative;
-	width: 976px;
-	height: 106px;
-}
-
-#header .inner h1 {
-	position: absolute;
-	top: 5px;
-	left: 22px;
-	width: 344px;
-	height: 67px;
-}
-
-#header ul {
-	float: left;
-	clear: both;
-	width: 970px;
-	margin: 0 3px 0 3px;
-	background: #CBEAE7;
-	list-style-type:none;
-	padding:0px;
-}
-
-#header ul li {
-	float: left;
-	border-right: solid 1px #e7f5f4;
-}
-
-#header ul li a {
-	float: left;
-	display: block;
-	padding: 14px 20px 11px 20px;
-	border-right: solid 1px #A2D1CC;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-weight: bold;
-	font-family: Comic Sans MS;
-	font-size: .75em;
-	color: #375552;
-	text-shadow: #dbefed 0 1px 1px;
-}
-#header ul li a:hover { text-decoration: underline; }
-
-#header ul li.active a {
-	color: #4F4213;
-	text-shadow: #f6e899 0 1px 1px;
-}
-
-#header ul li .term { 
-	float:right;
-}
-
 

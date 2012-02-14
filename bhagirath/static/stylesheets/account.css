@@ -1,9 +1,24 @@
-#maincolumn .info {
+#account .acc {
 	float: left;
-	margin-left: 60px;
-	margin-top: 40px;
-	width: 283px;
+	margin-left: 20px;
+	margin-top: 10px;
+	width: 660px;
 	background:#FDF7EF;
+}
+
+#account .acc .heading {
+	margin-left: 10px;
+	font-weight:bold;
+	font-size:20px;
+	font-family:times,sans-serif;
+	color:#660033;
+}
+
+#account .acc .stats {
+	margin-left: 5px;
+	font-size:15px;
+	color:#660033;
+	font-family:sans-serif;
 }
 
 

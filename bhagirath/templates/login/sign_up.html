@@ -1,28 +1,17 @@
 {% extends "layout.html" %}
 {% load adminmedia %}
-{% block title %}Bhagirath-Knowledge knows no language-Signup {% endblock %}
-{% block head %}
-	<script type="text/javascript" src="/my_admin/jsi18n/"></script>
-	<script type="text/javascript" src="/admin_media/js/calendar.js"></script>
-	<script type="text/javascript" src="/admin_media/js/admin/DateTimeShortcuts.js"></script>
-	<script type="text/javascript" src="/static/admin/js/core.js"></script><script type="text/javascript">
-		window.__admin_media_prefix__ = "{% filter escapejs %} {% admin_media_prefix %} {% endfilter %}";
-	</script>
-	{{ form.media }} 
-{% endblock %}
 
 {% block script %}
-
 <script type="text/javascript" Language="JavaScript">
 	function OnSignUp()	{
-		document.signup_form.action = "/signup/done/"
+		document.sign_up_form.action = "/sign_up/done/"
 		return true;
 	}
 </script>
 {% endblock %}
 
-{% block center_panel_content %}
-<form action="." name="signup_form" id="signup_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{% block center_panel_other_content %}
+<form action="." name="sign_up_form" id="sign_up_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 {% csrf_token %}
 <div id="signup">
 	<div class="sign_up">
@@ -47,7 +36,7 @@
 				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.domain}}</p>
     			<p><label>Medium of education during school:</label>{{form.medium_of_education_during_school}}</p>
       			<p><label>Interests:</label>{{form.interests}}</p>
-    			<p>{{form.translator|default_if_none:"on"}}Translator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    			<p><label>Select Roles:</label>{{form.translator|default_if_none:"on"}}Translator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.evaluator|default_if_none:"off"}}Evaluator</p>
     			<p><label>Language:</label>{{form.language}}</p>

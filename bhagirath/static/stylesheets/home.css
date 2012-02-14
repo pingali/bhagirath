@@ -1,18 +1,48 @@
-#maincolumn .sign_in {
+.home {
 	float: left;
-	margin-left: 60px;
-	margin-top: 40px;
-	width: 283px;
-	background:#FAF8CC;
+	margin-left: 20px;
+	margin-top: 10px;
+	width: 420px;
+	height:235px;
+	background:#FDF7EF;
 }
 
-#maincolumn .sign_in h2 {
+.home .heading {
+	margin-left: 5px;
+	color:#660033;
+}
+
+.home .info {
+	margin-left: 5px;
+	font-size:12px;
+	font-family:verdana,sans-serif;
+}
+
+.home .headinfo {
+	margin-left: 5px;
+	color:#660033;
+}
+
+.home .stats {
+	font-size:12px;
+	color:#660033;
+	font-family:sans-serif;
+}
+#signin .sign_in {
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+	width: 245px;
+	background:#FDF7EF;
+}
+
+#signin .sign_in h2 {
 	padding: 12px 0 10px 20px;
 	background: url(../images/signin_top.png) no-repeat;
 	font-weight: bold;
 	font-size: .80em;
-	color:#4A4A4A;
-	background:#ECD872;
+	color:#282828;
+	background:#D8D8D8;
 	text-shadow: #e9fdfa 0 1px 1px;
 }
 

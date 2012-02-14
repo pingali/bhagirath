@@ -49,7 +49,7 @@ textarea{
 }
 
 
-div.original {
+div.original_sentence {
 	   width:456px;
 	   height:180px;
 	   border:1px solid #ccc;
@@ -193,7 +193,7 @@ button.reset:hover{
     cursor: pointer;
 }
 
-button.next{
+button.next_btn{
     color: #4B0082;
     font-variant: small-caps;
     font-size: .8em;
@@ -204,7 +204,7 @@ button.next{
     cursor: pointer;
 }
 
-button.next:hover{
+button.next_btn:hover{
     color: #4B0082;
     font-variant: small-caps;
     font-size: .8em;
@@ -261,6 +261,7 @@ button.google_translate:hover{
     cursor: pointer;
 }
 
+.hlight{background-color:#ffcc00;color:#B0B0B0;}
+.eng_bold{font-weight:bold;}
 
-div.original .hlight{background-color:#ffcc00;}
  

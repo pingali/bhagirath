@@ -1,14 +1,12 @@
 {% extends "layout.html" %}
-{% block title %}Bhagirath-Knowledge knows no language {% endblock %}
 
-{% block head %}
-<style>
-	.hlight{background-color:#ffcc00;}
-</style>
+{% block status_message %}
+<p class="account">Welcome, <a>{{username}}.</a></p>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript" Language="JavaScript">
+
 	$(document).ready(function() {
 		$('input[@type="text"], textarea').val("");		
 		// install the event handler for #debug #output
@@ -25,24 +23,22 @@
 	/******this function handles #debug #output******/
 	var memory = '';
 	var kmem = '';
+
 	function mup(e) {
 		if($(this).getSelection().text != '')  {
 			kmem = 'Mouse up, ';
 			kup(e);
 		}
 	}
+
 	function kup(e) {
 		// here we fetch our text range object
 		var range = $(this).getSelection();
 		// just dump the values
-		$('#output1').html(
-				""
-						+ hexdump(kmem, range.text, range.start,
-								(range.end != range.start) ? range.end - 1
-										: range.end)
-						);
+		$('#output1').html(""+ hexdump(kmem, range.text, range.start,(range.end != range.start) ? range.end - 1	: range.end));
 	    kmem = '';
 	}
+	
 	function kdown(e) {
 		kmem += e.which + ' ';
 	}
@@ -83,55 +79,98 @@
 			});
 			return s;
 		}
-
 	})();
 
 	function hexdump(key, txt, hi_f, hi_t) {
 		var hex = '', tmp;		
 		memory += ' ' + key + (txt?'Selected '+txt : '') +  ' <br/>';
-		if (txt) {
-			/*
-			for ( var i = 0, j = txt.length; i <= j; i++) {
-				tmp = txt.charCodeAt(i).toString(16);
-				if (i == hi_f)
-					hex += '<span class="hi">';
-				if (i < txt.length)
-					hex += ((tmp.length == 2) ? tmp : '0' + tmp);
-				else
-					hex += "&nbsp;&nbsp;";
-				if (i == hi_t)
-					hex += '</span>';
-				if ((i + 1) % 16 == 0)
-					hex += "\n";
-				else
-					hex += ' ';
-			}*/
-		}
 		return memory;
 	}
+	
 	$(function() {
-	    editTxt('#original_sentence');
-		
-	    $('span').mouseover( function() {
-	        $(this).addClass('hlight');
-	    });
-	   
-	    $('span').mouseout( function() {
-	        $(this).removeClass('hlight');
-	    });
+		appendSpan_english();
+		appendSpan_prev_context();
+		appendSpan_next_context();
 	});
 	
-	function editTxt(selector) {
-	    $(function() {
-	        var newHtml = '';
-	        var words = $(selector).text().split(' ');
-	        for (i = 0; i < words.length; i++) {
-	            newHtml += '<span>' + words[i] + '</span> ';
-	        }     
-	        $(selector).html(newHtml);
+	function appendSpan_english() {
+		$(function() {	
+		var eng_words = $('#english').text().split(' ');
+	    var newHtml1 = '';
+	    for (i = 0; i < eng_words.length; i++) {
+	        	newHtml1 += '<span id="eng">' + eng_words[i] + '</span> ';
+	    }     
+	    $('#english').html(newHtml1);
+	    $(this).find("span").attr("id", "eng").addClass('eng_bold');
+	    $(this).find("span").attr("id", "eng").mouseover( function() {
+	        $(this).addClass('hlight');
+	        getWord($(this).text());
 	    });
+	    $(this).find("span").attr("id", "eng").mouseout( function() {
+	        $(this).removeClass('hlight');
+	        
+	    });
+	 });
+	document.getElementById("original_sentence").removeChild(dict);
 	}
-
+	
+	 function appendSpan_prev_context() {
+	    var prev_context_words = $('#prev_context').text().split(' ');
+		$(function() {	    
+	    var newHtml2 = '';
+	    for (i = 0; i < prev_context_words.length; i++) {
+	        	newHtml2 += '<span id="prev_con">' + prev_context_words[i] + '</span> ';
+	    }     
+	    $('#prev_context').html(newHtml2);
+	    $(this).find("span").attr("id", "prev_con").mouseover( function() {
+	        $(this).addClass('hlight');
+	    });
+	    $(this).find("span").attr("id", "prev_con").mouseout( function() {
+	        $(this).removeClass('hlight');
+	    });   
+	 });
+	 }
+	 
+	 function appendSpan_next_context() {
+	 	var next_context_words = $('#next_context').text().split(' ');
+		$(function() {	
+	    var newHtml3 = '';
+	    for (i = 0; i < next_context_words.length; i++) {
+	        	newHtml3 += '<span id="next_con">' + next_context_words[i] + '</span> ';
+	    }     
+	    $('#next_context').html(newHtml3);      
+	    $(this).find("span").attr("id", "next_con").mouseover( function() {
+	        $(this).addClass('hlight');
+	    });
+	   $(this).find("span").attr("id", "next_con").mouseout( function() {
+	        $(this).removeClass('hlight');
+	    });   
+	});
+	}
+	
+	function getWord(word){
+		var dictionary = $('#dict').text().split(',');
+		var lines = ''; //will contain each line in text as array.	
+		var word = $('#word').text().split(',');
+		$(function() {	
+			for (i = 0; i < word.length; i++) {
+				if (word[i]==find)
+		        {	
+		        	mean = dictionary[i].split('--');
+		        	for (j = 0; j < mean.length; j++) {
+		      			lines = lines + mean[j] + '</br>'; 
+		        	}
+				 }
+		    } 
+		});
+		dict = document.createElement("div");
+		dict.setAttribute('id','meaning');
+		dict.setAttribute('border','0');
+		dict.setAttribute('class','meaning');
+		dict.innerHTML = lines;
+		document.getElementById("original_sentence").appendChild(dict);
+	}
+		
 	var fontSize = 1;
 	
 	function zoomOut() {
@@ -153,17 +192,17 @@
 	function OnSubmit()	{
 		x = $('#debug').text();
 		$('#cmd').val(x);
-		document.main_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/"
+		document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/"
 		return true;
 	}
 
 	function OnNext()  {
-		document.main_form.action = "/account/translate/{{uid}}/"
+		document.translate_form.action = "/account/translate/{{uid}}/"
 	  	return true;
 	}
 
 	function Go() {
-		document.main_form.action = "/account/translate/{{uid}}/{{curr_id}}/context/"
+		document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/context/"
 	  	return true;
 	}		
 </script>
@@ -172,16 +211,16 @@
 {% block menu %}
 	<ul>
 		<li><a href="/account/">Home</a></li>
-		<li><a href="/account/upload/">Upload File</a></li>
+		<li><a href="/account/upload/">Contribute</a></li>
 		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li><a href="/account/evaluate/">Evaluate</a></li>
-		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
+		<li><a href="/account/{{uid}}/settings/">Settings</a></li>
 		<li><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
 
-{% block center_panel_content %}
-<form name="main_form" id="main_form" action="." method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+{% block center_panel_other_content %}
+<form name="translate_form" id="translate_form" action="." method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 {%csrf_token%}
 <div id="translate">
 	<div class="trans">
@@ -209,10 +248,10 @@
 			<tr>
 				<td>
 					<label style="color: #FF7359">Translate this:</label>
-					<div class="original" name="original_sentence" id="original_sentence" readonly="readonly">
-						 {% if prev_context %}<a style="color: #375552;">{{prev_context}}</a>{% endif %}
-						 <a style="font-weight:bold;">{{english}}</a>
-						 {% if next_context %}<a style="color: #375552;">{{next_context}}</a>{% endif %}
+					<div class="original_sentence" name="original_sentence" id="original_sentence" readonly="readonly">
+						 {% if prev_context %} <div name="prev_context" id="prev_context"><a style="color: #B0B0B0;">{{prev_context}}</a></div>{% endif %}
+						 <div name="english" id="english"><a style="font-weight:bold;">{{english}}</a></div>
+						 {% if next_context %} <div name="next_context" id="next_context"><a style="color: #B0B0B0;">{{next_context}}</a></div>{% endif %}
 	   			    </div>
    			    </td>
 				<td>
@@ -226,12 +265,300 @@
 			<tr>
 				<td>
 					<button name="submit" id="submit" class="save" onclick="return OnSubmit();">Save Translation</button><img src="/static/images/save.png"/>
-					<button type="button" name="reset" id="reset" class="reset" value="reset" onclick="input.value=' '">Reset</button>
-					<button name="next" id="next" value="next" class="next" onclick="return OnNext();" >Next</button>
+					<button type="button" name="reset" id="reset" class="reset" value="reset" onclick="translated_sentence.value=' '">Reset</button>
+					<button name="next" id="next" value="next" class="next_btn" onclick="return OnNext();" >Next</button>
+					<button type="button" name="display_help" id="display_help" class="help" onclick="helpClicked(this,'help');">View Help</button>
 					<button type="button" name="prev_translations" id="prev_translations" class="prev_translations" onclick="previous_TranslationsClicked(this,'previous');">View Alternate Translations</button>
 				</td>
 			</tr>
 		</table>
+		<div id="help" style="display:none;">
+			<table width="100%"  style="font-size:.9em;"><tr>
+			<td colspan=10 style="color:#FF9933;" >To Type Symbols like (, ), :, .(dot), _, ! etc... Escape them. i.e. use \: or \) or \. and so on.</td>
+			</tr></table>
+			<table width=100%>
+				<tr>	
+					<td align=center width=40% colspan=10>	
+					<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px; background-color:#252525;" cellspacing="0">
+					<tr><td colspan=10 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Consonants</td></tr>
+					<tr style="color: #E9AB17;">
+						<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0915;</td>
+						<td align=center>ka</td>
+						<td align=center>&#x0916;</td>
+						<td align=center>kha</td>
+						<td align=center>&#x0917;</td>
+						<td align=center>ga</td>
+						<td align=center>&#x0918;</td>
+						<td align=center>gha</td>
+						<td align=center>&#x0919;</td>
+						<td align=center>NG</td>
+					</tr>
+					<tr>
+						<td align=center>&#x091A;</td>
+						<td align=center>cha</td>
+						<td align=center>&#x091B;</td>
+						<td align=center>Cha</td>
+						<td align=center>&#x091C;</td>
+						<td align=center>ja</td>
+						<td align=center>&#x091D;</td>
+						<td align=center>jha/za</td>
+						<td align=center>&#x091E;</td>
+						<td align=center>Nya</td>
+					</tr>
+					<tr>
+						<td align=center>&#x091F;</td>
+						<td align=center>Ta</td>
+						<td align=center>&#x0920;</td>
+						<td align=center>Tha</td>
+						<td align=center>&#x0921;</td>
+						<td align=center>Da</td>
+						<td align=center>&#x0922;</td>
+						<td align=center>Dha</td>
+						<td align=center>&#x0923;</td>
+						<td align=center>Na</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0924;</td>
+						<td align=center>ta</td>
+						<td align=center>&#x0925;</td>
+						<td align=center>tha</td>
+						<td align=center>&#x0926;</td>
+						<td align=center>da</td>
+						<td align=center>&#x0927;</td>
+						<td align=center>dha</td>
+						<td align=center>&#x0928;</td>
+						<td align=center>na</td>
+					</tr>
+					<tr>
+						<td align=center>&#x092A;</td>
+						<td align=center>pa</td>
+						<td align=center>&#x092B;</td>
+						<td align=center>pha</td>
+						<td align=center>&#x092C;</td>
+						<td align=center>ba</td>
+						<td align=center>&#x092D;</td>
+						<td align=center>bha</td>
+						<td align=center>&#x092E;</td>
+						<td align=center>ma</td>
+					</tr>
+					<tr>
+						<td align=center>&#x092F;</td>
+						<td align=center>ya</td>
+						<td align=center>&#x0930;</td>
+						<td align=center>ra</td>
+						<td align=center>&#x0932;</td>
+						<td align=center>la</td>
+						<td align=center>&#x0935;</td>
+						<td align=center>va/wa</td>
+						<td align=center>&#x0936;</td>
+						<td align=center>sha</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0937;</td>
+						<td align=center>Sha</td>
+						<td align=center>&#x0938;</td>
+						<td align=center>sa</td>
+						<td align=center>&#x0939;</td>
+						<td align=center>ha</td>
+						<td align=center>&#x0915;&#x094D;&#x0937;</td>
+						<td align=center>kSha/xa</td>
+						<td align=center>&#x091C;&#x094D;&#x091E;</td>
+						<td align=center>Jha</td>
+					</tr>
+					<tr>
+						<td align=center>श्र</td>
+						<td align=center>shra</td>
+						<td align=center>त्र</td>
+						<td align=center>tra</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</table>
+				</td>
+				<td align=center width=20% colspan=4>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+				<tr>
+					<td colspan=4 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Others</td>
+				</tr>
+				<tr style="color: #E9AB17;">
+					<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+					<td align=center>Type&nbsp;&nbsp;</td>
+					<td align=center>For&nbsp;&nbsp;</td>
+					<td align=center>Type&nbsp;&nbsp;</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0958;</td>
+					<td align=center>Ka</td>
+					<td align=center>&#x0959;</td>
+					<td align=center>Kha</td>
+				</tr>
+				<tr>
+					<td align=center>&#x095A;</td>
+					<td align=center>Ga</td>
+					<td align=center>&#x095B;</td>
+					<td align=center>Za</td>
+				</tr>
+				<tr>
+					<td align=center>&#x095E;</td>
+					<td align=center>Fa</td>
+					<td align=center>&#x095C;</td>
+					<td align=center>DD</td>
+				</tr>
+				<tr>
+					<td align=center>&#x095D;</td>
+					<td align=center>DH</td>
+					<td align=center>&#x095F;</td>
+					<td align=center>Y</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0934;</td>
+					<td align=center>LL</td>
+					<td align=center>&#x0929;</td>
+					<td align=center>NN</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+				</td>
+				<td align=center width=20% colspan=4>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+					<tr>
+						<td colspan=4 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Vowels</td>
+					</tr>
+					<tr style="color: #E9AB17;">
+						<td align=center>&nbsp;For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+						<td align=center>For&nbsp;&nbsp;</td>
+						<td align=center>Type&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0905;</td>
+						<td align=center>a</td>
+						<td align=center>&#x0906;</td>
+						<td align=center>A/aa</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0907;</td>
+						<td align=center>i</td>
+						<td align=center>&#x0908;</td>
+						<td align=center>I/ee</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0909;</td>
+						<td align=center>u</td>
+						<td align=center>&#x090A;</td>
+						<td align=center>U</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0909;</td>
+						<td align=center>e</td>
+						<td align=center>&#x0910;</td>
+						<td align=center>ai</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0913;</td>
+						<td align=center>o</td>
+						<td align=center>&#x0914;</td>
+						<td align=center>au</td>
+					</tr>
+					<tr>
+						<td align=center>&#x090B;</td>
+						<td align=center>R</td>
+						<td align=center>&#x0902;</td>
+						<td align=center>M</td>
+					</tr>
+					<tr>
+						<td align=center>&#x0903;</td>
+						<td align=center>:</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+				</td>
+				<td align=center width=15% colspan=2>
+				<table width=100% style="color:#E0FFFF; border-style:solid; border-width: 1px;background-color:#252525;" cellspacing="0">
+				<tr>
+					<td colspan=2 align=center style="color:#f87431; font-variant:small-caps; font-size:1.5em;">Specials</td>
+				</tr>
+				<tr style="color: #E9AB17;">
+					<td align=center>&nbsp;For</td>
+					<td align=center>Type</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0943;</td>
+					<td align=center>VR</td>
+				</tr>
+				<tr>
+					<td align=center>&#x090D;</td>
+					<td align=center>E</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0945;</td>
+					<td align=center>E</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0964;</td>
+					<td align=center>|</td>
+				</tr>
+				<tr>
+					<td align=center>&#x0965;</td>
+					<td align=center>||</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				</table>
+				</td>
+			</tr>
+			</table>
+		</div> 
 		<div id="previous" style="display:none;">
 		<table width="100%">
 			<tr>
@@ -248,7 +575,8 @@
 	<input id="ws" name="ws" type="checkbox" checked="checked"></input>
 	<input id="cmd" name="cmd" type="text"></input>
 	<pre id="output1"></pre>
-	
 </div>
+<div id="dict" style="visibility:hidden">{{dictionary}}</div>
+<div id="word" style="visibility:hidden">{{word}}</div>
 </form>
 {% endblock %}

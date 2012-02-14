@@ -1,0 +1,23 @@
+button.change_password{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: 13px;
+    
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    position:relative;
+    left:6px;
+}
+
+button.change_password:hover{
+    color: #245194;
+    font-variant: small-caps;
+    font-size: 13px;
+    
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}

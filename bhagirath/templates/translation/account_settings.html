@@ -2,10 +2,68 @@
 {% block menu %}
 	<ul>
 		<li><a href="/account/">Home</a></li>
-		<li><a href="/account/upload/">Upload File</a></li>
+		<li><a href="/account/upload/">Contribute</a></li>
 		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li><a href="/account/evaluate/">Evaluate</a></li>
-		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
+		<li><a href="/account/{{uid}}/settings/">Settings</a></li>
 		<li><a href="/logout/">Logout</a></li>
 	</ul>
+{% endblock %}
+
+{% block status_message %}
+<p class="account">Welcome, <a>{{username}}.</a></p>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" Language="JavaScript">
+	function OnChangePassword()  {
+		Animate('passwd');
+	}
+	
+	function OnUpdate()	{
+		document.settings_form.action = "/account/{{uid}}/settings/done/"
+		return true;
+	}
+</script>
+{% endblock %}
+
+{% block center_panel_other_content %}
+<form action="." name="settings_form" id="settings_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{% csrf_token %}
+<div id="signup">
+	<div class="sign_up">
+		<h2>Update your Profile</h2>
+			<fieldset>
+				<p><label>Username:</label>{{form1.username}}</p>
+				<p><label>First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last Name</label>
+				{{form1.first_name|capfirst}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form1.last_name|capfirst}}</p>
+				<p><label>Email ID:</label>{{form1.email}}</p>
+				<p><button type="button" name="change_password" id="change_password" class="change_password" onclick="OnChangePassword();">Change Password</button>  
+				<div id="passwd" style="display:none;">
+					<p><label>Password:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						Confirm Password:</label>{{form.password}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.confirm_password}}	
+				</div></p>		
+    			<p><label>Date of Birth:</label>{{form.date_of_birth}}</p>
+    			<p><label>District:</label>{{form.district|capfirst}}</p>
+    			<p><label>Educational Qualification:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				 Domain:</label>{{form.education_qualification}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.domain}}</p>
+    			<p><label>Medium of education during school:</label>{{form.medium_of_education_during_school}}</p>
+      			<p><label>Interests:</label>{{form.interests}}</p>
+    			<p>{{form.translator|default_if_none:"on"}}Translator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    			{{form.evaluator|default_if_none:"off"}}Evaluator</p>
+    			<p><label>Language:</label>{{form.language}}</p>
+				<p>{{html_captcha|safe}}</p>     			
+       			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>          
+			</fieldset>
+	</div>
+</div>
+</form>
 {% endblock %}

@@ -2,28 +2,31 @@
 {% block menu %}
 	<ul>
 		<li><a href="/account/">Home</a></li>
-		<li><a href="/account/upload/">Upload File</a></li>
+		<li><a href="/account/upload/">Contribute</a></li>
 		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li><a href="/account/evaluate/">Evaluate</a></li>
-		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
+		<li><a href="/account/{{uid}}/settings/">Settings</a></li>
 		<li><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
 
-{% block center_panel_content %}
-<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{% block status_message %}
+<p class="account">Welcome, <a>{{username}}.</a></p>
+{% endblock %}
+
+{% block other_content %}
+<form action="." name="account_form" id="account_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 {%csrf_token%}
-<div id="maincolumn">
-	<div class="info">
-		<p>Number of sentences translated : {{scount}}</p>
-		<p>&nbsp;</p>
-		<p>Number of tasks uploaded : {{ucount}}</p>
-		<p>&nbsp;</p>
-		<p>Number of correct translations : {{ccount}}</p>
-		<p>&nbsp;</p>		
-		<p>Number of sentences evaluated : {{ecount}}</p>
-		<p>&nbsp;</p>		
-	</div>
+<div id="account">
+	<div class="acc">
+		<p class="heading">Your contribution:<p>
+	    <p class="stats">
+		    Number of sentences translated : {{total_translated_sentences}}</br>
+			Number of tasks uploaded : {{no_of_perfect_translations}}</br>
+			Number of correct translations : {{total_uploaded_tasks}}</br>
+			Number of sentences evaluated : {{total_evaluated_sentences}}</br>
+		</p>		
+	</div>	
 </div>
 </form>
 {% endblock %}

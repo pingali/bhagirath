@@ -1,0 +1,37 @@
+{% extends "layout1.html" %}
+
+{% block script %}
+<script type="text/javascript" Language="JavaScript">
+	function OnSignIn()  {
+		document.login_form.action = "/login/"
+	  	return true;
+	}
+</script>
+{% endblock %}
+
+{% block other_content %}
+<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div id="signin">
+	<div class="sign_in">
+		<h2>Already have an account? Sign In</h2>
+		<fieldset>
+				<p class=""><label style="font-size:15px;">Username</label>{{form.username}}</p>			
+				<p class=""><label style="font-size:15px;">Password</label>{{form.password}}</p>				
+				<button name="sign_in" id="sign_in" class="reset" onclick="OnSignIn();">SignIn</button>
+		</fieldset>
+	</div>
+</div>
+<div class="home">
+		<p class="headinfo">Green revolution – Dr. M S Swaminathan</p>
+		<p class="headinfo">White revolution – Dr. Verghese Kurien</p>
+		<p class="heading">Knowledge Revolution – <label style="color:#A00000; font-size:20px">YOU!!!</label></p>
+
+		<p class="info">Be the change agent who brings the world’s knowledge to India and its people.<a href="/sign_up/"> Register</a> now to be part of this epic experience.</p>
+	    <p class="stats">
+		</p>
+		<p class="info"><a href="/about_us/">Read more...</a></p>
+		<p class="info"><a href="/sample_translations/1/">View Sample Translations...</a></p>		
+	</div>
+</form>
+{% endblock %}

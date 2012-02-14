@@ -1,89 +1,94 @@
-#leftcolumn{
-	margin: 0px;
-	padding: 0px;
-	padding-left:3px;
-	width: 219px;
-	float:left;
-	
+#stats ul {
+	float: left;
+	clear: both;
+	width: 690px;
+	margin: 10px 3px 3px 10px;
+	background: #FFD1B2;
+	list-style-type:none;
+	padding:0px;
 }
 
-#rightcolumn{
-	margin: 0px;
-	padding: 0px;
-	padding-left:5px;
-	width: 219px;
+#stats ul li {
+	float: left;
+	border-right:1px #804833;
+}
+
+#stats ul li a {
+	float: left;
+	display: block;
+	padding: 14px 20px 11px 20px;
+	border-right: solid 1px #FFC299;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-weight: bold;
+	font-family: Comic Sans MS;
+	font-size: .75em;
+	color: #804833;
+	text-shadow: #dbefed 0 1px 1px;
+}
+
+#stats ul li a label{
+	color: #660033;
+}
+#stats ul li.active a {
+	color: #804833;
+	text-shadow: #f6e899 0 1px 1px;
+}
+
+#stats ul li .term { 
 	float:right;
-	
-}
-
-#maincolumn{
-	width: 570px;
-	float:center;
-}
-
-#maincolumn .goal p {
-	font-family:Tahoma,Arial,Helvetica, sans-sarif;
-	font-weight: normal;
-	font-size: 15px;
-	color: #6e6e6e;
-}
-
-#leftcolumn div.module_menu, #leftcolumn div.module, #rightcolumn div.moduletable_text{
-	margin: 10px 0px;
-	margin-left:3px;
-	padding: 0px;
-	width: 211px;
-	background:#F8F8F8;
-	border:1px solid #cccccc;
-}
-
-#rightcolumn div.moduletable_menu, #rightcolumn div.moduletable, #rightcolumn div.moduletable_text{
-	margin: 10px 0px;
-	margin-right:3px;
-	padding: 0px;
-	width: 211px;
-	background:#F8F8F8;
-	border:1px solid #cccccc;
 }
 
 
-#leftcolumn div.module_menu  div div div, #leftcolumn div.module div div{
-	margin: 0px;
-	padding: 0px;
-	padding-bottom:5px;
-	width: 211px;
-	height:auto;
-	color:#333333;
+element.style {
+    font-family: monospace;
 }
 
-#leftcolumn div.module_menu div div div div, #leftcolumn div.module div div div div{
-	background:none;
-	padding: 4px 8px;
+table.overall_leaderboard_table{
+    border-collapse: collapse;
+    color: black;
+    width:250px;
+   
+    background-color:#FAF5FF;
 }
 
-#rightcolumn div.moduletable_menu  div div div, #rightcolumn div.moduletable div div{
-	margin: 0px;
-	padding: 0px;
-	padding-bottom:5px;
-	width: 211px;
-	height:auto;
-	color:#333333;
+.overall_leaderboard_table caption {
+	background-color:#F5EBFF;
+	color:#664C80;
+}
+.overall_leaderboard_table th{
+    border: 1px #AAAAAA;
+    padding: 0.2em;
+    font-size:13px;
+   
 }
 
-#rightcolumn div.moduletable_menu div div div div, #rightcolumn div.moduletable div div div div{
-	background:none;
-	padding: 4px 8px;
+.overall_leaderboard_table td {
+    border: 1px #AAAAAA;
+    padding: 0.2em;
+    font-size:13px;
+    
 }
 
-
-#leftcolumn h2,#rightcolumn h2{
-	text-align: center;
-	width: 207px;
-	line-height: 41px;
-	color:#4A4A4A;
-	font-size: 12px;
-	margin:1px;
-	background:url(../images/bg_h3.png);
-	text-shadow: #fefceb 0 1px 1px;
+table.weekly_leaderboard_table{
+    border-collapse: collapse;
+    color: black;
+    width:250px;
+    
 }
 
+.weekly_leaderboard_table caption {
+	background-color:#F5EBFF;
+	color:#664C80;
+}
+.weekly_leaderboard_table th{
+    border: 1px #AAAAAA;
+    padding: 0.2em;
+    font-size:13px;
+}
+
+.weekly_leaderboard_table td {
+    border: 1px #AAAAAA;
+    padding: 0.2em;
+    font-size:13px;
+}

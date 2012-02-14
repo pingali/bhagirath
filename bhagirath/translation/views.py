@@ -3,7 +3,7 @@ from django.contrib import auth
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
-from bhagirath.translation.forms import UploadForm,LoginForm,TranslateForm,SignUpForm
+from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
 from django.conf import settings
 from django.contrib import messages
@@ -11,7 +11,6 @@ from django.core import serializers
 import captcha
 import traceback
 import logging
-import urllib2
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
 
@@ -28,11 +27,28 @@ def hindiwords(request):
         p.save()
     return HttpResponse("DONE!!!") 
 
+def english2hindi(request):
+    F = open("/home/ankita/Desktop/enghin/a_new.txt")
+    line = F.read()
+    parts = line.split('\n')
+    i = 0
+    j = len(parts)
+    
+    while i < j:
+        if parts[i]:
+            part = parts[i].split(',')
+            p = Master_English2Hindi()
+            p.english_word = part[0]
+            p.pos = part[1]
+            p.hindi_word = part[2]
+            p.save()
+        i += 1
+   
+    return HttpResponse("DONE!!!")
+
 def subtask(request):
     tasks = Task.objects.all()
-    i = 0
-    for j in tasks:
-        i += 1
+    i = Task.objects.all().count()
     j = 0
     while  j< i:
         t = tasks[j]
@@ -67,7 +83,7 @@ def microtask(request):
     return HttpResponse("DONE!!!") 
            
 def home(request):
-    sta = StatCounter.objects.all()
+    sta = StatCounter.objects.all().order_by('created_on')
     if sta:
         st = sta[0]
         u = st.registered_users
@@ -83,10 +99,10 @@ def home(request):
             'translated_sentences':s,
             'published_articles':a
         }
-    return render_to_response('login/login.html',data,context_instance=RequestContext(request))
+    return render_to_response('login/home.html',data,context_instance=RequestContext(request))
 
-def aboutus(request):
-    sta = StatCounter.objects.all()
+def about_us(request):
+    sta = StatCounter.objects.all().order_by('created_on')
     if sta:
         st = sta[0]
         u = st.registered_users
@@ -102,16 +118,43 @@ def aboutus(request):
             'translated_sentences':s,
             'published_articles':a
         }
-    return render_to_response('login/aboutUs.html',data,context_instance=RequestContext(request))
+    return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))
+          
+def sample_translations(request,id):
+    sample_translations = Master_SampleTranslations.objects.get(pk=id)
+    original_sentence = sample_translations.original_sentence;
+    google_translation = sample_translations.google_translation;
+    user_translation = sample_translations.user_translation;
+    
+    count = Master_SampleTranslations.objects.all().count()
+ 
+    if int(id) == int(count):
+        next_id = 1
+    else:
+        next_id = int(id) + 1
+    
+    if int(id) == 1:
+        prev_id = int(count)
+    else:
+        prev_id = int(id) - 1
+        
+    data = {
+            'original_sentence':original_sentence,
+            'google_translation':google_translation,
+            'user_translation':user_translation,
+            'next_id':next_id,
+            'prev_id':prev_id
+        }
+    return render_to_response('login/sample_translations.html',data,context_instance=RequestContext(request))
 
-def signup(request):
+def sign_up(request):
     data = {
         'form': SignUpForm(),
         'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
     }
-    return render_to_response('login/signup.html',data,context_instance=RequestContext(request))
+    return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
  
-def processSignup(request):
+def process_sign_up(request):
     user = request.user 
     if request.method == 'POST':
         check_captcha = captcha.client.submit(request.POST['recaptcha_challenge_field'], 
@@ -131,10 +174,7 @@ def processSignup(request):
             f_first_name = request.POST['first_name']
             f_last_name = request.POST['last_name']
             f_date_of_birth = request.POST['date_of_birth']
-            f_city = request.POST['district']
-            f_education_qualification = request.POST['education_qualification']  
-            f_medium_of_education_during_school = request.POST['medium_of_education_during_school']
-            
+                 
             if request.POST.has_key('translator'):
                 f_translator = request.POST['translator']
             else:
@@ -147,50 +187,21 @@ def processSignup(request):
                 f_evaluator = request.POST['evaluator']
             else:
                 f_evaluator = False
-                
-            """ Age group tag calculation    
-            dtob = datetime.datetime.strptime(f_date_of_birth,'%Y-%m-%d')   
-            dob = dtob.date()
-            age = datetime.date.today() - dob
-            age = age.days
-            f_age = age/365
-            age_groups = Master_AgeGroup.objects.all()
-            for i in age_groups:
-                if(f_age<20):
-                    calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=19)
-                elif(f_age>=20 and f_age<=30):
-                    calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=30)
-                elif(f_age>=31 and f_age<=40):
-                    calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=40)
-                elif(f_age>=41 and f_age<=60):
-                    calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=60)
-                elif(f_age>60):
-                    calculated_age_group_tag = Master_AgeGroup.objects.filter(maximum_age=100)
-            """        
+                      
             try:
-                a = User.objects.all()
                 count = 0
                 if f_password == f_confirm_password:
                     if f_email and f_username and f_first_name and f_last_name:
-                        for j in a:
-                            em = a.filter(email=f_email)
-                            for j in em:
-                                count +=1
-                        
+                        count = User.objects.filter(email=f_email).count()                     
                         if count !=0:
                             data = {
                                 'form': SignUpForm(request.POST),
                                 'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                                 }
                             messages.error(request,"EmailID already in use.Try another one!!!")
-                            return render_to_response('login/signup.html',data,context_instance=RequestContext(request))
+                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
                         
-                        a = User.objects.all()
-                        count = 0
-                        for j in a:
-                            us = a.filter(username = f_username)
-                            for j in us:
-                                count +=1
+                        count = User.objects.all().filter(username = f_username).count()
                                 
                         if count != 0:
                             data = {
@@ -198,7 +209,7 @@ def processSignup(request):
                                 'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                                 }
                             messages.error(request,"Username already in use.Try another one!!!")
-                            return render_to_response('login/signup.html',data,context_instance=RequestContext(request)) 
+                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request)) 
                         
                         u = User.objects.create_user(f_username, f_email, f_password)
                         u.is_active = True
@@ -209,8 +220,7 @@ def processSignup(request):
                         u.save()
                         
                         user = User.objects.get(username__exact=f_username)
-                        user.userprofile_set.create(date_of_birth=f_date_of_birth,
-                                                    education_qualification=f_education_qualification,ip_address=request.META['REMOTE_ADDR'], 
+                        user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'], 
                                                     translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
                         
                         userpro = UserProfile.objects.get(user=user)
@@ -240,6 +250,24 @@ def processSignup(request):
                                 f_district = Master_GeographicalRegion.objects.get(pk=id)
                                 userpro.district = f_district
                                 userpro.save()
+
+                        if request.POST.has_key('education_qualification'):     
+                            education_qualification = request.POST['education_qualification']            
+                            
+                            for l in education_qualification:
+                                id = int(l)
+                                f_education_qualification = Master_EducationQualification.objects.get(pk=id)
+                                userpro.education_qualification = f_education_qualification
+                                userpro.save()
+                                
+                        if request.POST.has_key('domain'):     
+                            domain = request.POST['domain']            
+                            
+                            for l in domain:
+                                id = int(l)
+                                f_domain = Master_EducationDomain.objects.get(pk=id)
+                                userpro.domain = f_domain
+                                userpro.save()
                               
                         if request.POST.getlist('interests'):
                             all_interests = request.POST.getlist('interests')                
@@ -254,14 +282,14 @@ def processSignup(request):
                             'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                             }
                         messages.success(request,"Record saved successfully!!.")
-                        return render_to_response('login/login.html',data,context_instance=RequestContext(request))                              
+                        return render_to_response('login/home.html',data,context_instance=RequestContext(request))                              
                     else:
                         data = {
                             'form': SignUpForm(request.POST),
                             'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                             }
                         messages.error(request,"Please fill in all fields!!!")
-                        return render_to_response('login/signup.html',data,context_instance=RequestContext(request))
+                        return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
     
                 else:
                     data = {
@@ -269,7 +297,7 @@ def processSignup(request):
                         'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                         } 
                     messages.error(request,"Confirm password correctly!!!")
-                    return render_to_response('login/signup.html',data,context_instance=RequestContext(request))
+                    return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
                 return HttpResponseRedirect(reverse('home')) 
             except:
                 log.exception("Registration Failed!!!")
@@ -283,11 +311,10 @@ def processSignup(request):
                 }
             messages.error(request, "Recaptcha entered incorrectly!!!")
            
-            return render_to_response('login/signup.html',data,context_instance=RequestContext(request))
-   
-    return HttpResponse("Y")
-    
-def processSignin(request):
+            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
+    return HttpResponse("Error!!!")
+
+def process_sign_in(request):
     uname = request.POST['username']
     passwd = request.POST['password']
     user = auth.authenticate(username=uname, password=passwd)
@@ -305,12 +332,12 @@ def processSignin(request):
         messages.error(request, "Incorrect username or password!!!")   
     return HttpResponseRedirect(reverse('home'))
     
-def processSignout(request):
+def process_sign_out(request):
     s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
     s.logout_timestamp = datetime.datetime.now()
     s.save()
     auth.logout(request)
-    sta = StatCounter.objects.all()
+    sta = StatCounter.objects.all().order_by('created_on')
     if sta:
         st = sta[0]
         u = st.registered_users
@@ -327,13 +354,24 @@ def processSignout(request):
         'published_articles':a
         } 
     messages.success(request,"You're logged out successfully!!!")
-    return render_to_response('login/login.html',data,context_instance=RequestContext(request))   
+    return render_to_response('login/home.html',data,context_instance=RequestContext(request))   
 
 def account(request):
     user = request.user
     uid = user.pk
 
     if user.is_authenticated():
+        sta = StatCounter.objects.all().order_by('created_on')
+        if sta:
+            st = sta[0]
+            u = st.registered_users
+            s = st.translated_sentences
+            a = st.published_articles
+        else:
+            u = 0
+            a = 0
+            s = 0
+          
         user_pro = UserProfile.objects.filter(user = uid)
         user_profile = user_pro[0]
         total_translated_sentences = user_profile.total_translated_sentences 
@@ -342,10 +380,14 @@ def account(request):
         total_evaluated_sentences = user_profile.total_evaluated_sentences
         data = {
                 'uid':uid,
-                'scount':total_translated_sentences,
-                'ccount': no_of_perfect_translations,
-                'ucount':total_uploaded_tasks,
-                'ecount':total_evaluated_sentences, 
+                'total_translated_sentences':total_translated_sentences,
+                'no_of_perfect_translations': no_of_perfect_translations,
+                'total_uploaded_tasks':total_uploaded_tasks,
+                'total_evaluated_sentences':total_evaluated_sentences,
+                'registered_users':u,
+                'translated_sentences':s,
+                'published_articles':a,
+                'username':user
         } 
         return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
     else:
@@ -354,7 +396,7 @@ def account(request):
         'uid':uid
         } 
     messages.error(request,"You're not logged in!!!")
-    return render_to_response('login/login.html',data,context_instance=RequestContext(request)) 
+    return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
 def upload(request):   
     user = request.user
@@ -363,6 +405,7 @@ def upload(request):
         data = {
             'form': UploadForm(),
             'uid':  uid,
+            'username':user,
              }
         ta = TransactionAction()
         ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
@@ -373,12 +416,13 @@ def upload(request):
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
         data = {
-        'form': LoginForm()
+        'form': LoginForm(),
+        'username':user,
         } 
     messages.error(request,"You're not logged in!!!")
-    return render_to_response('login/login.html',data,context_instance=RequestContext(request)) 
+    return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
-def uploadDone(request):
+def process_upload(request):
     user = request.user
     uid = user.pk
     try:
@@ -411,6 +455,7 @@ def uploadDone(request):
                         data = {
                                 'form' : UploadForm(),
                                 'uid':uid,
+                                'username':user,
                                 }
                         messages.error(request,"Select different target language!!!")
                         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
@@ -440,6 +485,7 @@ def uploadDone(request):
             data = {
                     'form': UploadForm(),
                     'uid': uid,
+                    'username':user,
                    }
             ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
             ta.task = Task.objects.get(pk=newtask.id)
@@ -459,30 +505,31 @@ def translate(request,uid):
             logged_in_user_id = uid
             i = 0
             c = 0
-            q = 0
-
             available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
             available_microtasks = Microtask.objects.filter(assigned = 0)    
-                                    
+                                   
             for j in available_sentences_done_by_user:
                 available_microtasks = available_microtasks.exclude(original_sentence = available_sentences_done_by_user[i]).order_by('id')
                 i +=1
             
             for j in available_microtasks:
                 c += 1
-            
+                
             if c==0:
                 data = {
                     'form': TranslateForm(),
-                    'uid':uid
+                    'uid':uid,
+                    'username':user,
                 }
-                messages.error(request,"No sentence available for translation!!")
+                
                 ta = TransactionAction()
                 ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
                 ta.user = user
                 ta.action = Master_Action.objects.filter(action="Translate")[0]
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
+                
+                messages.error(request,"No sentence available for translation!!")
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
                 available_microtask = available_microtasks[0]
@@ -497,8 +544,7 @@ def translate(request,uid):
                     text = i.translated_sentence
                     if text:
                         other_translations = other_translations + "-> " + text + '\n'
-                    
-                              
+                                  
                 h = UserHistory()
                 h.task = available_microtask.task
                 h.subtask = available_microtask.subtask
@@ -515,6 +561,25 @@ def translate(request,uid):
                 s.hop_count = s.hop_count + 1
                 s.save()               
                 
+                dict = h.original_sentence.split(' ')
+                count = len(dict)
+                k = 0
+                word = ''
+                hindi_dictionary = ''
+                meaning = ''
+                while k < count:
+                    mean = Master_English2Hindi.objects.filter(english_word = dict[k])
+                    if mean:
+                        i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
+                        m = 0
+                        while m < i:
+                            meaning = mean[m].hindi_word + '--' + meaning
+                            m += 1
+                        if meaning:
+                            hindi_dictionary = hindi_dictionary + ',' + meaning 
+                            word = word + ',' + dict[k]    
+                    k += 1
+                                
                 data = {
                         'form': TranslateForm(),
                         'curr_id':available_microtask,
@@ -523,8 +588,11 @@ def translate(request,uid):
                         'hindi': microtask_translation,
                         'machine_translation': machine_translation,
                         'other_translations':other_translations,
+                        'dictionary': hindi_dictionary,
+                        'word':word,
+                        'username':user,
                 }
-                
+                                
                 available_microtask.assigned=True
                 available_microtask.save()
                 ta = TransactionAction()
@@ -543,10 +611,10 @@ def translate(request,uid):
         'form': LoginForm(),
         } 
         messages.error(request,"Please login.You're not logged in!!!")
-        return render_to_response('login/login.html',data,context_instance=RequestContext(request))
-    
-    
-def translateDone(request,id,uid):
+        return render_to_response('login/home.html',data,context_instance=RequestContext(request))
+    return HttpResponse("Error!!!")
+
+def process_translate(request,id,uid):
     user = request.user    
     if user.is_authenticated():
         if request.method == 'POST':
@@ -594,6 +662,7 @@ def translateDone(request,id,uid):
                         'curr_id':h.microtask_id,
                         'english': h.original_sentence,
                         'hindi':"",
+                        'username':user,
                     }
                 messages.success(request,"Record saved sucessfully!!!")
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
@@ -604,7 +673,7 @@ def translateDone(request,id,uid):
     else:
         return HttpResponse("Please login.You're not logged in!!!")
 
-def context(request,id,uid):
+def load_context(request,id,uid):
     user = request.user
     if user.is_authenticated():
         if request.method == 'POST':
@@ -615,7 +684,9 @@ def context(request,id,uid):
                 prev_translation = request.POST['translated_sentence']
                 hist = UserHistory.objects.filter(user = uid, original_sentence = rec.original_sentence)
                 h = hist[0]
+               
                 static = StaticMicrotask.objects.filter(original_sentence = rec.original_sentence)
+               
                 s = static[0]
                 a = s.pk - int(count)
                 b = s.pk + int(count)
@@ -636,7 +707,26 @@ def context(request,id,uid):
                         t = StaticMicrotask.objects.get(id=st)
                         next_context = next_context + t.original_sentence + ". "
                     c += 1
-          
+                
+                dict = rec.original_sentence.split(' ')
+                count = len(dict)
+                k = 0
+                word = ''
+                hindi_dictionary = ''
+                meaning = ''
+                while k < count:
+                    mean = Master_English2Hindi.objects.filter(english_word = dict[k])
+                    if mean:
+                        i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
+                        m = 0
+                        while m < i:
+                            meaning = mean[m].hindi_word + '--' + meaning
+                            m += 1
+                        if meaning:
+                            hindi_dictionary = hindi_dictionary + ',' + meaning 
+                            word = word + ',' + dict[k]    
+                    k += 1
+                
                 data = {
                     'form': TranslateForm(instance=h),
                     'curr_id':id,
@@ -645,6 +735,9 @@ def context(request,id,uid):
                     'prev_context':prev_context,
                     'next_context':next_context,
                     'hindi': prev_translation,
+                    'dictionary': hindi_dictionary,
+                    'word':word,
+                    'username':user,
                     }        
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))     
             except:
@@ -653,8 +746,130 @@ def context(request,id,uid):
                 messages.error(request, "Context loading Failed!!!")
     else:
         return HttpResponse("Please login.You're not logged in!!!")
-    
 
+def account_settings(request,uid):
+    user = User.objects.get(pk=uid)
+    u = UserProfile.objects.get(user = uid)
+    form =  UpdateProfileForm(instance=u)
+    form1 = UpdateProfileForm(instance=user) 
+    
+    data = {
+        'form': form,
+        'form1':form1,
+        'uid':uid,
+        'username':request.user
+    }
+    return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))    
+
+def process_account_settings(request,uid):
+    user = request.user 
+    if request.method == 'POST':
+        f_password = request.POST['password']
+        f_confirm_password = request.POST['confirm_password']
+        f_email = request.POST['email']
+        f_first_name = request.POST['first_name']
+        f_last_name = request.POST['last_name']
+        f_date_of_birth = request.POST['date_of_birth']
+        f_district = request.POST['district']
+        f_education_qualification = request.POST['education_qualification']
+        f_domain = request.POST['domain']  
+        f_medium_of_education_during_school = request.POST['medium_of_education_during_school']
+            
+        if request.POST.has_key('translator'):
+            f_translator = request.POST['translator']
+        else:
+            f_translator = False
+        if request.POST.has_key('contributor'):
+            f_contributor = request.POST['contributor']
+        else:
+            f_contributor = False
+        if request.POST.has_key('evaluator'):           
+            f_evaluator = request.POST['evaluator']
+        else:
+            f_evaluator = False
+                
+        try:
+            if f_password == f_confirm_password:
+                if f_email and f_first_name and f_last_name:
+                    count = User.objects.exclude(username=request.user).filter(email=f_email).count() 
+                                            
+                    if count !=0:
+                        data = {
+                            'form': SignUpForm(request.POST), 
+                        }
+                        messages.error(request,"EmailID already in use.Try another one!!!")
+                        return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+                    u = User.objects.get(username = request.user)
+                    u.first_name =f_first_name
+                    u.last_name = f_last_name
+                    u.email = f_email
+                    u.save()
+                    if f_password:
+                        u.set_password(f_password)
+                        u.save()
+
+                    userpro = UserProfile.objects.get(user=user)
+                        
+                    userpro.date_of_birth = f_date_of_birth
+                    userpro.district = Master_GeographicalRegion.objects.get(pk=f_district)
+                    userpro.domain = Master_EducationDomain.objects.get(pk=f_domain)
+                    userpro.education_qualification = Master_EducationQualification.objects.get(pk=f_education_qualification)
+                    userpro.translator = f_translator
+                    userpro.evaluator = f_evaluator
+                    userpro.contributor = f_contributor
+                    userpro.save()
+                    
+                    if request.POST.getlist('language'):     
+                        all_language = request.POST.getlist('language')            
+                            
+                        for l in all_language:
+                            id = int(l)
+                            f_language = Master_Language.objects.get(pk=id)
+                            userpro.language.add(f_language)
+                        
+                    if request.POST.has_key('medium_of_education_during_school'):     
+                        medium_of_education_during_school = request.POST['medium_of_education_during_school']            
+                            
+                        for l in medium_of_education_during_school:
+                            id = int(l)
+                            f_medium_of_education_during_school = Master_Language.objects.get(pk=id)
+                            userpro.medium_of_education_during_school = f_medium_of_education_during_school
+                            userpro.save()
+                                                     
+                    if request.POST.getlist('interests'):
+                        all_interests = request.POST.getlist('interests')                
+                            
+                        for i in all_interests:
+                            id = int(i)
+                            f_interests = Master_InterestTags.objects.get(pk=id)
+                            userpro.interests.add(f_interests)
+                        
+                    data = {
+                        'form': SignUpForm(), 
+                        }
+                    messages.success(request,"Record saved successfully!!.")
+                    return render_to_response('translation/account.html',data,context_instance=RequestContext(request))                              
+                else:
+                    data = {
+                        'form': SignUpForm(request.POST),
+                        }
+                    messages.error(request,"Please fill in all fields!!!")
+                    return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+    
+            else:
+                data = {
+                    'form': SignUpForm(request.POST),
+                } 
+                messages.error(request,"Confirm password correctly!!!")
+                return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+            return HttpResponseRedirect(reverse('home')) 
+        except:
+            log.exception("Update Failed!!!")
+            traceback.print_exc() 
+            messages.error(request, "Account update Failed!!!Try again.")
+            return render_to_response('translation/account_settings.html',context_instance=RequestContext(request))
+    return HttpResponse("Error!!!") 
+    
 def evaluate(request):
     print "to be done"
     ta = TransactionAction()
@@ -665,13 +880,6 @@ def evaluate(request):
     ta.save()
     return HttpResponseRedirect(reverse('account'))
     
-def evaluateDone(request):
+def process_evaluate(request):
     print "to be done"
     return HttpResponseRedirect(reverse('account'))
-
-def account_settings(request,uid):
-    print "to be done"
-    return HttpResponseRedirect(reverse('account'))
-    
-
-  

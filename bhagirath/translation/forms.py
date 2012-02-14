@@ -17,7 +17,6 @@ class DateJSField(forms.SplitDateTimeField):
         super(DateJSField, self).__init__(*args, **kwargs)
         self.widget.widgets[0].attrs = {'class': 'vDateField'}
       
-
 class LoginForm(forms.models.ModelForm):
     class Meta:
         model = User
@@ -36,7 +35,6 @@ class LoginForm(forms.models.ModelForm):
             elif not self.user_cache.is_active:
                 raise forms.ValidationError("This account is inactive.")
         return self.cleaned_data
-    
 
 class SignUpForm(forms.models.ModelForm):
     class Meta:
@@ -46,14 +44,17 @@ class SignUpForm(forms.models.ModelForm):
                    'contributor':forms.CheckboxInput,
                    'evaluator':forms.CheckboxInput,
                  }
-    
+    EXPERTISE_CHOICES = (('1', '1'),
+                         ('2', '2'),
+                         ('3', '3'))
+
     first_name = forms.CharField(max_length=50)
     last_name = forms.CharField(max_length=50)
     email = forms.EmailField()
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField( widget=forms.PasswordInput)
-    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
+    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all().order_by('geographical_region'),widget=forms.Select)
     language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all(), widget=forms.CheckboxSelectMultiple())
     interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
@@ -63,17 +64,8 @@ class SignUpForm(forms.models.ModelForm):
     captcha = ReCaptchaField(label="Please enter text you see or hear")
 
     def __init__(self, *args, **kwargs):      
-        if 'instance' in kwargs:
-            
-            # as a dict if it didn't exist.                
-            initial = kwargs.setdefault('initial', {})
-            print initial
-            initial['interests'] = [t.language for t in kwargs['instance'].language_set.all()]
-            print initial['interests']
-            initial['language'] = [t.language for t in kwargs['instance'].language_set.all()]
         super(SignUpForm, self).__init__(*args, **kwargs)
         self.fields['date_of_birth'].widget = widgets.AdminDateWidget()
-     
     
     def clean(self):
         first_name = self.cleaned_data.get('first_name')
@@ -105,8 +97,7 @@ class SignUpForm(forms.models.ModelForm):
             raise forms.ValidationError("Please confirm password correctly.")
         
         return self.cleaned_data
-    
-               
+                  
 class UploadForm(forms.models.ModelForm):
     UPLOAD_CHOICES = (('external', 'Provide URL'), ('internal', 'Attach a File'))
     SPECIFICATION_CHOICES = (('default', 'Default'), ('Specify', 'Specify'))
@@ -145,7 +136,32 @@ class TranslateForm(forms.models.ModelForm):
         for key in self.fields:
             self.fields[key].required = False
             self.fields[key].widget.attrs['readonly'] = 'readonly'
-            
-        
-            
+                   
+class UpdateProfileForm(forms.models.ModelForm):
+    class Meta:
+        model = UserProfile
+        widgets = {'date_of_birth':DateJSField(required=False,), 
+                   'translator':forms.CheckboxInput,
+                   'contributor':forms.CheckboxInput,
+                   'evaluator':forms.CheckboxInput,
+                }
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    email = forms.EmailField()
+    username = forms.CharField(max_length=50)
+    password = forms.CharField( widget=forms.PasswordInput)
+    confirm_password = forms.CharField( widget=forms.PasswordInput)
+    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all().order_by('geographical_region'),widget=forms.Select)
+    language = forms.ModelMultipleChoiceField(queryset=Master_LanguageExpertise.objects.all(), widget=forms.CheckboxSelectMultiple())
+    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())
+    education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
+    domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
+    medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
+    #competence_for_each_language      
+
+    def __init__(self, *args, **kwargs):      
+        super(UpdateProfileForm, self).__init__(*args, **kwargs)
+        self.fields['date_of_birth'].widget = widgets.AdminDateWidget()
+        self.fields['username'].widget.attrs['readonly'] = True
+
             

@@ -1,84 +1,158 @@
 {% extends "layout.html" %}
 {% block title %}Bhagirath-Knowledge knows no language {% endblock %}
 
-{% block script %}
-
-<script type="text/javascript" Language="JavaScript">
-	function OnMouseOver(){
-		this.getElementByTagName("ul")[0].style.display="block"
-	}
-	
-	function OnMouseOut(){
-		this.getElementByTagName("ul")[0].style.display="none"
-	}
-</script>
-{% endblock %}
-
-{% block left_panel_content %}
-	<div id="leftcolumn"> 
-		<div class="module_menu">
-			<div>
-			<div>
-			<div>
-				<h2>Weekly leaderboard</h2>
-				<p>&nbsp; 1. User</p>
-				<p>&nbsp; 2. User</p>
-				<p>&nbsp; 3. User</p>
-				<p>&nbsp; 4. User</p>
-				<p>&nbsp; 5. User</p>
-			</div>
-			</div>
-			</div>
-    	</div>
-
-		<div class="module_menu">
-			<div>
-			<div>
-			<div>
-		  	<h2>News</h2>
-			<Marquee OnMouseOver="this.stop();" OnMouseOut="this.start();" direction="up" scrollamount="2">
-			<p>&nbsp;&nbsp;   1.Upload file</p>
-			<p>&nbsp;&nbsp;   2.Translate content</p>
-			<p>&nbsp;&nbsp;   3.Evaluate translation</p>
-			</Marquee>
-			</div>
-			</div>
-			</div>
-		</div>
+{% block center_panel_content %}
+<div align="left" id="stats">
+	<ul>
+		<li><a><label>{{registered_users}}</label>  Registered users</a></li>
+		<li><a><label>{{translated_sentences}}</label>  Sentences translated</a></li>
+		<li><a><label>{{published_articles}}</label>  Articles translated</a></li>
+	</ul>	
+</div>
+{% if messages %}
+	<div align="center">
+	  	<ul class="messages">
+	  		{% for message in messages %}
+	   			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+					{% autoescape off %}
+						{{ message }}
+					{% endautoescape %} 
+		      	</li>
+		     {% endfor %}
+		</ul>
 	</div>
+{% endif %}
+
+{% block other_content %} {% endblock %}
 {% endblock %}
  
-{% block right_panel_content %}  
-  <div id="rightcolumn"> 
-	<div class="moduletable_menu">
-		<div>
-		<div>
-		<div>
-			<h2>Overall leaderboard</h2>
-			<p>&nbsp; 1. User</p>
-			<p>&nbsp; 2. User</p>
-			<p>&nbsp; 3. User</p>
-			<p>&nbsp; 4. User</p>
-			<p>&nbsp; 5. User</p>
-		</div>
-		</div>
-		</div>
-    </div>
-
-	<div class="moduletable_menu">
-	 <div>
-	     <div>
-		  <div>
-			<h2>Statistics</h2>
-			<p><img src="/static/images/menu_arrow.png"/>  Registered users</p>
-			&nbsp;&nbsp;&nbsp;&nbsp;    {{registered_users}}
-			<p><img src="/static/images/menu_arrow.png"/>  Articles translated</p>
-			&nbsp;&nbsp;&nbsp;&nbsp;   {{published_articles}}
-			<p><img src="/static/images/menu_arrow.png"/>  Sentences translated</p>
-			&nbsp;&nbsp;&nbsp;&nbsp;   {{translated_sentences}}
-		</div>
-	    </div>
-	</div>
-     </div>
+{% block right_panel_content %}
+<div id="right_panel">
+				<table class="overall_leaderboard_table">
+					<caption>Overall Leaderboard</caption>
+					<tbody>
+						{% for i in overall_leaderboard%}
+						<tr>
+							<td>{{i.rank}}</td>
+							<td>{{i.username}}</td>
+							<td>{{i.overall_points_earned}}</td>
+						</tr>
+						{% endfor %}
+						<tr>
+							<td>1</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+					</tbody>
+				</table>
+				</br>
+				<table class="weekly_leaderboard_table">
+					
+					<caption>Weekly Leaderboard</caption>
+					<tbody>
+						{% for i in weekly_leaderboard%}
+						<tr>
+							<td>{{i.id}}</td>
+							<td>{{i.username}}</td>
+							<td>{{i.points_earned_this_week}}</td>
+						</tr>
+						{% endfor %}
+						<tr>
+							<td>1</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>User</td>
+							<td>1287</td>
+						</tr>
+					</tbody>
+				</table>
 </div>
 {% endblock %}

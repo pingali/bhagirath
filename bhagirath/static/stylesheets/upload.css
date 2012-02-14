@@ -1,10 +1,9 @@
 
-
 #upload .up_load {
 	float: left;
 	margin: 5px 20px 20px 160px;
 	width: 650px;
-	background:#FAF8CC;
+	background:#FDF7EF;
 }
 
 #upload .up_load h2 {
@@ -12,7 +11,7 @@
 	font-weight: bold;
 	font-size: .80em;
 	color: #242424;
-	background:#ECD872;
+	background:#D8D8D8;
 	text-shadow: #fefceb 0 1px 1px;
 }
 

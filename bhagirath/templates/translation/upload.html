@@ -1,14 +1,8 @@
 {% extends "layout.html" %}
 {% load adminmedia %}
-{% block title %}Bhagirath-Knowledge knows no language-Upload {% endblock %}
-{% block head %}
-	<script type="text/javascript" src="/my_admin/jsi18n/"></script>
-	<script type="text/javascript" src="/admin_media/js/calendar.js"></script>
-	<script type="text/javascript" src="/admin_media/js/admin/DateTimeShortcuts.js"></script>
-	<script type="text/javascript" src="/static/admin/js/core.js"></script><script type="text/javascript">
-		window.__admin_media_prefix__ = "{% filter escapejs %} {% admin_media_prefix %} {% endfilter %}";
-	</script>
-	{{ form.media }} 
+
+{% block status_message %}
+<p class="account">Welcome, <a>{{username}}.</a></p>
 {% endblock %}
 
 {% block script %}
@@ -33,15 +27,15 @@
 {% block menu %}
 	<ul>
 		<li><a href="/account/">Home</a></li>
-		<li><a href="/account/upload/">Upload File</a></li>
+		<li><a href="/account/upload/">Contribute</a></li>
 		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li><a href="/account/evaluate/">Evaluate</a></li>
-		<li><a href="/account/{{uid}}/settings/">Account Settings</a></li>
+		<li><a href="/account/{{uid}}/settings/">Settings</a></li>
 		<li><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
 
-{% block center_panel_content %}
+{% block center_panel_other_content %}
 <form action="." name="upload_form" enctype="multipart/form-data" method="post" enctype="multipart/form-data" accept-charset="utf-8" >		
 {%csrf_token%}
 <div id="upload">

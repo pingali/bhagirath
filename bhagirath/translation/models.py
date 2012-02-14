@@ -18,8 +18,7 @@ class Master_English2Hindi(models.Model):
     english_word = models.CharField(verbose_name="English word",
                                 help_text="English word in dictionary",
                                 max_length=2000,
-                                null=False,
-                                unique=True)
+                                null=False)
     pos = models.CharField(max_length=2000,null=False)
     hindi_word = models.CharField(verbose_name="Hindi word",
                                 help_text="Hindi meaning of english word",
@@ -27,7 +26,7 @@ class Master_English2Hindi(models.Model):
                                 null=False)
     
     def __unicode__(self):
-        return u"%s" % (self.english)
+        return u"%s" % (self.english_word)
     
 class Master_AgeGroup(models.Model):
     age_group_tag = models.TextField(verbose_name="Age group",
@@ -98,9 +97,7 @@ class Master_EducationQualification(models.Model):
     def __unicode__(self):
         return u"%s" % (self.education_qualification)
 
- 
 class Master_EducationDomain(models.Model):
-    education_qualification = models.ForeignKey(Master_EducationQualification,on_delete=models.PROTECT)
     domain = models.TextField(verbose_name="Domain of education", 
                               help_text="User's educational domain",
                               unique=True,
@@ -108,7 +105,6 @@ class Master_EducationDomain(models.Model):
     def __unicode__(self):
         return u"%s" % (self.domain) 
     
-
 class Master_Language(models.Model): 
     language = models.TextField(verbose_name="Language", 
                                 help_text="Language",
@@ -127,7 +123,24 @@ class Master_LanguageExpertise(models.Model):
        
     def __unicode__(self):
         return u"%s%s" % (self.language,self.expertise)
+
+class Master_SampleTranslations(models.Model):
+    original_sentence = models.TextField(verbose_name="Original sentence", 
+                                help_text="Sentence in source language",
+                                unique=True,
+                                null = False)
+    google_translation = models.TextField(verbose_name="Google translation", 
+                                help_text="Translation from google",
+                                unique=True,
+                                null = False)
+    user_translation = models.TextField(verbose_name="User translation", 
+                                help_text="Translation done by user",
+                                unique=True,
+                                null = False)
     
+    def __unicode__(self):
+        return u"%s" % (self.id)
+       
 class StatCounter(models.Model):
     registered_users = models.IntegerField() 
     translated_sentences = models.IntegerField() 
@@ -142,16 +155,16 @@ class OverallLeaderboard(models.Model):
     overall_points_earned = models.IntegerField(null=True,default=0)
         
     def __unicode__(self):
-        return u"%s" % (self.username)
+        return u"%s" % (self.id)
     
 class WeeklyLeaderboard(models.Model):
     username = models.ForeignKey(User,null=False)
     points_earned_this_week = models.IntegerField(null=True,default=0)
     # default = overall_score - prev_week_score from UserProfile
-    rank = models.IntegerField(null=True)
+    rank = models.ForeignKey(OverallLeaderboard,null=False)
         
     def __unicode__(self):
-        return u"%s" % (self.username)
+        return u"%s" % (self.id)
     
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
@@ -209,7 +222,6 @@ class Task(models.Model):
  
     def __unicode__(self):
         return u"%s" % (self.id)
-
         
 class Subtask(models.Model):
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
@@ -275,7 +287,6 @@ class UserHistory(models.Model):
     def __unicode__(self):
         return u"%s" %(self.original_sentence)
     
-
 class TransactionAction(models.Model):
     session = models.ForeignKey(Session,on_delete=models.PROTECT)
     user = models.ForeignKey(User,on_delete=models.PROTECT)

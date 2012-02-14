@@ -1,0 +1,27 @@
+{% extends "layout1.html" %}
+
+{% block other_content %}
+<form action="." name="about_us_form" id="about_us_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{%csrf_token%}
+<div class="about">
+		<p class="heading">About Project Bhagiratha<p>
+		<p class="info">The river Ganga has been of prime significance in Indian mythology. Many Indians believe that the waters of Ganga can provide spiritual upliftment.
+		   The mythological King Bhagiratha is credited to have been responsible for bringing Ganga to earth after deep penance. We too intend to bring upliftment
+		   to many Indians through our project Bhagiratha.</br>However, our belief is that true upliftment of the masses can only occur via education and removal of ignorance.
+		   Given the history of the world, many of today’s knowledge repositories remain inaccessible to large sections of the Indian society (on account of 
+		   insufficient knowhow about English, and often also due to lack of poor communication infrastructure.)</br>In this project, we undertake an ambitious effort to 
+		   translate the Wikipedia into Indian language through a combination of machine learning and crowd sourcing.
+		   It took Bhagiratha 1000 years of hard prayer to bring river Ganga to earth. Now YOU can bring the world’s knowledge to India by just translating 4 sentences every day.
+	    </p>
+	    <p class="stats">
+		   Total number of Wikipedia articles in English = 3.6 million articles</br>
+		   Total number of Wikipedia articles in Hindi = 0.1 million articles</br>
+		   Approximate number of sentences in a Wikipedia article = 100 sentences</br>
+		   Total number of sentences to be translated = 360 million</br>
+		</p>
+		<p class="info">
+		   If 1 million users translate four sentences each every day, we can translate whole of Wikipedia in Hindi in 3 months!
+		   So <a href="/signup/">register</a> immediately and be part of Project Bhagiratha.</p>		
+</div>
+</form>
+{% endblock %}

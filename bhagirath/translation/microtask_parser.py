@@ -1,77 +1,85 @@
-# coding: utf-8
-from bhagirath.translation.models import Task,Subtask,StaticMicrotask
+import sqlite3
 import re
 
 splitlist = []
-RE = re.compile('\bRetd|Ltd|Inc|Mrs|Mr|Ms|Prof|Dr|Gen|Rep|Sen|C.O|U.S|U.K|i.e|ex|rep|prof|dr|Co|co|ltd|mr|ms|mrs|\
-                Sgt|sgt|Maj|maj|Col|col|etc|e.g|Ing|Asso|asso\b')
+RE = re.compile('Ltd|Inc|Mrs|Mr|Ms|Prof|Gen|Rep|Sen|Retd|Ltd|Inc|Mrs|Mr|Ms|Prof|Dr|Gen|Rep|Sen|C.O|U.S')
 
 def microtaskParser():
     data = ''
-   
-    results = Subtask.objects.filter(assigned = 0)
-    print results
-    subtask = results[0]#subtask id
-    print subtask
-    subtask_id = subtask.id
-    sub = Subtask.objects.get(id = subtask_id )
-    #print sub.task_id
-    task_id = sub.task_id
-    task = Task.objects.get(id = task_id)
-    sub.assigned = 1 
-     
-    data = str(sub.original_data)
-    print data 
-    #data = data.encode('utf-8')   
-    data = re.sub('[\t\n]+','\n',data)
-    lst = data.split("\n")
-    string = ''
-    for each1 in lst:
-        sent = each1.split(". ")
-        if len(sent) > 1:
-            #for hamdling acronyms LIST TO BE UPDATED
-            for each in sent:
-                each_index = sent.index(each)
-                match_list = RE.findall(each)
-                for i in match_list:
-                        if each.endswith(i):
-                            #join this and next sentence and relace the two sentences in the list
-                            join_after = sent.pop(each_index + 1)
-                            join_before = sent.pop(each_index)
-                            each = join_before + '. ' + join_after
-                            sent.insert(each_index,each)
-                            #print each + "\n" #dump 
-                            break
-                string = string + '. SEN_END ' + (''.join(str(each))).lstrip()
-        else:
-                string = string + '. SEN_END ' + (''.join(str(each1))).lstrip()
+    conn = sqlite3.connect("/home/ankita/git/bhagirath/bhagirath/bhagirath.db")
     
-    string = re.sub('([\?\.\!]+\s*)(\[\d+\]\s*)(\w+)', r'\1 SEN_END\2\3', string)
-    string = re.sub('(SEN_END)\s*([a-z]+)',r'\2', string)
-    string = re.sub('([\s\W]+)([A-Z0-9][\.\?\!]\s+)(SEN_END)', r'\1\2',string)
-    string = re.sub('(\.)+','.', string)
-    #print string
-    flag = 0
-    splitlist = string.split("SEN_END")
-    print splitlist
-    for each in splitlist:
-        each1= unicode(each)
-        print each1
-        if not(each == '. ' or each == '' or each == ' '):        
+    with conn:
+        c = conn.cursor()
+        sql_data = 'SELECT * FROM translation_subtask WHERE assigned=0'     
+        try:
+            c.execute(sql_data)
+            results = c.fetchall()
+            for row in results:
+                subtask_id = row[0]
+                task_id = row[1]
+                data = row[2]
+                break;
+            sql_flag = "UPDATE translation_subtask SET assigned = 1 WHERE task_id = '?'",(task_id)
+            try:
+                c.execute(sql_flag)
+                c.commit()
+            except:
+                c.rollback()        
+        except:
+            print "Error: unable to fetch data"
+  
+        data = data.replace('\'','\\\'')
+        #entire data content is in 'data','dump data' contains whole data before the last See also link(to exclude refrences..etc)
+        #find all occurencs of see also,mark index to discrd contnt after the last see also
+        for_discard = data.rsplit('See also',1)
+        dump_data = for_discard[0]
+
+        splitlist = dump_data.split(". ") 
+        
+        for each in splitlist:
+            each_index = splitlist.index(each)
+            match_list = RE.findall(each)
+            for i in match_list:
+                if each.endswith(i):
+                    #join this and next sentence and relace the two sentences in the list
+                    join_after = splitlist.pop(each_index + 1)
+                    join_before = splitlist.pop(each_index)
+                    each = join_before + '. ' + join_after
+                    splitlist.insert(each_index,each)
+                    break        
+            
+         
+        final = []
+        for i in splitlist:
+            final = i.split(' ')
+            index = 0
+            spacecount =0
+            for each in final:
+                if each == '':
+                    index = index + 1                   
+                else:
+                    dump = ''
+                    group = final[index:]
+                    for next in group:
+                        if next == '':
+                            spacecount = spacecount + 1
+                            if spacecount > 1:
+                                break
+                            else:
+                                continue
+                        dump = dump + ' '+ (''.join(str(next)))
+                        index = index + 1
+                        
+                    if not(dump == ''):        
                         #if single word translate and replace...google api??
-                        if (len(each.split(' '))<=1):
-                            flag = 1
-                            #code yet to be written
+                        if (len(dump.split(' '))<=6):
+                            dump_list = dump.split(' ')
                             #translate that word as it is and store, code to be writen, google api??
-                        else:
-                            #print each
-                            micro = StaticMicrotask()  
-                            micro.subtask = subtask
-                            micro.task = task
-                            micro.original_sentence = each
-                            micro.save()
-                             
-    sub.save()
-    print "microtask done"
-#microtaskParser()
+                        else:    
+                            #print (dump)    
+                            c = conn.cursor()
+                            t = (task_id,subtask_id,dump,False,False,0)
+                            c.execute("INSERT INTO translation_staticmicrotask (task_id,subtask_id,original_sentence,assigned,scoring_done,hop_count) VALUES (?,?,?,?,?,?)",t)
+                            c.close()
     
+    conn.close()
