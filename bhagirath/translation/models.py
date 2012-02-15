@@ -160,7 +160,6 @@ class OverallLeaderboard(models.Model):
 class WeeklyLeaderboard(models.Model):
     username = models.ForeignKey(User,null=False)
     points_earned_this_week = models.IntegerField(null=True,default=0)
-    # default = overall_score - prev_week_score from UserProfile
     rank = models.ForeignKey(OverallLeaderboard,null=False)
         
     def __unicode__(self):
