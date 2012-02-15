@@ -1,5 +1,5 @@
 from django_cron import CronJobBase, Schedule
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
@@ -97,10 +97,11 @@ class UploadPriviledgeCronJob(CronJobBase):
         while j < i:
             c = check[j]
             usr = User.objects.get(username=c.user)
+            perm_id = Permission.objects.get(codename = 'add_task')
             if usr.has_perm('translation.add_task'):
                 pass
             else:
-                usr.user_permissions.add('translation.add_task')        
+                usr.user_permissions.add(perm_id)        
                 usr.save()
             j += 1
         j = 0
@@ -110,7 +111,7 @@ class UploadPriviledgeCronJob(CronJobBase):
             if  not usr.has_perm('translation.add_task'):
                 pass
             else:
-                usr.user_permissions.remove('translation.add_task')        
+                usr.user_permissions.remove(perm_id)        
                 usr.save()
             j += 1
         
