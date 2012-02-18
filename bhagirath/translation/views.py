@@ -268,14 +268,18 @@ def process_sign_up(request):
                                 f_domain = Master_EducationDomain.objects.get(pk=id)
                                 userpro.domain = f_domain
                                 userpro.save()
-                              
-                        if request.POST.getlist('interests'):
-                            all_interests = request.POST.getlist('interests')                
-                            
-                            for i in all_interests:
-                                id = int(i)
-                                f_interests = Master_InterestTags.objects.get(pk=id)
-                                userpro.interests.add(f_interests)
+                        
+                        if request.POST.has_key('specific'):
+                            if request.POST.getlist('interests'):
+                                all_interests = request.POST.getlist('interests') 
+                                for i in all_interests:
+                                    id = int(i)
+                                    f_interests = Master_InterestTags.objects.get(pk=id)
+                                    userpro.interests.add(f_interests)  
+                        else:             
+                                all_interests = Master_InterestTags.objects.all()  
+                                for i in all_interests:
+                                    userpro.interests.add(i) 
                             
                         data = {
                             'form': SignUpForm(),

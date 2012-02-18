@@ -13,7 +13,10 @@ class Master_HindiWords(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.original)
-    
+
+    class Meta:
+        ordering = ["original"]
+        
 class Master_English2Hindi(models.Model):
     english_word = models.CharField(verbose_name="English word",
                                 help_text="English word in dictionary",
@@ -28,6 +31,9 @@ class Master_English2Hindi(models.Model):
     def __unicode__(self):
         return u"%s" % (self.english_word)
     
+    class Meta:
+        ordering = ["english_word"]
+        
 class Master_AgeGroup(models.Model):
     age_group_tag = models.TextField(verbose_name="Age group",
                                      help_text="Age group",
@@ -47,6 +53,10 @@ class Master_GeographicalRegion(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.geographical_region)
+    
+    class Meta:
+        ordering = ["geographical_region"]
+
 
 class Master_InterestTags(models.Model):
     category = models.TextField(verbose_name="Task context",
@@ -58,6 +68,9 @@ class Master_InterestTags(models.Model):
     def __unicode__(self):
         return u"%s" % (self.category) 
     
+    class Meta:
+        ordering = ["category"]
+    
 class Master_Action(models.Model):
     action = models.TextField(verbose_name="Action name", 
                               help_text="Type of action", 
@@ -66,7 +79,10 @@ class Master_Action(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.action)
- 
+
+    class Meta:
+        ordering = ["action"]
+        
 class Master_Role(models.Model):
     role = models.TextField(verbose_name="Role", 
                             help_text="Type of role",
@@ -78,6 +94,9 @@ class Master_Role(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.role)
+
+    class Meta:
+        ordering = ["role"]
 
 class Master_Rank(models.Model):
     position =  models.TextField(verbose_name="Rank", 
@@ -97,6 +116,9 @@ class Master_EducationQualification(models.Model):
     def __unicode__(self):
         return u"%s" % (self.education_qualification)
 
+    class Meta:
+        ordering = ["education_qualification"]
+        
 class Master_EducationDomain(models.Model):
     domain = models.TextField(verbose_name="Domain of education", 
                               help_text="User's educational domain",
@@ -105,6 +127,9 @@ class Master_EducationDomain(models.Model):
     def __unicode__(self):
         return u"%s" % (self.domain) 
     
+    class Meta:
+        ordering = ["domain"]
+        
 class Master_Language(models.Model): 
     language = models.TextField(verbose_name="Language", 
                                 help_text="Language",
@@ -116,13 +141,19 @@ class Master_Language(models.Model):
        
     def __unicode__(self):
         return u"%s" % (self.language)
-
+    
+    class Meta:
+        ordering = ["language"]
+        
 class Master_LanguageExpertise(models.Model): 
     language = models.ForeignKey(Master_Language,on_delete=models.PROTECT)
     expertise = models.IntegerField()
        
     def __unicode__(self):
-        return u"%s%s" % (self.language,self.expertise)
+        return u"Language:%s  Expertise:%s" % (self.language,self.expertise)
+    
+    class Meta:
+        ordering = ["language"]
 
 class Master_SampleTranslations(models.Model):
     original_sentence = models.TextField(verbose_name="Original sentence", 
@@ -140,7 +171,8 @@ class Master_SampleTranslations(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.id)
-       
+    
+
 class StatCounter(models.Model):
     registered_users = models.IntegerField() 
     translated_sentences = models.IntegerField() 
@@ -149,6 +181,7 @@ class StatCounter(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.id)
+    
     
 class OverallLeaderboard(models.Model):
     username = models.ForeignKey(User,null=False)

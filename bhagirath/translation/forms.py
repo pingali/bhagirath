@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.admin import widgets   
+from django.contrib.admin import widgets  
 from captcha.fields import ReCaptchaField
 from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
@@ -54,15 +54,17 @@ class SignUpForm(forms.models.ModelForm):
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField( widget=forms.PasswordInput)
-    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all().order_by('geographical_region'),widget=forms.Select)
-    language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all(), widget=forms.CheckboxSelectMultiple())
-    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(), widget=forms.CheckboxSelectMultiple())
+    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
+    language = forms.ModelMultipleChoiceField(queryset=Master_LanguageExpertise.objects.all())
+    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all())
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
     domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
     #competence_for_each_language      
     captcha = ReCaptchaField(label="Please enter text you see or hear")
-
+    
+   
+    
     def __init__(self, *args, **kwargs):      
         super(SignUpForm, self).__init__(*args, **kwargs)
         self.fields['date_of_birth'].widget = widgets.AdminDateWidget()
