@@ -173,6 +173,7 @@ def process_sign_up(request):
             f_username = request.POST['username']
             f_first_name = request.POST['first_name']
             f_last_name = request.POST['last_name']
+            f_gender = request.POST['gender']
             f_date_of_birth = request.POST['date_of_birth']
                  
             if request.POST.has_key('translator'):
@@ -220,7 +221,7 @@ def process_sign_up(request):
                         u.save()
                         
                         user = User.objects.get(username__exact=f_username)
-                        user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'], 
+                        user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'],gender=f_gender,
                                                     translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
                         
                         userpro = UserProfile.objects.get(user=user)

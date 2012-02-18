@@ -47,13 +47,17 @@ class SignUpForm(forms.models.ModelForm):
     EXPERTISE_CHOICES = (('1', '1'),
                          ('2', '2'),
                          ('3', '3'))
-
+    GENDER_CHOICES = (
+        (u'Male',u'Male'),
+        (u'Female', u'Female'),
+    )
     first_name = forms.CharField(max_length=50)
     last_name = forms.CharField(max_length=50)
     email = forms.EmailField()
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField( widget=forms.PasswordInput)
+    gender = ChoiceField(widget=RadioSelect, choices=GENDER_CHOICES)
     district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
     language = forms.ModelMultipleChoiceField(queryset=Master_LanguageExpertise.objects.all())
     interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all())
@@ -110,7 +114,6 @@ class UploadForm(forms.models.ModelForm):
         model = Task
         exclude = ('upload_timestamp','budget','dampening_factor','current_average_stability')
         widgets = {
-
                    'time_to_publish': SplitDateTimeJSField(required=False,)
                   }
     html_doc_content = forms.FileField(help_text="Task"),

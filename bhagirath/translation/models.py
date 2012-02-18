@@ -201,6 +201,7 @@ class WeeklyLeaderboard(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
     date_of_birth = models.DateField(null=False)
+    gender = models.CharField(max_length=6,null=False)
     district = models.ForeignKey(Master_GeographicalRegion,on_delete=models.SET_NULL,null=True,default=None)
     education_qualification = models.ForeignKey(Master_EducationQualification,on_delete=models.SET_NULL,null=True,default=None)
     domain = models.ForeignKey(Master_EducationDomain,on_delete=models.SET_NULL,null=True,default=None)
