@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic.simple import redirect_to
-
+import os
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^about_us/$','translation.views.about_us',name="about_us"),
     url(r'^sample_translations/(?P<id>\d+)/$','translation.views.sample_translations',name="sample_translations"),
     url(r'^sign_up/$','translation.views.sign_up',name="sign_up"),
-    url(r'^sign_up/done/$','translation.views.process_sign_up',name="process_sign_up"),                  
+    url(r'^sign_up/done/$','translation.views.process_sign_up',name="process_sign_up"),
     url(r'^login/$','translation.views.process_sign_in',name="login"),
     url(r'^logout/$','translation.views.process_sign_out',name="logout"),
     url(r'^account/$','translation.views.account',name="account"),
@@ -30,9 +30,9 @@ urlpatterns = patterns('',
     url(r'^account/translate/(?P<uid>\d+)/(?P<id>\d+)/context/$','translation.views.load_context',name="load_context"),
     url(r'^account/(?P<uid>\d+)/settings/$','translation.views.account_settings',name="account_settings"),
     url(r'^account/(?P<uid>\d+)/settings/done/$','translation.views.process_account_settings',name="process_account_settings"),
-    ('^/?$', redirect_to, {"url": "/home"}),   
+    ('^/?$', redirect_to, {"url": "/home"}),
     (r'^my_admin/jsi18n', 'django.views.i18n.javascript_catalog'),
-   
+    
     # Examples:
     # url(r'^$', 'bhagirath.views.home', name='home'),
     # url(r'^bhagirath/', include('bhagirath.foo.urls')),
@@ -51,4 +51,3 @@ if settings.DEBUG:
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
         (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     )
-

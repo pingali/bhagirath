@@ -1,7 +1,6 @@
 from django.contrib import admin
 from bhagirath.translation.models import *
 
-    
 admin.site.register(Master_HindiWords)
 admin.site.register(Master_English2Hindi)
 admin.site.register(Master_AgeGroup)

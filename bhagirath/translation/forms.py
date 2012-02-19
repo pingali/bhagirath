@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.admin import widgets  
+from django.contrib.admin import widgets 
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.admin import ModelAdmin as myadmin
 from captcha.fields import ReCaptchaField
 from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
@@ -59,15 +61,15 @@ class SignUpForm(forms.models.ModelForm):
     confirm_password = forms.CharField( widget=forms.PasswordInput)
     gender = ChoiceField(widget=RadioSelect, choices=GENDER_CHOICES)
     district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
-    language = forms.ModelMultipleChoiceField(queryset=Master_LanguageExpertise.objects.all())
+    language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all())
     interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all())
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
     domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
     #competence_for_each_language      
     captcha = ReCaptchaField(label="Please enter text you see or hear")
-    
-   
+
+
     
     def __init__(self, *args, **kwargs):      
         super(SignUpForm, self).__init__(*args, **kwargs)

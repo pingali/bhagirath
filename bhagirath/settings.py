@@ -80,7 +80,12 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (findpath('static'),
+STATICFILES_DIRS = (
+    ("images", os.path.join(STATIC_ROOT,'img').replace('\\','/')),
+    ("css",    os.path.join(STATIC_ROOT,'css').replace('\\','/')),
+    ("js",     os.path.join(STATIC_ROOT,'js').replace('\\','/')),
+
+    findpath('static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
