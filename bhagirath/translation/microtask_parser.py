@@ -1,5 +1,5 @@
 # coding: utf-8
-from bhagirath.translation.models import Task,Subtask,StaticMicrotask
+from bhagirath.translation.models import Task,Subtask,StaticMicrotask,Master_Experiment
 import re
 
 splitlist = []
@@ -8,20 +8,17 @@ RE = re.compile('\bRetd|Ltd|Inc|Mrs|Mr|Ms|Prof|Dr|Gen|Rep|Sen|C.O|U.S|U.K|i.e|ex
 
 def microtaskParser():
     data = ''
-   
     results = Subtask.objects.filter(assigned = 0)
-    print results
     subtask = results[0]#subtask id
-    print subtask
     subtask_id = subtask.id
     sub = Subtask.objects.get(id = subtask_id )
-    #print sub.task_id
+
     task_id = sub.task_id
     task = Task.objects.get(id = task_id)
     sub.assigned = 1 
      
     data = str(sub.original_data)
-    print data 
+     
     #data = data.encode('utf-8')   
     data = re.sub('[\t\n]+','\n',data)
     lst = data.split("\n")
@@ -50,13 +47,14 @@ def microtaskParser():
     string = re.sub('(SEN_END)\s*([a-z]+)',r'\2', string)
     string = re.sub('([\s\W]+)([A-Z0-9][\.\?\!]\s+)(SEN_END)', r'\1\2',string)
     string = re.sub('(\.)+','.', string)
-    #print string
+    
     flag = 0
+    i = 0
     splitlist = string.split("SEN_END")
-    print splitlist
+    b = Master_Experiment.objects.all()
     for each in splitlist:
         each1= unicode(each)
-        print each1
+        
         if not(each == '. ' or each == '' or each == ' '):        
                         #if single word translate and replace...google api??
                         if (len(each.split(' '))<=1):
@@ -64,14 +62,18 @@ def microtaskParser():
                             #code yet to be written
                             #translate that word as it is and store, code to be writen, google api??
                         else:
-                            #print each
+                            a = b[i]
                             micro = StaticMicrotask()  
                             micro.subtask = subtask
                             micro.task = task
                             micro.original_sentence = each
+                            micro.bit_array = a.id
                             micro.save()
+                            if i == 10:
+                                i = 0
+                            else:
+                                i += 1
                              
     sub.save()
-    print "microtask done"
-#microtaskParser()
+   
     

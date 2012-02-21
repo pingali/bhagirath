@@ -83,16 +83,7 @@ def microtask(request):
     return HttpResponse("DONE!!!") 
            
 def home(request):
-    sta = StatCounter.objects.all().order_by('created_on')
-    if sta:
-        st = sta[0]
-        u = st.registered_users
-        s = st.translated_sentences
-        a = st.published_articles
-    else:
-        u = 0
-        a = 0
-        s = 0
+    (u,a,s) = stats()
     data = {
             'form': LoginForm(),
             'registered_users':u,
@@ -102,16 +93,7 @@ def home(request):
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))
 
 def about_us(request):
-    sta = StatCounter.objects.all().order_by('created_on')
-    if sta:
-        st = sta[0]
-        u = st.registered_users
-        s = st.translated_sentences
-        a = st.published_articles
-    else:
-        u = 0
-        a = 0
-        s = 0
+    (u,a,s) = stats()
     data = {
             'form': LoginForm(),
             'registered_users':u,
@@ -337,16 +319,8 @@ def process_sign_out(request):
     s.logout_timestamp = datetime.datetime.now()
     s.save()
     auth.logout(request)
-    sta = StatCounter.objects.all().order_by('created_on')
-    if sta:
-        st = sta[0]
-        u = st.registered_users
-        s = st.translated_sentences
-        a = st.published_articles
-    else:
-        u = 0
-        a = 0
-        s = 0
+    
+    (u,a,s) = stats()
     data = {
         'form': LoginForm(),
         'registered_users':u,
@@ -361,29 +335,15 @@ def account(request):
     uid = user.pk
 
     if user.is_authenticated():
-        sta = StatCounter.objects.all().order_by('created_on')
-        if sta:
-            st = sta[0]
-            u = st.registered_users
-            s = st.translated_sentences
-            a = st.published_articles
-        else:
-            u = 0
-            a = 0
-            s = 0
-          
+        (u,a,s) = stats()          
         user_pro = UserProfile.objects.filter(user = uid)
         user_profile = user_pro[0]
-        total_translated_sentences = user_profile.total_translated_sentences 
-        no_of_perfect_translations = user_profile.no_of_perfect_translations 
-        total_uploaded_tasks = user_profile.total_uploaded_tasks 
-        total_evaluated_sentences = user_profile.total_evaluated_sentences
         data = {
                 'uid':uid,
-                'total_translated_sentences':total_translated_sentences,
-                'no_of_perfect_translations': no_of_perfect_translations,
-                'total_uploaded_tasks':total_uploaded_tasks,
-                'total_evaluated_sentences':total_evaluated_sentences,
+                'total_translated_sentences':user_profile.total_translated_sentences,
+                'no_of_perfect_translations': user_profile.no_of_perfect_translations,
+                'total_uploaded_tasks':user_profile.total_uploaded_tasks,
+                'total_evaluated_sentences':user_profile.total_evaluated_sentences,
                 'registered_users':u,
                 'translated_sentences':s,
                 'published_articles':a,
@@ -393,7 +353,10 @@ def account(request):
     else:
         data = {
         'form': LoginForm(),
-        'uid':uid
+        'uid':uid,
+        'registered_users':u,
+        'translated_sentences':s,
+        'published_articles':a,
         } 
     messages.error(request,"You're not logged in!!!")
     return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
@@ -415,17 +378,7 @@ def upload(request):
         ta.save()
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
-        sta = StatCounter.objects.all().order_by('created_on')
-        if sta:
-            st = sta[0]
-            u = st.registered_users
-            s = st.translated_sentences
-            a = st.published_articles
-        else:
-            u = 0
-            a = 0
-            s = 0
-   
+        (u,a,s) = stats()
         data = {
         'form': LoginForm(),
         'username':user,
@@ -496,17 +449,7 @@ def process_upload(request):
                                 f_interests = Master_InterestTags.objects.get(pk=id)
                                 newtask.interest_tags.add(f_interests)
                     newtask.save()
-            sta = StatCounter.objects.all().order_by('created_on')
-            if sta:
-                st = sta[0]
-                u = st.registered_users
-                s = st.translated_sentences
-                a = st.published_articles
-            else:
-                u = 0
-                a = 0
-                s = 0
-   
+            (u,a,s) = stats()
             data = {
                     'form': UploadForm(),
                     'uid': uid,
@@ -563,15 +506,35 @@ def translate(request,uid):
                 available_microtask = available_microtasks[0]
                 s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
                 parent_static_microtask = StaticMicrotask.objects.get(id=s)
-                microtask_translation = parent_static_microtask.translated_sentence
-                machine_translation = parent_static_microtask.machine_translation
-                other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
-                other_translations = ""
+                parent_static_microtask.bit_array = Master_Experiment.objects.get(pk=8)
+                x = Master_Experiment.objects.get(bit_array = parent_static_microtask.bit_array)
+                z = x.bit_array
+                prev_context_size = int(z[0:3],2)
+                auto_correct =  int(z[10],2)
+                reference_translation = int(z[11],2)
+                
+                prev_context = load_context(parent_static_microtask.id,prev_context_size)
+                
+                if auto_correct==0:
+                    auto_correction = False
+                else:
+                    auto_correction = True
+                
+                if reference_translation == 1:
+                    microtask_translation = parent_static_microtask.translated_sentence
+                    machine_translation = parent_static_microtask.machine_translation
+                
+                    other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
+                    other_translations = ""
 
-                for i in other:
-                    text = i.translated_sentence
-                    if text:
-                        other_translations = other_translations + "-> " + text + '\n'
+                    for i in other:
+                        text = i.translated_sentence
+                        if text:
+                            other_translations = other_translations + "-> " + text + '\n'
+                else:
+                    microtask_translation = ""
+                    machine_translation = ""
+                    other_translations = ""
                                   
                 h = UserHistory()
                 h.task = available_microtask.task
@@ -588,26 +551,8 @@ def translate(request,uid):
                 s = StaticMicrotask.objects.get(id=s)
                 s.hop_count = s.hop_count + 1
                 s.save()               
-                
-                dict = h.original_sentence.split(' ')
-                count = len(dict)
-                k = 0
-                word = ''
-                hindi_dictionary = ''
-                meaning = ''
-                while k < count:
-                    mean = Master_English2Hindi.objects.filter(english_word = dict[k])
-                    
-                    if mean:
-                        i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
-                        m = 0
-                        while m < i:
-                            meaning = mean[m].hindi_word + '--' + meaning
-                            m += 1
-                        if meaning:
-                            hindi_dictionary = hindi_dictionary + ',' + meaning 
-                            word = word + ',' + dict[k]    
-                    k += 1
+                                
+                (word,hindi_dictionary) = dict(h)               
                                 
                 data = {
                         'form': TranslateForm(),
@@ -620,6 +565,8 @@ def translate(request,uid):
                         'dictionary': hindi_dictionary,
                         'word':word,
                         'username':user,
+                        'prev_context':prev_context,
+                        'auto_correction':auto_correction
                 }
                                 
                 available_microtask.assigned=True
@@ -636,17 +583,7 @@ def translate(request,uid):
             traceback.print_exc() 
             messages.error(request, "Load microtask for translation Failed!!!")
     else:
-        sta = StatCounter.objects.all().order_by('created_on')
-        if sta:
-            st = sta[0]
-            u = st.registered_users
-            s = st.translated_sentences
-            a = st.published_articles
-        else:
-            u = 0
-            a = 0
-            s = 0
-   
+        (u,a,s) = stats()
         data = {
             'form': LoginForm(),
             'registered_users':u,
@@ -713,81 +650,6 @@ def process_translate(request,id,uid):
                 log.exception("Save translated microtask Failed!!!")
                 traceback.print_exc() 
                 messages.error(request, "Save translated microtask Failed!!!")
-    else:
-        return HttpResponse("Please login.You're not logged in!!!")
-
-def load_context(request,id,uid):
-    user = request.user
-    if user.is_authenticated():
-        if request.method == 'POST':
-            try:
-                count = request.POST['context_size']
-                english = Microtask.objects.get(id=id)
-                rec = Microtask.objects.get(id = english.id)
-                prev_translation = request.POST['translated_sentence']
-                hist = UserHistory.objects.filter(user = uid, original_sentence = rec.original_sentence)
-                h = hist[0]
-               
-                static = StaticMicrotask.objects.filter(original_sentence = rec.original_sentence)
-               
-                s = static[0]
-                a = s.pk - int(count)
-                b = s.pk + int(count)
-                prev_context = ""
-                next_context = ""
-
-                while a < s.pk:
-                    st = StaticMicrotask.objects.filter(id=a)
-                    if st:
-                        t = StaticMicrotask.objects.get(id=st)
-                        prev_context = prev_context + t.original_sentence + ". "
-                    a += 1
-
-                c = s.pk + 1
-                while c <= b:
-                    st = StaticMicrotask.objects.filter(id=c)
-                    if st:
-                        t = StaticMicrotask.objects.get(id=st)
-                        next_context = next_context + t.original_sentence + ". "
-                    c += 1
-                    
-                sentence =  rec.original_sentence + prev_context + next_context
-                dict = sentence.split(' ')
-                count = len(dict)
-                k = 0
-                word = ''
-                hindi_dictionary = ''
-                meaning = ''
-                while k < count:
-                    mean = Master_English2Hindi.objects.filter(english_word = dict[k])
-                    if mean:
-                        i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
-                        m = 0
-                        while m < i:
-                            meaning = mean[m].hindi_word + '--' + meaning
-                            m += 1
-                        if meaning:
-                            hindi_dictionary = hindi_dictionary + ',' + meaning 
-                            word = word + ',' + dict[k]    
-                    k += 1
-                
-                data = {
-                    'form': TranslateForm(instance=h),
-                    'curr_id':id,
-                    'uid': uid,
-                    'english': rec.original_sentence,
-                    'prev_context':prev_context,
-                    'next_context':next_context,
-                    'hindi': prev_translation,
-                    'dictionary': hindi_dictionary,
-                    'word':word,
-                    'username':user,
-                    }        
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))     
-            except:
-                log.exception("Context loading Failed!!!")
-                traceback.print_exc() 
-                messages.error(request, "Context loading Failed!!!")
     else:
         return HttpResponse("Please login.You're not logged in!!!")
 
@@ -941,3 +803,49 @@ def evaluate(request):
 def process_evaluate(request):
     print "to be done"
     return HttpResponseRedirect(reverse('account'))
+
+
+def load_context(sid,prev_context_count):
+    a = int(sid) - int(prev_context_count)
+    prev_context = ""
+    while int(a) < int(sid):
+        st = StaticMicrotask.objects.get(id=a)
+        if st:
+            prev_context = prev_context + st.original_sentence + ". "
+        a += 1
+    return prev_context
+
+def dict(h):
+    dict = h.original_sentence.split(' ')
+    count = len(dict)
+    k = 0
+    word = ''
+    hindi_dictionary = ''
+    meaning = ''
+    while k < count:
+        mean = Master_English2Hindi.objects.filter(english_word = dict[k])            
+        if mean:
+            i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
+            m = 0
+            while m < i:
+                meaning = mean[m].hindi_word + '--' + meaning
+                m += 1
+            if meaning:
+                hindi_dictionary = hindi_dictionary + ',' + meaning 
+                word = word + ',' + dict[k]    
+        k += 1
+    return (word,hindi_dictionary)
+
+def stats():
+    sta = StatCounter.objects.all().order_by('created_on')
+    if sta:
+        st = sta[0]
+        u = st.registered_users
+        s = st.translated_sentences
+        a = st.published_articles
+    else:
+        u = 0
+        a = 0
+        s = 0
+        
+    return (u,a,s)

@@ -1,6 +1,7 @@
-#Mon Feb 20 14:17:20 IST 2012
+#Tue Feb 21 15:21:55 IST 2012
 eclipse.preferences.version=1
 encoding//bhagirath/centoid_score/CentroidFinder.py=utf-8
+encoding//bhagirath/translation/microtask_parser.py=utf-8
 encoding//bhagirath/translation/migrations/0002_auto__del_master_backgroundtask__del_leaderboard__add_master_english2h.py=utf-8
 encoding//bhagirath/translation/migrations/0003_auto__add_field_userprofile_no_of_perfect_translations__add_field_stat.py=utf-8
 encoding//bhagirath/translation/migrations/0004_auto__chg_field_session_logout_timestamp.py=utf-8

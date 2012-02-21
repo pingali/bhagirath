@@ -44,8 +44,11 @@ class PopulateMicrotaskCronJob(CronJobBase):
         static = StaticMicrotask.objects.filter(assigned = 0)
         while i < 50:
             s = static[i]
+            x = Master_Experiment.objects.get(bit_array = s.bit_array)
+            z = x.bit_array
+            val = int(z[6:10],2) 
             j = 0
-            while j < 2:
+            while j < val:
                 m = Microtask()
                 m.task = s.task
                 m.subtask = s.subtask
