@@ -62,19 +62,26 @@ class SentenceMap(object):
             self.sentencesimilarityscore = 0
             self.distance = 2000
             return self.distance
-        self.sentencesimilarityscore = ((2 * matches) - transpositions) / float(self.charcount1 + self.charcount2) 
+        #print "matches : " + str(matches)
+        #print "transpositions :"+str(transpositions)
+        #print "float(self.charcount1 + self.charcount2)" + str(float(self.charcount1 + self.charcount2 -2))
+        self.sentencesimilarityscore = ((2 * matches) - transpositions) / float(self.charcount1 + self.charcount2 -2) 
+        #print "self.sentencesimilarityscore" + str(self.sentencesimilarityscore)
         self.distance = 1 / self.sentencesimilarityscore
-       # print "distance is:" + str(self.distance)
+        #print "distance is:" + str(self.distance)
         return self.distance
 
     def getmatches(self):
         matches = 0
         ## for-while
         i = 0
+        #print "t1 :" + str(self.tokencount1)correct op
+        #print "t2 :" + str(self.tokencount2)correct op
         while i < self.tokencount1:
             ## for-while
             j = 0
             while j < self.tokencount2:
+                #print "self.sentencemap[i][j] :" + str(self.sentencemap[i][j])
                 if self.sentencemap[i][j] > 0:
                     matches = matches + self.sentencemap[i][j] * self.sentenceweightmap[i][j]
                 j += 1

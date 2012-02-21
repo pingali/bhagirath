@@ -19,8 +19,10 @@ class CentroidFinder(object):
     mapscorematrix=[]
     mapmatrix=[]
     mapweightmatrix=[]
+    normalizer = 0
     @classmethod
     def getCentroid(self, a):
+        selectedsentnum = 0
         selectedtranslation = ""
         total_num_outputs = len(a)
         sentences = [Sentence() for __idx0 in range(total_num_outputs)]
@@ -43,7 +45,7 @@ class CentroidFinder(object):
             i += 1
             
         if len(sentences) <= 1:#//if only 1 or 2 candidate translations available
-            randomGenerator = Random()
+            randomGenerator = random()
             randomchoice = randomGenerator.nextInt(len(sentences))#check
             selectedtranslation = sentences[randomchoice].text
         else:#//if 3 or more candidate translations are available
@@ -103,6 +105,7 @@ class CentroidFinder(object):
                             #print "args"
                             #print (sentences[i].tokens[slength1], sentences[j].tokens[slength2])
                             self.mapscorematrix[slength1][slength2] = WordComparer.comparescores(sentences[i].tokens[slength1], sentences[j].tokens[slength2])
+                            #print "self.mapscorematrix[slength1][slength2]" + str(WordComparer.comparescores(sentences[i].tokens[slength1], sentences[j].tokens[slength2]))
                             slength2 += 1
                         slength1 += 1
                     #print ("mapscorematrix",self.mapscorematrix)
@@ -148,8 +151,10 @@ class CentroidFinder(object):
                                 else:
                                     self.mapweightmatrix[index1][slength2] = len(sentences[i].tokens[index1])
                                 self.mapmatrix[index1][slength2] = similarity
+                                #print "self.mapmatrix[index1][slength2] : " + str(self.mapmatrix[index1][slength2])correct
                                 debaredlist.append(index1)
                             slength2 += 1
+                    #print self.mapmatrix
                     sentencemaps[sentencemapcount].setscorematrix(self.mapscorematrix)
                     sentencemaps[sentencemapcount].setmapmatrix(self.mapmatrix)
                     sentencemaps[sentencemapcount].setweightmatrix(self.mapweightmatrix)
@@ -189,20 +194,19 @@ class CentroidFinder(object):
                 ## for-while
                 y = 0
                 while y < len(sentences):
+                    #print sentences[z].distance[y]
                     newdistance = newdistance + sentences[z].distance[y]
                     y += 1
                     
                 if newdistance < newoptdistance:
+                    selectedsentnum = z
                     selectedtranslation = sentences[z].text
                     newoptdistance = newdistance
                 newdistance = 0
                 z += 1
-        """
         
-        //decided on scores and reputation systems based on distance
-        //If centroid has two neighbours below a certain threshold then flag ready and flush - here
-        //Else say not ready, need another round - game can be decided by this say using sigma between neighbours - here  
-        """
+        self.normalizer = 10*(sentences[selectedsentnum].tokencount)
+        #print "normalizer=" + str(self.normalizer)
         return selectedtranslation
 
     @classmethod
@@ -232,19 +236,19 @@ class CentroidFinder(object):
         i = 0
         while i < len(self.reputation):
             if maxscore==0 :
-                normalizedreputation[i] = 0;
+                self.normalizedreputation[i] = 0;
             else:
-                self.normalizedreputation[i] = int(100 * (self.reputation[i] / maxscore))
+                self.normalizedreputation[i] = int(self.normalizer*(self.reputation[i]/maxscore))
                 i += 1
         return self.normalizedreputation
 
     @classmethod
     def isIterationNeeded(self):
         closeneighbourcount = 0
-        ## for-while
+        normalscore = int(0.95 * self.normalizer)
         i = 0
         while i < len(self.reputation):
-            if self.normalizedreputation[i] >= 90:
+            if self.normalizedreputation[i]>=(normalscore):
                 closeneighbourcount += 1
             i += 1
         if closeneighbourcount > 2:

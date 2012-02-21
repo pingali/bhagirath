@@ -1,42 +1,4 @@
-#signup .sign_up {
-	float: left;
-	margin: 5px 20px 20px 160px;
-	width: 650px;
-	background:#FDF7EF;
-}
-
-#signup .sign_up h2 {
-	padding: 12px 0 10px 20px;
-	font-weight: bold;
-	font-size: 15px;
-	color:#282828;
-	background:#D8D8D8;
-	text-shadow: #fefceb 0 1px 1px;
-}
-
-#signup fieldset { 
-	padding: 20px 0 20px 0; 
-}
-
-#signup fieldset p {
-	margin: 0 10px 10px 20px;
-	font-weight: bold;
-	font-size: 13px;
-	color: #6e6e6e;
-}
-
-#signup fieldset label {
-	margin: 0 0 5px 0;
-	display: block;
-}
-
-.interest {
-	width:500px;
-	height:100px;
-	border-style: solid;
-	border-width: 2px;
-}
-
+/* Overriding SELECTOR (FILTER INTERFACE) of django admin widgets*/
 
 .selector {
     width: 580px;
@@ -127,33 +89,6 @@ a.selector-chooseall, a.selector-clearall {
 
 a.selector-chooseall:hover, a.selector-clearall:hover {
     color: #036;
-}
-
-
-
-
-button.signup{
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 0.8em;
-    background-color: #BFBFBF;
-    font-weight: bold;
-    border-style: solid;
-    border-width: 1px;
-    cursor: pointer;
-    position:relative;
-    left:20px;
-}
-
-button.signup:hover{
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 0.8em;
-    background-color: #33CCFF;
-    font-weight: bold;
-    border-style: solid;
-    border-width: 1px;
-    cursor: pointer;
 }
 
 

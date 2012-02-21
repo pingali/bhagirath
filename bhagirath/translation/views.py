@@ -415,9 +415,23 @@ def upload(request):
         ta.save()
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
+        sta = StatCounter.objects.all().order_by('created_on')
+        if sta:
+            st = sta[0]
+            u = st.registered_users
+            s = st.translated_sentences
+            a = st.published_articles
+        else:
+            u = 0
+            a = 0
+            s = 0
+   
         data = {
         'form': LoginForm(),
         'username':user,
+        'registered_users':u,
+        'translated_sentences':s,
+        'published_articles':a
         } 
     messages.error(request,"You're not logged in!!!")
     return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
@@ -482,10 +496,24 @@ def process_upload(request):
                                 f_interests = Master_InterestTags.objects.get(pk=id)
                                 newtask.interest_tags.add(f_interests)
                     newtask.save()
+            sta = StatCounter.objects.all().order_by('created_on')
+            if sta:
+                st = sta[0]
+                u = st.registered_users
+                s = st.translated_sentences
+                a = st.published_articles
+            else:
+                u = 0
+                a = 0
+                s = 0
+   
             data = {
                     'form': UploadForm(),
                     'uid': uid,
                     'username':user,
+                    'registered_users':u,
+                    'translated_sentences':s,
+                    'published_articles':a
                    }
             ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
             ta.task = Task.objects.get(pk=newtask.id)
@@ -608,8 +636,22 @@ def translate(request,uid):
             traceback.print_exc() 
             messages.error(request, "Load microtask for translation Failed!!!")
     else:
+        sta = StatCounter.objects.all().order_by('created_on')
+        if sta:
+            st = sta[0]
+            u = st.registered_users
+            s = st.translated_sentences
+            a = st.published_articles
+        else:
+            u = 0
+            a = 0
+            s = 0
+   
         data = {
-        'form': LoginForm(),
+            'form': LoginForm(),
+            'registered_users':u,
+            'translated_sentences':s,
+            'published_articles':a
         } 
         messages.error(request,"Please login.You're not logged in!!!")
         return render_to_response('login/home.html',data,context_instance=RequestContext(request))
@@ -643,8 +685,8 @@ def process_translate(request,id,uid):
                 h.status_flag = 'Reviewed'
                 h.correction_episode = list 
                 h.save()
-                data = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
-                h.correction_episode = data
+                dat = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
+                h.correction_episode = dat
                 h.save()
                 
                 #micro = Microtask.objects.get (id=engl)
@@ -845,10 +887,24 @@ def process_account_settings(request,uid):
                             id = int(i)
                             f_interests = Master_InterestTags.objects.get(pk=id)
                             userpro.interests.add(f_interests)
-                        
+                    
+                    sta = StatCounter.objects.all().order_by('created_on')
+                    if sta:
+                        st = sta[0]
+                        u = st.registered_users
+                        s = st.translated_sentences
+                        a = st.published_articles
+                    else:
+                        u = 0
+                        a = 0
+                        s = 0
+       
                     data = {
                         'form': SignUpForm(), 
-                        }
+                        'registered_users':u,
+                        'translated_sentences':s,
+                        'published_articles':a
+                    }
                     messages.success(request,"Record saved successfully!!.")
                     return render_to_response('translation/account.html',data,context_instance=RequestContext(request))                              
                 else:

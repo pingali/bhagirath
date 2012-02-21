@@ -172,6 +172,12 @@ class Master_SampleTranslations(models.Model):
     def __unicode__(self):
         return u"%s" % (self.id)
     
+class Master_Experiment(models.Model):
+    bit_array = models.CharField(max_length=24)
+    
+    def __unicode__(self):
+        return u"%s" % (self.bit_array) 
+    
 
 class StatCounter(models.Model):
     registered_users = models.IntegerField() 
@@ -199,7 +205,7 @@ class WeeklyLeaderboard(models.Model):
         return u"%s" % (self.id)
     
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
+    user = models.OneToOneField(User)
     date_of_birth = models.DateField(null=False)
     gender = models.CharField(max_length=6,null=False)
     district = models.ForeignKey(Master_GeographicalRegion,on_delete=models.SET_NULL,null=True,default=None)
@@ -277,6 +283,7 @@ class StaticMicrotask(models.Model):
     stability = models.FloatField(default=0.0,null=True)
     scoring_done = models.BooleanField(default=False)
     hop_count = models.IntegerField(default=0)
+    bit_array = models.ForeignKey(Master_Experiment,null=True)
     
     def __unicode__(self):
         return u"%s" %(self.id)

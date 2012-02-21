@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import StringIO
 from CentroidFinder import CentroidFinder
 
 class See4API(object):
@@ -11,16 +12,27 @@ class See4API(object):
     def main(self, a):
         total_inputs = 5
         inputs = ['' for __idx0 in range(total_inputs)]
-        inputs[0] = "meraa bhaarata mahaana h"
-        inputs[1] = ""
-        inputs[2] = "meraa bhaarata mahaana "
-        inputs[3] = "meraa bhaarata mahaana"
-        inputs[4] = "meraa bhaarat hai"
+        
+        dictionary_filpath = "/home/bhagyashree/Desktop/finalizedreputationsystemcode/abc1.txt"
+        file1 = open(dictionary_filpath,'r')
+        
+        strval = ""
+        count = 0
+        while strval is not None:
+            strval = file1.readline()
+            if strval=='':
+                break
+            else:
+                inputs[count] = strval.decode("utf-8")
+                #print inputs[count]
+                count+=1
+        file1.close()
+        
         centroid = CentroidFinder.getCentroid(inputs)
-        print ("centroid", centroid) 
+        print "centroid : " + str(centroid) 
         scores = [int() for __idx0 in range(total_inputs)]
         scores = CentroidFinder.getReputationscores()
-        ## for-while
+      
         i = 0
         while i < total_inputs:
             print scores[i]

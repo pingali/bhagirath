@@ -16,6 +16,7 @@ class SentenceTokenizer(object):
 
     @classmethod
     def sentencetokenizer(self, sentence):
+        sentence = sentence.rstrip('\n')
         token = sentence.split(" ")
         return token
 

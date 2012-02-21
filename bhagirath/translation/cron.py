@@ -45,7 +45,7 @@ class PopulateMicrotaskCronJob(CronJobBase):
         while i < 50:
             s = static[i]
             j = 0
-            while j < 3:
+            while j < 2:
                 m = Microtask()
                 m.task = s.task
                 m.subtask = s.subtask

@@ -6,7 +6,15 @@
 {% endblock %}
 
 {% block script %}
+<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
+
 <script type="text/javascript" Language="JavaScript">
+	$(document).ready(function() {
+		jQuery.each($('select[@multiple="multiple"]'), function () {  
+		 SelectFilter.init(this.id, "", 0, "/media/");  
+		}); 			
+	});
+
 	function OnUpload()  {
 		document.upload_form.action = "/account/upload/done/"
 	  	return true;

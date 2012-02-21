@@ -1,0 +1,81 @@
+[
+   {
+    "model": "translation.master_experiment", 
+	"pk": "1", 
+	"fields": { 
+	    "bit_array": "001000001011"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "2", 
+	"fields": { 
+	    "bit_array": "001000001001"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "3", 
+	"fields": { 
+	    "bit_array": "001000001010"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "4", 
+	"fields": { 
+	    "bit_array": "001000001111"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "5", 
+	"fields": { 
+	    "bit_array": "001000010111"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "6", 
+	"fields": { 
+	    "bit_array": "001000011111"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "7", 
+	"fields": { 
+	    "bit_array": "001000100111"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "8", 
+	"fields": { 
+	    "bit_array": "000000001011"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "9", 
+	"fields": { 
+	    "bit_array": "010000001011"
+	} 
+    },
+    
+    {
+    "model": "translation.master_experiment", 
+	"pk": "10", 
+	"fields": { 
+	    "bit_array": "011000001011"
+	} 
+    }
+]
