@@ -1,12 +1,12 @@
 {% extends "layout1.html" %}
 {% block menu %}
 	<ul>
-		<li><a href="/account/">Home</a></li>
-		<li><a href="/account/upload/">Contribute</a></li>
-		<li><a href="/account/translate/{{uid}}/">Translate</a></li>
-		<li><a href="/account/evaluate/">Evaluate</a></li>
-		<li><a href="/account/{{uid}}/settings/">Settings</a></li>
-		<li><a href="/logout/">Logout</a></li>
+		<li title="Your home page"><a href="/account/">Home</a></li>
+		<li title="Upload file for translation"><a href="/account/upload/">Contribute</a></li>
+		<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
+		<li title="Evaluate translations"><a href="/account/evaluate/">Evaluate</a></li>
+		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Settings</a></li>
+		<li title="Logout"><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
 

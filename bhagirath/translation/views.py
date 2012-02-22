@@ -600,15 +600,8 @@ def process_translate(request,id,uid):
         if request.method == 'POST':
             try:
                 correction_episode = request.POST['cmd']
-                epi = correction_episode.split(' ')
-                i = 0
-                list = []
-                for j in epi:
-                    if epi[i]=='' or epi[i]=='\n' or epi[i]=='\t' or epi[i]=='\t\t\t':
-                        pass
-                    else:
-                        list.append(epi[i])
-                    i += 1                
+                list = correction_episode.split('here')
+                           
                 
                 engl = Microtask.objects.filter(pk=id)
                 eng = engl[0]
