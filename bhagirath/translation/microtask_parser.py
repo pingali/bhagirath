@@ -62,17 +62,16 @@ def microtaskParser():
                             #code yet to be written
                             #translate that word as it is and store, code to be writen, google api??
                         else:
+                            if int(i) == 10:
+                                i = 0
                             a = b[i]
                             micro = StaticMicrotask()  
                             micro.subtask = subtask
                             micro.task = task
                             micro.original_sentence = each
-                            micro.bit_array = a.id
+                            micro.bit_array = a
                             micro.save()
-                            if i == 10:
-                                i = 0
-                            else:
-                                i += 1
+                            i += 1
                              
     sub.save()
    

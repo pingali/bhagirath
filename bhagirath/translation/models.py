@@ -7,8 +7,7 @@ class Master_HindiWords(models.Model):
     original = models.CharField(verbose_name="Hindi word",
                                 help_text="Hindi word in devnagri script",
                                 max_length=2000,
-                                null=False,
-                                unique=True)
+                                null=False)
     pos = models.CharField(max_length=2000,null=False)
     
     def __unicode__(self):

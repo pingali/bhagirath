@@ -52,13 +52,15 @@ def subtask(request):
     j = 0
     while  j< i:
         t = tasks[j]
-        s = '/home/ankita/Desktop/TRDDC_Wikipedia/Sample_Wiki_Articles/' + t.html_doc_name
-        subtaskParser(s,t.id)
+        subtaskParser(t.html_doc_name)
         j +=1
     return HttpResponse("DONE!!!") 
 
 def staticmicro(request):
-    microtaskParser()    
+    i = 0
+    while i < 5:
+        microtaskParser()
+        i += 1  
     return HttpResponse("DONE!!!") 
 
 def microtask(request):
@@ -66,8 +68,11 @@ def microtask(request):
     static = StaticMicrotask.objects.filter(assigned = 0)
     while i < 50:
         s = static[i]
+        x = Master_Experiment.objects.get(bit_array = s.bit_array)
+        z = x.bit_array
+        val = int(z[6:10],2) 
         j = 0
-        while j < 3:
+        while j < val:
             m = Microtask()
             m.task = s.task
             m.subtask = s.subtask
@@ -77,9 +82,9 @@ def microtask(request):
             m.assign_timestamp = datetime.datetime.now()
             m.save()
             j += 1
-        #s.assigned = 1
-        #s.save
-        i += 1    
+        s.assigned = 1
+        s.save()
+        i += 1 
     return HttpResponse("DONE!!!") 
            
 def home(request):
@@ -143,12 +148,8 @@ def process_sign_up(request):
                                        request.POST['recaptcha_response_field'], 
                                        settings.RECAPTCHA_PRIVATE_KEY, 
                                        request.META['REMOTE_ADDR'])
-        if check_captcha.is_valid is False:
-            pass_captcha = False
-        else:
-            pass_captcha = True
-
-        if pass_captcha :
+        
+        if check_captcha.is_valid:
             f_password = request.POST['password']
             f_confirm_password = request.POST['confirm_password']
             f_email = request.POST['email']
@@ -506,7 +507,6 @@ def translate(request,uid):
                 available_microtask = available_microtasks[0]
                 s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
                 parent_static_microtask = StaticMicrotask.objects.get(id=s)
-                parent_static_microtask.bit_array = Master_Experiment.objects.get(pk=8)
                 x = Master_Experiment.objects.get(bit_array = parent_static_microtask.bit_array)
                 z = x.bit_array
                 prev_context_size = int(z[0:3],2)

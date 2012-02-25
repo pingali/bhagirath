@@ -55,7 +55,7 @@ class Command(BaseCommand):
         dbpass = db['PASSWORD']
         
 
-subtaskParser('Wordnet.html') 
-#        microtaskParser()
+#subtaskParser('Olympics.html') 
+microtaskParser()
        
 
