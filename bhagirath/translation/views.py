@@ -1,20 +1,28 @@
 from django.template import RequestContext
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.core import serializers
 from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
-from django.conf import settings
-from django.contrib import messages
-from django.core import serializers
+from bhagirath.translation.subtask_parser import subtaskParser
+from bhagirath.translation.microtask_parser import microtaskParser
 import captcha
 import traceback
 import logging
-from bhagirath.translation.subtask_parser import subtaskParser
-from bhagirath.translation.microtask_parser import microtaskParser
+import os
+import sys
+
+def findpath(path):
+    parent_dir = os.path.dirname(__file__)
+    return os.path.abspath(os.path.join(parent_dir,path))
 
 log = logging.getLogger("translation.views")
+path = 'rolling_log'
+rolling_handler = logging.handlers.RotatingFileHandler(path, maxBytes=52428800)
+log.addHandler(rolling_handler)
 
 def hindiwords(request):
     F = open("/home/ankita/Desktop/hindi_wordlist/noun_txt")
@@ -183,6 +191,7 @@ def process_sign_up(request):
                                 'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                                 }
                             messages.error(request,"EmailID already in use.Try another one!!!")
+                            log.error("Exisiting email-id used while user-registration.")
                             return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
                         
                         count = User.objects.all().filter(username = f_username).count()
@@ -193,6 +202,7 @@ def process_sign_up(request):
                                 'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                                 }
                             messages.error(request,"Username already in use.Try another one!!!")
+                            log.error("Exisiting username used while user-registration.")
                             return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request)) 
                         
                         u = User.objects.create_user(f_username, f_email, f_password)
@@ -264,7 +274,8 @@ def process_sign_up(request):
                             'form': SignUpForm(),
                             'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                             }
-                        messages.success(request,"Record saved successfully!!.")
+                        messages.success(request,"Record saved successfully!!!")
+                        log.info("User registration successful for %s."%(f_username))
                         return render_to_response('login/home.html',data,context_instance=RequestContext(request))                              
                     else:
                         data = {
@@ -272,6 +283,7 @@ def process_sign_up(request):
                             'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                             }
                         messages.error(request,"Please fill in all fields!!!")
+                        log.error("All fields not entered correctly while user registration.")
                         return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
     
                 else:
@@ -280,10 +292,11 @@ def process_sign_up(request):
                         'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                         } 
                     messages.error(request,"Confirm password correctly!!!")
+                    log.error("Password not confirmed correctly.")
                     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
                 return HttpResponseRedirect(reverse('home')) 
             except:
-                log.exception("Registration Failed!!!")
+                log.exception("User registration failed for %s."%(f_username))
                 traceback.print_exc() 
                 messages.error(request, "Registration Failed!!!Try again.")
                
@@ -293,9 +306,9 @@ def process_sign_up(request):
                 'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
                 }
             messages.error(request, "Recaptcha entered incorrectly!!!")
-           
+            log.error("Recaptcha entered incorrectly while user registration.")
             return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-    return HttpResponse("Error!!!")
+    return HttpResponse("Registration Failed - Some error occurred!!!")
 
 def process_sign_in(request):
     uname = request.POST['username']
@@ -309,13 +322,16 @@ def process_sign_in(request):
         s.save()
         msg = "Welcome,%s"%(request.user)   
         next = "/account/"
-        messages.success(request,msg) 
+        messages.success(request,msg)
+        log.info("%s logged in succesfully."%(user)) 
         return HttpResponseRedirect(next) 
     else:
-        messages.error(request, "Incorrect username or password!!!")   
+        messages.error(request, "Incorrect username or password!!!")
+        log.error("Login failed for user: %s."%(uname))   
     return HttpResponseRedirect(reverse('home'))
     
 def process_sign_out(request):
+    user=request.user
     s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
     s.logout_timestamp = datetime.datetime.now()
     s.save()
@@ -329,6 +345,7 @@ def process_sign_out(request):
         'published_articles':a
         } 
     messages.success(request,"You're logged out successfully!!!")
+    log.info("%s logged out succesfully."%(user))
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))   
 
 def account(request):
@@ -350,6 +367,7 @@ def account(request):
                 'published_articles':a,
                 'username':user
         } 
+        log.info("%s visited its home page."%(user))
         return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
     else:
         data = {
@@ -359,8 +377,9 @@ def account(request):
         'translated_sentences':s,
         'published_articles':a,
         } 
-    messages.error(request,"You're not logged in!!!")
-    return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
+        messages.error(request,"You're not logged in!!!")
+        log.error("%s made request before login."%(user))
+        return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
 def upload(request):   
     user = request.user
@@ -377,6 +396,7 @@ def upload(request):
         ta.action = Master_Action.objects.filter(action="Upload")[0]
         ta.action_timestamp = datetime.datetime.now()
         ta.save()
+        log.info("%s visited upload form."%(user))
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
         (u,a,s) = stats()
@@ -388,6 +408,7 @@ def upload(request):
         'published_articles':a
         } 
     messages.error(request,"You're not logged in!!!")
+    log.error("%s made request before login."%(user))
     return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
 def process_upload(request):
@@ -426,6 +447,7 @@ def process_upload(request):
                                 'username':user,
                                 }
                         messages.error(request,"Select different target language!!!")
+                        log.error("%s selected same language as source and target while uploading document for translation."%(user))
                         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
                     if request.POST['context_size']:
                         newtask.context_size = request.POST['context_size']
@@ -464,6 +486,7 @@ def process_upload(request):
             ta.action_timestamp = datetime.datetime.now()
             ta.save()
             messages.success(request,"File uploaded sucessfully!!!")
+            log.info("File %s uploaded succesfully"%(newtask.html_doc_name))
             return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
     except:
         log.exception("Upload Failed!!!")
@@ -502,6 +525,7 @@ def translate(request,uid):
                 ta.save()
                 
                 messages.error(request,"No sentence available for translation!!")
+                log.error("No sentence available for translation.")
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
                 available_microtask = available_microtasks[0]
@@ -577,11 +601,12 @@ def translate(request,uid):
                 ta.action = Master_Action.objects.filter(action="Translate")[0]
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
+                log.info("Microtask loaded for translation.")
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
         except:
-            log.exception("Load microtask for translation Failed!!!")
+            log.exception("Load microtask for translation failed.")
             traceback.print_exc() 
-            messages.error(request, "Load microtask for translation Failed!!!")
+            messages.error(request, "Load microtask for translation failed!!!")
     else:
         (u,a,s) = stats()
         data = {
@@ -591,6 +616,7 @@ def translate(request,uid):
             'published_articles':a
         } 
         messages.error(request,"Please login.You're not logged in!!!")
+        log.error("%s made request before login."%(user))
         return render_to_response('login/home.html',data,context_instance=RequestContext(request))
     return HttpResponse("Error!!!")
 
@@ -638,12 +664,14 @@ def process_translate(request,id,uid):
                         'username':user,
                     }
                 messages.success(request,"Record saved sucessfully!!!")
+                log.info("Microtask (id:%s) saved successfully after translation."%(id))
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             except:
-                log.exception("Save translated microtask Failed!!!")
+                log.exception("Save translated microtask failed.")
                 traceback.print_exc() 
                 messages.error(request, "Save translated microtask Failed!!!")
     else:
+        log.error("%s made request before login."%(user))
         return HttpResponse("Please login.You're not logged in!!!")
 
 def account_settings(request,uid):
@@ -658,6 +686,7 @@ def account_settings(request,uid):
         'uid':uid,
         'username':request.user
     }
+    log.info("%s visited account_settings form."%(user))
     return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))    
 
 def process_account_settings(request,uid):
@@ -697,6 +726,7 @@ def process_account_settings(request,uid):
                             'form': SignUpForm(request.POST), 
                         }
                         messages.error(request,"EmailID already in use.Try another one!!!")
+                        log.error("%s changed email-id to an existing one while updating profile."%(user))
                         return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
                     u = User.objects.get(username = request.user)
                     u.first_name =f_first_name
@@ -743,30 +773,24 @@ def process_account_settings(request,uid):
                             f_interests = Master_InterestTags.objects.get(pk=id)
                             userpro.interests.add(f_interests)
                     
-                    sta = StatCounter.objects.all().order_by('created_on')
-                    if sta:
-                        st = sta[0]
-                        u = st.registered_users
-                        s = st.translated_sentences
-                        a = st.published_articles
-                    else:
-                        u = 0
-                        a = 0
-                        s = 0
+                    (u,a,s) = stats()
        
                     data = {
                         'form': SignUpForm(), 
+                        'username':user,
                         'registered_users':u,
                         'translated_sentences':s,
                         'published_articles':a
                     }
                     messages.success(request,"Record saved successfully!!.")
+                    log.info("Profile updated successfully for user: %s."%(user))
                     return render_to_response('translation/account.html',data,context_instance=RequestContext(request))                              
                 else:
                     data = {
                         'form': SignUpForm(request.POST),
                         }
                     messages.error(request,"Please fill in all fields!!!")
+                    log.error("All fields not entered correctly while updating user profile.")
                     return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
     
             else:
@@ -774,6 +798,7 @@ def process_account_settings(request,uid):
                     'form': SignUpForm(request.POST),
                 } 
                 messages.error(request,"Confirm password correctly!!!")
+                log.error("Password not confirmed correctly.")
                 return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
             return HttpResponseRedirect(reverse('home')) 
         except:

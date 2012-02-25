@@ -1,6 +1,7 @@
 # Django settings for bhagirath project.
-import os, sys
-import logging 
+import os
+import sys
+import logging
 
 def findpath(path):
     parent_dir = os.path.dirname(__file__)
@@ -175,8 +176,8 @@ handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)-6s: %(name)s - %(levelname)s - %(message)s',
-                    #filename=logfile, 
-                    #filemode='a+',
+                    filename= 'logfile', 
+                    filemode= 'a+',
                     handlers=[handler],
                     )
 
