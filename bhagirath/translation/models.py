@@ -4,6 +4,11 @@ import datetime
 import jsonfield
 
 class Master_HindiWords(models.Model):
+    """
+    This class contains hindi words and it returns hindi word.
+    original: hindi word in devanagri
+    pos: part of speech - noun, verb, adverb, adjective
+    """
     original = models.CharField(verbose_name="Hindi word",
                                 help_text="Hindi word in devnagri script",
                                 max_length=2000,
@@ -17,6 +22,13 @@ class Master_HindiWords(models.Model):
         ordering = ["original"]
         
 class Master_English2Hindi(models.Model):
+    """
+    This class contains english word, its hindi meaning, part of speech and returns english word.
+    Used for english-hindi dictionary lookup.
+    english_word: English word.
+    pos: part of speech  
+    hindi_word: meaning in hindi (devanagri script)
+    """
     english_word = models.CharField(verbose_name="English word",
                                 help_text="English word in dictionary",
                                 max_length=2000,
@@ -34,6 +46,10 @@ class Master_English2Hindi(models.Model):
         ordering = ["english_word"]
         
 class Master_AgeGroup(models.Model):
+    """
+    Contains age group tag along with the minimum and maximum age 
+    for that group
+    """
     age_group_tag = models.TextField(verbose_name="Age group",
                                      help_text="Age group",
                                      null = False, 
@@ -45,6 +61,11 @@ class Master_AgeGroup(models.Model):
         return u"%s" % (self.age_group_tag)
     
 class Master_GeographicalRegion(models.Model):
+    """
+    Contains districts all over India. 
+    These are used to know the geographical region 
+    of the user
+    """
     geographical_region = models.TextField(verbose_name="Geographic location",
                                            help_text="Geographic location",
                                            null = False,
@@ -58,6 +79,13 @@ class Master_GeographicalRegion(models.Model):
 
 
 class Master_InterestTags(models.Model):
+    """
+    Contain domain names in order to determine
+    the field to which article is related to 
+    for ex. history, poetry
+    need_evaluation field determines whether this
+    article needs evaluation or not 
+    """
     category = models.TextField(verbose_name="Task context",
                                 help_text="Task context or category",
                                 null = False,
@@ -71,6 +99,9 @@ class Master_InterestTags(models.Model):
         ordering = ["category"]
     
 class Master_Action(models.Model):
+    """
+     This table has actions that user can perform
+    """
     action = models.TextField(verbose_name="Action name", 
                               help_text="Type of action", 
                               null = False,
@@ -83,6 +114,11 @@ class Master_Action(models.Model):
         ordering = ["action"]
         
 class Master_Role(models.Model):
+    """
+    This table defines all possible roles user can have.
+    Depending on the condition on which the role permission
+    is granted
+    """
     role = models.TextField(verbose_name="Role", 
                             help_text="Type of role",
                             null = False,
@@ -98,6 +134,10 @@ class Master_Role(models.Model):
         ordering = ["role"]
 
 class Master_Rank(models.Model):
+    """
+    This table defines the rank of the user
+    Rank is determined through reputation score algorithm
+    """
     position =  models.TextField(verbose_name="Rank", 
                             help_text="Rank of User",
                             null = False,
@@ -108,6 +148,10 @@ class Master_Rank(models.Model):
         return u"%s" % (self.position)
  
 class Master_EducationQualification(models.Model): 
+    """
+    This table stores various educational qualifications
+    that the users can have
+    """
     education_qualification = models.TextField(verbose_name="Educational qualification", 
                                                help_text="User's educational qualification",
                                                unique=True,
@@ -119,6 +163,9 @@ class Master_EducationQualification(models.Model):
         ordering = ["education_qualification"]
         
 class Master_EducationDomain(models.Model):
+    """
+    It stores the domain of education of user
+    """
     domain = models.TextField(verbose_name="Domain of education", 
                               help_text="User's educational domain",
                               unique=True,
@@ -130,6 +177,10 @@ class Master_EducationDomain(models.Model):
         ordering = ["domain"]
         
 class Master_Language(models.Model): 
+    """
+    It contains name of the language and the
+    region where the language is mostly spoken
+    """
     language = models.TextField(verbose_name="Language", 
                                 help_text="Language",
                                 unique=True,
@@ -145,6 +196,10 @@ class Master_Language(models.Model):
         ordering = ["language"]
         
 class Master_LanguageExpertise(models.Model): 
+    """
+    It contains name of the language and the
+    score of expertise 
+    """
     language = models.ForeignKey(Master_Language,on_delete=models.PROTECT)
     expertise = models.IntegerField()
        
@@ -155,6 +210,10 @@ class Master_LanguageExpertise(models.Model):
         ordering = ["language"]
 
 class Master_SampleTranslations(models.Model):
+    """
+    This table stores english sentence, its machine
+    translation and user translated sentence 
+    """
     original_sentence = models.TextField(verbose_name="Original sentence", 
                                 help_text="Sentence in source language",
                                 unique=True,
@@ -172,6 +231,19 @@ class Master_SampleTranslations(models.Model):
         return u"%s" % (self.id)
     
 class Master_Experiment(models.Model):
+    """
+    This stores a 24 bit array in bit_array field
+    The bits are grouped in a way to experiment
+    the number of copies that should be made, features
+    that should be given or not
+    A    B    C    D    E
+    3    3    4    1    1
+    A - no. of sentences that should be given above for context
+    B - no. of sentences that should be given below for context
+    C - no. of parallel users
+    D - auto correction
+    E - Reference translation
+    """
     bit_array = models.CharField(max_length=24)
     
     def __unicode__(self):
@@ -179,6 +251,11 @@ class Master_Experiment(models.Model):
     
 
 class StatCounter(models.Model):
+    """
+    it stores the count of registered users,
+    sentences and articles translated and 
+    the timestamp when it was found
+    """
     registered_users = models.IntegerField() 
     translated_sentences = models.IntegerField() 
     published_articles = models.IntegerField()
@@ -189,6 +266,9 @@ class StatCounter(models.Model):
     
     
 class OverallLeaderboard(models.Model):
+    """
+    Stores all users and total points they scored till date
+    """
     username = models.ForeignKey(User,null=False)
     overall_points_earned = models.IntegerField(null=True,default=0)
         
@@ -196,6 +276,9 @@ class OverallLeaderboard(models.Model):
         return u"%s" % (self.id)
     
 class WeeklyLeaderboard(models.Model):
+    """
+    Stores top 10 week users depending on their weekly score
+    """
     username = models.ForeignKey(User,null=False)
     points_earned_this_week = models.IntegerField(null=True,default=0)
     rank = models.ForeignKey(OverallLeaderboard,null=False)
@@ -204,6 +287,9 @@ class WeeklyLeaderboard(models.Model):
         return u"%s" % (self.id)
     
 class UserProfile(models.Model):
+    """
+    advanced user details are stored in this model 
+    """
     user = models.OneToOneField(User)
     date_of_birth = models.DateField(null=False)
     gender = models.CharField(max_length=6,null=False)
@@ -230,6 +316,10 @@ class UserProfile(models.Model):
         return u"%d" %(self.id)
 
 class Session(models.Model):
+    """
+    It stores the time for which user was active ie
+    user id, time he logged in and logged out
+    """
     user = models.ForeignKey(User,on_delete=models.PROTECT)
     login_timestamp = models.DateTimeField(null=False)
     logout_timestamp = models.DateTimeField(null=True)
@@ -238,6 +328,9 @@ class Session(models.Model):
         return u"%s" %(self.id)
     
 class Task(models.Model):
+    """
+    Uploaded file along with its info is stored in this model
+    """
     html_doc_name = models.URLField(verify_exists=True,null=True,verbose_name="URL referring to file") 
     html_doc_content = models.FileField(upload_to='task_uploads/%Y/%m/%d',null=True)
     upload_timestamp = models.DateTimeField(default=datetime.datetime.now)
@@ -262,6 +355,9 @@ class Task(models.Model):
         return u"%s" % (self.id)
         
 class Subtask(models.Model):
+    """
+    Extracted text from html doc is stored in this model
+    """
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
     original_data = models.FileField(upload_to='subtask_original_uploads',null=False)
     translated_data = models.FileField(upload_to='subtask_translated_uploads',null=True)
@@ -272,6 +368,9 @@ class Subtask(models.Model):
         return u"%s" % (self.id)
     
 class StaticMicrotask(models.Model):
+    """
+    sentences that are formed from html text are stored in this table
+    """
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
     subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
@@ -288,6 +387,11 @@ class StaticMicrotask(models.Model):
         return u"%s" %(self.id)
     
 class Microtask(models.Model):
+    """
+    Stores copies of sentences in StaticMicroatsk table
+    initially assigned is false but when it is given to user
+    its assigned flag is set to true
+    """
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
     subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
@@ -299,6 +403,10 @@ class Microtask(models.Model):
         return u"%s" %(self.id)
     
 class UserHistory(models.Model):
+    """
+    It stores entry for every sentence given to every user
+    with various other parameters to determine his performance
+    """
     STATUS_FLAG_CHOICES = (
         (u'Raw', u'Raw'),
         (u'Reviewed', u'Reviewed'),
@@ -327,6 +435,10 @@ class UserHistory(models.Model):
         return u"%s" %(self.original_sentence)
     
 class TransactionAction(models.Model):
+    """
+    Stores actions done by user and time
+    It can be uploading file, translating sentence, evaluating sentences 
+    """
     session = models.ForeignKey(Session,on_delete=models.PROTECT)
     user = models.ForeignKey(User,on_delete=models.PROTECT)
     action = models.ForeignKey(Master_Action,on_delete=models.PROTECT)

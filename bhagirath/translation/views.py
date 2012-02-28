@@ -13,7 +13,6 @@ import captcha
 import traceback
 import logging
 import os
-import sys
 
 def findpath(path):
     parent_dir = os.path.dirname(__file__)
@@ -23,17 +22,6 @@ log = logging.getLogger("translation.views")
 path = 'rolling_log'
 rolling_handler = logging.handlers.RotatingFileHandler(path, maxBytes=52428800)
 log.addHandler(rolling_handler)
-
-def hindiwords(request):
-    F = open("/home/ankita/Desktop/hindi_wordlist/noun_txt")
-    line = F.read()
-    parts = line.split('\n')
-    for j in parts:
-        p = Master_HindiWords()
-        p.original = j
-        p.pos = "Noun"
-        p.save()
-    return HttpResponse("DONE!!!") 
 
 def english2hindi(request):
     F = open("/home/ankita/Desktop/enghin/a_new.txt")
@@ -96,6 +84,10 @@ def microtask(request):
     return HttpResponse("DONE!!!") 
            
 def home(request):
+    """
+    This function displays some information about bhagirath project, current statistics, 
+    weekly and overall top users and provides login facility to the user. 
+    """
     (u,a,s) = stats()
     data = {
             'form': LoginForm(),
@@ -106,6 +98,9 @@ def home(request):
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))
 
 def about_us(request):
+    """
+    This function gives detailed information about bhagirath along with statistics and leaderboards.
+    """
     (u,a,s) = stats()
     data = {
             'form': LoginForm(),
@@ -116,6 +111,10 @@ def about_us(request):
     return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))
           
 def sample_translations(request,id):
+    """
+    This function provides sample translations having english sentence, 
+    its machine translation and user translation.  
+    """
     sample_translations = Master_SampleTranslations.objects.get(pk=id)
     original_sentence = sample_translations.original_sentence;
     google_translation = sample_translations.google_translation;
@@ -143,6 +142,9 @@ def sample_translations(request,id):
     return render_to_response('login/sample_translations.html',data,context_instance=RequestContext(request))
 
 def sign_up(request):
+    """
+    This function loads sign up form for new user's registration. 
+    """
     data = {
         'form': SignUpForm(),
         'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
@@ -150,6 +152,12 @@ def sign_up(request):
     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
  
 def process_sign_up(request):
+    """
+    This function is used to process information provided by user while registration. 
+    It performs several checks over the data entered by user like the entered recaptcha, 
+    password as well as confirmed password, unique username and email-id. If all entries
+    are valid and all checks are passed it registers the user by creating a record in User and UserProfile models.
+    """
     user = request.user 
     if request.method == 'POST':
         check_captcha = captcha.client.submit(request.POST['recaptcha_challenge_field'], 
@@ -311,6 +319,10 @@ def process_sign_up(request):
     return HttpResponse("Registration Failed - Some error occurred!!!")
 
 def process_sign_in(request):
+    """
+    This function authenticates the user with username and password provided 
+    by him and allows login if and only if the user is active.
+    """
     uname = request.POST['username']
     passwd = request.POST['password']
     user = auth.authenticate(username=uname, password=passwd)
@@ -331,6 +343,9 @@ def process_sign_in(request):
     return HttpResponseRedirect(reverse('home'))
     
 def process_sign_out(request):
+    """
+    This function is used to logout user successfully from the site.
+    """
     user=request.user
     s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
     s.logout_timestamp = datetime.datetime.now()
@@ -349,6 +364,10 @@ def process_sign_out(request):
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))   
 
 def account(request):
+    """
+    This function provides information such as current statistics and user's contribution
+    as total sentences translated, files uploaded and number of correct translations.
+    """
     user = request.user
     uid = user.pk
 
@@ -382,6 +401,12 @@ def account(request):
         return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
 def upload(request):   
+    """
+    This function is used for uploading files for translation. 
+    User has to provide information about file,language in which it is to be translated,
+    interest tags, age group and region of people by whom it is to be translated, 
+    number of sentences that should be given at a time for translation.
+    """
     user = request.user
     uid = user.pk
     if user.is_authenticated():
@@ -412,11 +437,14 @@ def upload(request):
     return render_to_response('login/home.html',data,context_instance=RequestContext(request)) 
 
 def process_upload(request):
+    """
+    Stores file and its text part in Task model.
+    """
     user = request.user
     uid = user.pk
     try:
         if request.method == 'POST':
-            if request.POST.getlist('target_language'):     
+            if request.POST.getlist('target_language') and request.POST['html_doc_name'] and request.FILES['html_doc_content'] and request.POST['time_to_publish_0'] and request.POST['time_to_publish_1'] and request.POST.getlist('interest_tags'):  
                 all_language = request.POST.getlist('target_language')
                 for l in all_language:
                     id = int(l)
@@ -472,44 +500,59 @@ def process_upload(request):
                                 f_interests = Master_InterestTags.objects.get(pk=id)
                                 newtask.interest_tags.add(f_interests)
                     newtask.save()
-            (u,a,s) = stats()
-            data = {
-                    'form': UploadForm(),
-                    'uid': uid,
-                    'username':user,
-                    'registered_users':u,
-                    'translated_sentences':s,
-                    'published_articles':a
-                   }
-            ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
-            ta.task = Task.objects.get(pk=newtask.id)
-            ta.action_timestamp = datetime.datetime.now()
-            ta.save()
-            messages.success(request,"File uploaded sucessfully!!!")
-            log.info("File %s uploaded succesfully"%(newtask.html_doc_name))
-            return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
+                    (u,a,s) = stats()
+                    data = {
+                            'form': UploadForm(),
+                            'uid': uid,
+                            'username':user,
+                            'registered_users':u,
+                            'translated_sentences':s,
+                            'published_articles':a
+                        }
+                    ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
+                    ta.task = Task.objects.get(pk=newtask.id)
+                    ta.action_timestamp = datetime.datetime.now()
+                    ta.save()
+                    messages.success(request,"File uploaded sucessfully!!!")
+                    log.info("File %s uploaded succesfully"%(newtask.html_doc_name))
+                    return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
+            else:
+                messages.error(request,"Please fill in all fields!!!")
+                log.error("All fields not entered correctly while file upload.")
+                data = {
+                        'form': UploadForm(),
+                        'uid':  uid,
+                        'username':user,
+                }
+                return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     except:
         log.exception("Upload Failed!!!")
         traceback.print_exc() 
         messages.error(request, "Upload Failed")
    
 def translate(request,uid):
+    """
+    This function provides sentences for translation to user.
+    """
     user = request.user
     if user.is_authenticated():
         try:
             logged_in_user_id = uid
             i = 0
             c = 0
+            # check for sentences previously done by user
+            
             available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
-            available_microtasks = Microtask.objects.filter(assigned = 0)    
-                                   
+            available_microtasks = Microtask.objects.filter(assigned = 0)
+                
+            #find sentences to be given                                             
             for j in available_sentences_done_by_user:
                 available_microtasks = available_microtasks.exclude(original_sentence = available_sentences_done_by_user[i]).order_by('id')
                 i +=1
             
             for j in available_microtasks:
                 c += 1
-                
+            #if no sentence available display message    
             if c==0:
                 data = {
                     'form': TranslateForm(),
@@ -528,6 +571,7 @@ def translate(request,uid):
                 log.error("No sentence available for translation.")
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
+                #get bit_array value for that sentence from static microtask table
                 available_microtask = available_microtasks[0]
                 s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
                 parent_static_microtask = StaticMicrotask.objects.get(id=s)
@@ -537,6 +581,7 @@ def translate(request,uid):
                 auto_correct =  int(z[10],2)
                 reference_translation = int(z[11],2)
                 
+                #decide which features to be provided to user for a particular sentence
                 prev_context = load_context(parent_static_microtask.id,prev_context_size)
                 
                 if auto_correct==0:
@@ -544,6 +589,7 @@ def translate(request,uid):
                 else:
                     auto_correction = True
                 
+                #get translations done by other users for that sentence
                 if reference_translation == 1:
                     microtask_translation = parent_static_microtask.translated_sentence
                     machine_translation = parent_static_microtask.machine_translation
@@ -560,6 +606,7 @@ def translate(request,uid):
                     machine_translation = ""
                     other_translations = ""
                                   
+                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.  
                 h = UserHistory()
                 h.task = available_microtask.task
                 h.subtask = available_microtask.subtask
@@ -593,6 +640,7 @@ def translate(request,uid):
                         'auto_correction':auto_correction
                 }
                                 
+                #marking microtask entry as assigned  
                 available_microtask.assigned=True
                 available_microtask.save()
                 ta = TransactionAction()
@@ -607,6 +655,7 @@ def translate(request,uid):
             log.exception("Load microtask for translation failed.")
             traceback.print_exc() 
             messages.error(request, "Load microtask for translation failed!!!")
+    #if user is not logged in
     else:
         (u,a,s) = stats()
         data = {
@@ -621,29 +670,47 @@ def translate(request,uid):
     return HttpResponse("Error!!!")
 
 def process_translate(request,id,uid):
+    """
+    This function store translation submitted by user.
+    """
     user = request.user    
     if user.is_authenticated():
         if request.method == 'POST':
             try:
+                #take translation search for user in userHistory
                 correction_episode = request.POST['cmd']
                 list = correction_episode.split('here')
                            
                 
                 engl = Microtask.objects.filter(pk=id)
                 eng = engl[0]
+                #search for english sentence and store in userHistory
                 hist = UserHistory.objects.filter(microtask=eng)
                 h = hist[0]
-                h.translated_sentence = request.POST['translated_sentence']
-                h.submission_timestamp = datetime.datetime.now()
-                h.stability = 0.0
-                h.current_active_tag = 1
-                h.change_flag = 1
-                h.status_flag = 'Reviewed'
-                h.correction_episode = list 
-                h.save()
-                dat = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
-                h.correction_episode = dat
-                h.save()
+                if h.translated_sentence:
+                    data = {
+                        'form': TranslateForm(),
+                        'uid': uid,
+                        'curr_id':h.microtask_id,
+                        'english': h.original_sentence,
+                        'hindi':"",
+                        'username':user,
+                    }
+                    messages.success(request,"You have already translated that sentence!!!")
+                    return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
+                else:
+                    h.translated_sentence = request.POST['translated_sentence']
+                    h.submission_timestamp = datetime.datetime.now()
+                    h.stability = 0.0
+                    h.current_active_tag = 1
+                    h.change_flag = 1
+                    h.status_flag = 'Reviewed'
+                    h.correction_episode = list 
+                    h.save() 
+                    #convert history of key press in json and store
+                    dat = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
+                    h.correction_episode = dat
+                    h.save()
                 
                 #micro = Microtask.objects.get (id=engl)
                 #micro.delete()
@@ -675,6 +742,9 @@ def process_translate(request,id,uid):
         return HttpResponse("Please login.You're not logged in!!!")
 
 def account_settings(request,uid):
+    """
+    This function provides user with his account information which is to be updated.
+    """
     user = User.objects.get(pk=uid)
     u = UserProfile.objects.get(user = uid)
     form =  UpdateProfileForm(instance=u)
@@ -690,6 +760,10 @@ def account_settings(request,uid):
     return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))    
 
 def process_account_settings(request,uid):
+    """
+    This function saves the changes made by user in his profile
+    except his username cannot be changed.
+    """
     user = request.user 
     if request.method == 'POST':
         f_password = request.POST['password']
@@ -717,6 +791,7 @@ def process_account_settings(request,uid):
             f_evaluator = False
                 
         try:
+            #find user record
             if f_password == f_confirm_password:
                 if f_email and f_first_name and f_last_name:
                     count = User.objects.exclude(username=request.user).filter(email=f_email).count() 
@@ -728,6 +803,7 @@ def process_account_settings(request,uid):
                         messages.error(request,"EmailID already in use.Try another one!!!")
                         log.error("%s changed email-id to an existing one while updating profile."%(user))
                         return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+                    #update record
                     u = User.objects.get(username = request.user)
                     u.first_name =f_first_name
                     u.last_name = f_last_name
@@ -824,16 +900,26 @@ def process_evaluate(request):
 
 
 def load_context(sid,prev_context_count):
-    a = int(sid) - int(prev_context_count)
-    prev_context = ""
-    while int(a) < int(sid):
-        st = StaticMicrotask.objects.get(id=a)
-        if st:
-            prev_context = prev_context + st.original_sentence + ". "
-        a += 1
+    """
+    This function returns sentences before the sentence
+    to be translated for giving context to user.
+    """
+    if int(sid)==1:
+        prev_context = ""
+    else:
+        a = int(sid) - int(prev_context_count)
+        prev_context = ""
+        while int(a) < int(sid):
+            st = StaticMicrotask.objects.get(id=a)
+            if st:
+                prev_context = prev_context + st.original_sentence + ". "
+            a += 1
     return prev_context
 
 def dict(h):
+    """
+    This function returns the hindi meaning of all the words in english sentence.
+    """
     dict = h.original_sentence.split(' ')
     count = len(dict)
     k = 0
@@ -855,6 +941,9 @@ def dict(h):
     return (word,hindi_dictionary)
 
 def stats():
+    """
+    This function returns statistics - no. of registered users, sentences and articles translated.
+    """
     sta = StatCounter.objects.all().order_by('created_on')
     if sta:
         st = sta[0]

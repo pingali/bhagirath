@@ -4,6 +4,9 @@ import sys
 import logging
 
 def findpath(path):
+    """
+     This function provides absolute path of file specified.
+    """ 
     parent_dir = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(parent_dir,path))
 
@@ -82,11 +85,8 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ("images", os.path.join(STATIC_ROOT,'img').replace('\\','/')),
-    ("css",    os.path.join(STATIC_ROOT,'css').replace('\\','/')),
-    ("js",     os.path.join(STATIC_ROOT,'js').replace('\\','/')),
-
     findpath('static'),
+    '/usr/local/lib/python2.7/dist-packages/admin_tools/media/admin_tools'
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -139,7 +139,26 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # default template context processors
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    # required by django-admin-tools
+    'django.core.context_processors.request',
+)
+
+ADMIN_TOOLS_MENU = 'bhagirath.menu.CustomMenu'
+
+ADMIN_TOOLS_INDEX_DASHBOARD = 'bhagirath.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bhagirath.dashboard.CustomAppIndexDashboard'
+
 INSTALLED_APPS = (
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',                  
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

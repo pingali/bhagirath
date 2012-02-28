@@ -8,6 +8,11 @@ import datetime
 
 #1.Populate Subtask - DONE
 class PopulateSubtaskCronJob(CronJobBase):
+    """
+    This class takes file from Task table passes it to subtaskparser
+    for extracting text out of html doc. subtaskparser
+    parses file removes tags and stores text part in Subtask table
+    """
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.populate_subtask_cron_job' # a unique code
@@ -23,6 +28,10 @@ class PopulateSubtaskCronJob(CronJobBase):
 
 #2.Populate StaticMicortask - DONE
 class PopulateStaticMicrotaskCronJob(CronJobBase):
+    """
+    This class calls microtask parser that takes text part from subtask table,
+    splits it into sentences and stores in StaticMicrotask table   
+    """
     RUN_EVERY_MINS = 60 # run every 1 hr
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.populate_staticmicrotask_cron_job' # a unique code
@@ -35,6 +44,11 @@ class PopulateStaticMicrotaskCronJob(CronJobBase):
 
 #3.Populate Microtask - DONE
 class PopulateMicrotaskCronJob(CronJobBase):
+    """
+    This class makes copies of sentences in StaticMicrotask table
+    depending upon the value in bit_array field of StaticMicrotask table
+    ranging from 2 to 5. Store these copies in Microtask table. 
+    """
     RUN_EVERY_MINS = 10 # run every 10 min
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.populate_microtask_cron_job' # a unique code
@@ -64,6 +78,14 @@ class PopulateMicrotaskCronJob(CronJobBase):
 
 #4.Unassign Microtask - DONE
 class UnassignMicrotaskCronJob(CronJobBase):
+    """
+    This class is used whenever user clicks translate and sentences are given 
+    to him for translation from microtask table. When sentence is given
+    its assigned flag is set to true but if user clicks next without
+    submitting translation its translated_sentence field is null
+    Sentences having such fields are unassigned from microtask table
+    so that it can be given to other users 
+    """
     RUN_EVERY_MINS = 10 # run every 10 min
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.unassign_microtask_cron_job' # a unique code
@@ -85,6 +107,10 @@ class UnassignMicrotaskCronJob(CronJobBase):
 
 #5.Assign Upload priviledge - DONE
 class UploadPriviledgeCronJob(CronJobBase):
+    """
+    This class grants user upload file privilege if he checks the
+    upload checkbox in sign up form
+    """
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.update_priviledge_cron_job' # a unique code
@@ -120,6 +146,11 @@ class UploadPriviledgeCronJob(CronJobBase):
         
 #6.Update Overall LeaderBoard - DONE
 class UpdateOverallLeaderBoardCronJob(CronJobBase):
+    """
+    This class stores the users in descending order of their overall scores.
+    While displaying overall leaderboard top 10 users are
+    selected from the table.
+    """
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.update_overall_leaderboard_cron_job' # a unique code
@@ -138,7 +169,13 @@ class UpdateOverallLeaderBoardCronJob(CronJobBase):
             
 #7.Update Weekly LeaderBoard - DONE    
 class UpdateWeeklyLeaderBoardCronJob(CronJobBase):
-    """Always execute this after executing Overall leader board"""
+    """
+    This class stores the 10 users in descending order of their weekly 
+    scores. While displaying weekly leaderboard users are
+    selected from this table. It remains static for a week 
+    """
+    
+    """NOTE:Always execute this after executing Overall leader board"""
     RUN_EVERY_MINS = 1440*7 # run every week
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.update_weekly_leaderboard_cron_job' # a unique code
@@ -164,6 +201,11 @@ class UpdateWeeklyLeaderBoardCronJob(CronJobBase):
 
 #8.Update Statistics Counter - DONE    
 class UpdateStatisticsCounterCronJob(CronJobBase):
+    """
+    This class updates the statistics- no. of users, no. of sentences 
+    and articles translated periodically and stores in a table 
+    along with the timestamp 
+    """
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.update_statistics_counter_cron_job' # a unique code
@@ -191,6 +233,14 @@ class DocumentStabilityCronJob(CronJobBase):
 
 #10.Update Reputation Score - DONE
 class ReputationScoreCronJob(CronJobBase):
+    """
+    This class finds scores by using centroid_score algorithm for
+    the sentences translated by the users. Users are given 
+    scores for their translation and best translated 
+    sentence is determined for a particular english sentence.
+    If translations are not satisfactory they are given to other
+    users for translation. 
+    """
     RUN_EVERY_MINS = 60 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.reputation_score_cron_job' # a unique code
@@ -262,6 +312,10 @@ class ReputationScoreCronJob(CronJobBase):
 
 #11.Assign Rank-Start from end take upper roundoff of percentage value n assign that rank to those users - DONE
 class AssignRankCronJob(CronJobBase):
+    """
+    This class is used to assign ranks to users depending upon their position among all the users.
+    Ranks are categorized as - Amateur, Active translator, Senior translator, Master translator and Rockstar. 
+    """
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.assign_rank_cron_job' # a unique code

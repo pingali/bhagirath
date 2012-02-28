@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="/admin/">Home</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">{{count}} sentences translated this hour.</label>
+</br></br>
+<table id="result_list" cellspacing="0" width="70%">
+	<thead>
+		<tr>
+			<th style="font-size: 10px;">User</th>
+			<th style="font-size: 10px;">Original Sentence</th>
+			<th style="font-size: 10px;">Translated Sentence</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for i in current_translations %}
+		<tr>
+			<td>{{i.username}}</td>
+			<td>{{i.original_sentence}}</td>
+			<td>{{i.translated_sentence}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+		
+{% endblock %}

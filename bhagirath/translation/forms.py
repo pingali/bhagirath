@@ -9,17 +9,26 @@ from django.forms.widgets import RadioSelect
 from bhagirath.translation.models import *
 
 class SplitDateTimeJSField(forms.SplitDateTimeField):
+    """
+    This form class extends admin datetime widget
+    """
     def __init__(self, *args, **kwargs):
         super(SplitDateTimeJSField, self).__init__(*args, **kwargs)
         self.widget.widgets[0].attrs = {'class': 'vDateField'}
         self.widget.widgets[1].attrs = {'class': 'vTimeField'}  
 
 class DateJSField(forms.SplitDateTimeField):
+    """
+    This form class extends admin date widget
+    """
     def __init__(self, *args, **kwargs):
         super(DateJSField, self).__init__(*args, **kwargs)
         self.widget.widgets[0].attrs = {'class': 'vDateField'}
       
 class LoginForm(forms.models.ModelForm):
+    """
+    This form class extends User model and is rendered while user-login.
+    """
     class Meta:
         model = User
         
@@ -39,6 +48,9 @@ class LoginForm(forms.models.ModelForm):
         return self.cleaned_data
 
 class SignUpForm(forms.models.ModelForm):
+    """
+    This form class extends UserProfile model and is rendered while user-registration.
+    """
     class Meta:
         model = UserProfile
         widgets = {'date_of_birth':DateJSField(required=False,), 
@@ -68,8 +80,6 @@ class SignUpForm(forms.models.ModelForm):
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
     #competence_for_each_language      
     captcha = ReCaptchaField(label="Please enter text you see or hear")
-
-
     
     def __init__(self, *args, **kwargs):      
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -107,6 +117,9 @@ class SignUpForm(forms.models.ModelForm):
         return self.cleaned_data
                   
 class UploadForm(forms.models.ModelForm):
+    """
+    This form class extends Task model and is rendered while file upload (contribution).
+    """
     UPLOAD_CHOICES = (('external', 'Provide URL'), ('internal', 'Attach a File'))
     SPECIFICATION_CHOICES = (('default', 'Default'), ('Specify', 'Specify'))
     CONTEXT_SIZE_CHOICES = (('1', 'One sentence'), ('2', 'Two sentences'),
@@ -135,6 +148,9 @@ class UploadForm(forms.models.ModelForm):
         self.fields['time_to_publish'].widget = widgets.AdminSplitDateTime()
       
 class TranslateForm(forms.models.ModelForm):
+    """
+    This form class extends UserHistory model and is rendered while translation.
+    """
     class Meta:
         model = UserHistory
        
@@ -145,6 +161,9 @@ class TranslateForm(forms.models.ModelForm):
             self.fields[key].widget.attrs['readonly'] = 'readonly'
                    
 class UpdateProfileForm(forms.models.ModelForm):
+    """
+    This form class extends UserProfile model and is rendered while updating user-profile.
+    """
     class Meta:
         model = UserProfile
         widgets = {'date_of_birth':DateJSField(required=False,), 

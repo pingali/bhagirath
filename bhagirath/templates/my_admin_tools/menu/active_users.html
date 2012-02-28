@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="/admin/">Home</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">{{count}} users are currently logged in.</label>
+</br></br>
+<table id="result_list" cellspacing="0" width="40%">
+	<thead>
+		<tr>
+			<th style="font-size: 10px;">Username</th>
+			<th style="font-size: 10px;">Login timestamp</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for i in active_users_list %}
+		<tr>
+			<td>{{i.username}}</td>
+			<td>{{i.login_timestamp}}</td>
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+		
+{% endblock %}

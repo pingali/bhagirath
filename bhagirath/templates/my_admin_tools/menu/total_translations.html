@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="/admin/">Home</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">
+	<a style="color: #000000;">{{total_translations}}</a> sentences translated till date.
+</label>
+{% endblock %}

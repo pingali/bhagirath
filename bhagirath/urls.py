@@ -1,47 +1,67 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic.simple import redirect_to
-import os
+from bhagirath.translation import admin_urls
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    url(r'^hindiwords/$','translation.views.hindiwords',name="hindiwords"),
-    url(r'^subtask/$','translation.views.subtask',name="subtask"),
-    url(r'^staticmicro/$','translation.views.staticmicro',name="staticmicro"),
-    url(r'^microtask/$','translation.views.microtask',name="microtask"),
-    url(r'^home/$','translation.views.home',name="home"),
-    url(r'^english2hindi/$','translation.views.english2hindi',name="english2hindi"),
-    url(r'^about_us/$','translation.views.about_us',name="about_us"),
-    url(r'^sample_translations/(?P<id>\d+)/$','translation.views.sample_translations',name="sample_translations"),
-    url(r'^sign_up/$','translation.views.sign_up',name="sign_up"),
-    url(r'^sign_up/done/$','translation.views.process_sign_up',name="process_sign_up"),
-    url(r'^login/$','translation.views.process_sign_in',name="login"),
-    url(r'^logout/$','translation.views.process_sign_out',name="logout"),
-    url(r'^account/$','translation.views.account',name="account"),
-    url(r'^account/upload/$','translation.views.upload',name="upload"),
-    url(r'^account/upload/done/$','translation.views.process_upload',name="process_upload"),
-    url(r'^account/evaluate/$','translation.views.evaluate',name="evaluate"),
-    url(r'^account/evaluate/done/$','translation.views.process_evaluate',name="process_evaluate"),
-    url(r'^account/translate/(?P<uid>\d+)/$','translation.views.translate',name="translate"),
-    url(r'^account/translate/(?P<uid>\d+)/(?P<id>\d+)/done/$','translation.views.process_translate',name="process_translate"),
-    url(r'^account/(?P<uid>\d+)/settings/$','translation.views.account_settings',name="account_settings"),
-    url(r'^account/(?P<uid>\d+)/settings/done/$','translation.views.process_account_settings',name="process_account_settings"),
+urlpatterns = patterns('translation.views', 
+    
+    #loading home page of bhagirath
+    url(r'^home/$','home',name="home"),
+    #Displaying about_us template that gives more info about bhagirath
+    url(r'^about_us/$','about_us',name="about_us"),
+    #Displaying sample_translations template that provides few translations
+    url(r'^sample_translations/(?P<id>\d+)/$','sample_translations',name="sample_translations"),
+    #Sign up form for registration of new users
+    url(r'^sign_up/$','sign_up',name="sign_up"),
+    #Get user entered info and store in database when user presses submit button on sign up
+    url(r'^sign_up/done/$','process_sign_up',name="process_sign_up"),
+    #checks if username and password are authenticated and allow further login
+    url(r'^login/$','process_sign_in',name="login"),
+    #logs out user and redirects him to home page
+    url(r'^logout/$','process_sign_out',name="logout"),
+    #loads user account template showing his contribution in bhagirath
+    url(r'^account/$','account',name="account"),
+    #provides user upload file facility and asks him to enter specified info about file
+    url(r'^account/upload/$','upload',name="upload"),
+    #stores file and info entered by user when user presses submit button on upload page
+    url(r'^account/upload/done/$','process_upload',name="process_upload"),
+    #provide users sentences to evaluate
+    url(r'^account/evaluate/$','evaluate',name="evaluate"),
+    #stores the sentence evaluated by user
+    url(r'^account/evaluate/done/$','process_evaluate',name="process_evaluate"),
+    #give sentence to user for translation
+    url(r'^account/translate/(?P<uid>\d+)/$','translate',name="translate"),
+    #stores user entered translation when user hits submit on translate form
+    url(r'^account/translate/(?P<uid>\d+)/(?P<id>\d+)/done/$','process_translate',name="process_translate"),
+    #displays user entered info which user can edit except username 
+    url(r'^account/(?P<uid>\d+)/settings/$','account_settings',name="account_settings"),
+    #saves the changes made by user in his profile
+    url(r'^account/(?P<uid>\d+)/settings/done/$','process_account_settings',name="process_account_settings"),
+    
+    
+    url(r'^english2hindi/$','english2hindi',name="english2hindi"),
+    url(r'^subtask/$','subtask',name="subtask"),
+    url(r'^staticmicro/$','staticmicro',name="staticmicro"),
+    url(r'^microtask/$','microtask',name="microtask"),
+)
+
+urlpatterns += patterns('',
     ('^/?$', redirect_to, {"url": "/home"}),
     (r'^my_admin/jsi18n', 'django.views.i18n.javascript_catalog'),
-    
-    # Examples:
-    # url(r'^$', 'bhagirath.views.home', name='home'),
-    # url(r'^bhagirath/', include('bhagirath.foo.urls')),
-
+        
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
+        
+    #adding django-admin-tools urls.
+    url(r'^admin_tools/', include('admin_tools.urls')),
+    url(r'^current_activity/', include(admin_urls)),
+    
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    
 )
 
 

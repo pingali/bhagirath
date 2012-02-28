@@ -1,0 +1,19 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="/admin/">Home</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">
+	Average number of hops needed before convergence is reached for sentences: <a style="color: #000000;">{{avg_hop_count}}</a>
+</label> </br> </br>
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">
+	Maximum number of hops needed before convergence is reached for sentences: <a style="color: #000000;">{{max_hop_count}}</a>
+</label> </br> </br>
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">
+	Minimum number of hops needed before convergence is reached for sentences: <a style="color: #000000;">{{min_hop_count}}</a>
+</label> </br> </br>
+{% endblock %}
