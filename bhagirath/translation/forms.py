@@ -78,7 +78,8 @@ class SignUpForm(forms.models.ModelForm):
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
     domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
-    #competence_for_each_language      
+    #competence_for_each_language
+    groups = forms.CharField(max_length=50)      
     captcha = ReCaptchaField(label="Please enter text you see or hear")
     
     def __init__(self, *args, **kwargs):      

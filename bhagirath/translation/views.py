@@ -1,5 +1,6 @@
 from django.template import RequestContext
 from django.contrib import auth, messages
+from django.contrib.auth.models import Group
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
@@ -145,24 +146,26 @@ def sign_up(request):
     """
     This function loads sign up form for new user's registration. 
     """
+    l = find()
     data = {
         'form': SignUpForm(),
+        'list':l,
         'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
     }
     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
- 
+    
 def process_sign_up(request):
     """
-    This function is used to process information provided by user while registration. 
-    It performs several checks over the data entered by user like the entered recaptcha, 
-    password as well as confirmed password, unique username and email-id. If all entries
-    are valid and all checks are passed it registers the user by creating a record in User and UserProfile models.
-    """
-    user = request.user 
+This function is used to process information provided by user while registration.
+It performs several checks over the data entered by user like the entered recaptcha,
+password as well as confirmed password, unique username and email-id. If all entries
+are valid and all checks are passed it registers the user by creating a record in User and UserProfile models.
+"""
+    user = request.user
     if request.method == 'POST':
-        check_captcha = captcha.client.submit(request.POST['recaptcha_challenge_field'], 
-                                       request.POST['recaptcha_response_field'], 
-                                       settings.RECAPTCHA_PRIVATE_KEY, 
+        check_captcha = captcha.client.submit(request.POST['recaptcha_challenge_field'],
+                                       request.POST['recaptcha_response_field'],
+                                       settings.RECAPTCHA_PRIVATE_KEY,
                                        request.META['REMOTE_ADDR'])
         
         if check_captcha.is_valid:
@@ -174,6 +177,7 @@ def process_sign_up(request):
             f_last_name = request.POST['last_name']
             f_gender = request.POST['gender']
             f_date_of_birth = request.POST['date_of_birth']
+            f_grp = request.POST['groups'].upper()
                  
             if request.POST.has_key('translator'):
                 f_translator = request.POST['translator']
@@ -183,7 +187,7 @@ def process_sign_up(request):
                 f_contributor = request.POST['contributor']
             else:
                 f_contributor = False
-            if request.POST.has_key('evaluator'):           
+            if request.POST.has_key('evaluator'):
                 f_evaluator = request.POST['evaluator']
             else:
                 f_evaluator = False
@@ -191,12 +195,12 @@ def process_sign_up(request):
             try:
                 count = 0
                 if f_password == f_confirm_password:
-                    if f_email and f_username and f_first_name and f_last_name:
-                        count = User.objects.filter(email=f_email).count()                     
+                    if f_email and f_username and f_first_name and f_last_name and f_gender and f_date_of_birth and f_grp:
+                        count = User.objects.filter(email=f_email).count()
                         if count !=0:
                             data = {
                                 'form': SignUpForm(request.POST),
-                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
+                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
                                 }
                             messages.error(request,"EmailID already in use.Try another one!!!")
                             log.error("Exisiting email-id used while user-registration.")
@@ -207,11 +211,11 @@ def process_sign_up(request):
                         if count != 0:
                             data = {
                                 'form': SignUpForm(request.POST),
-                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
+                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
                                 }
                             messages.error(request,"Username already in use.Try another one!!!")
                             log.error("Exisiting username used while user-registration.")
-                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request)) 
+                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
                         
                         u = User.objects.create_user(f_username, f_email, f_password)
                         u.is_active = True
@@ -220,23 +224,48 @@ def process_sign_up(request):
                         u.save()
                         u.set_password(f_password)
                         u.save()
-                        
+                        try:
+                            g = Group.objects.get(name=f_grp)
+                            u.groups.add(g)
+                            u.save()
+                        except:
+                            g = Group.objects.filter(name=f_grp)
+                            if g:
+                                u.groups.add(g)
+                                u.save()  
+                            else:
+                                g = Group()
+                                g.name = f_grp
+                                g.save()
+                                u.groups.add(g)
+                                u.save()
+                            
                         user = User.objects.get(username__exact=f_username)
-                        user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'],gender=f_gender,
-                                                    translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
+                        
+                        #user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'],gender=f_gender,
+                        #                           translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
+                        p = UserProfile()
+                        p.user = user
+                        p.date_of_birth = f_date_of_birth
+                        p.ip_address = request.META['REMOTE_ADDR']
+                        p.gender = f_gender
+                        p.translator = f_translator
+                        p.contributor = f_contributor
+                        p.evaluator = f_evaluator
+                        p.save()
                         
                         userpro = UserProfile.objects.get(user=user)
                         
-                        if request.POST.getlist('language'):     
-                            all_language = request.POST.getlist('language')            
+                        if request.POST.getlist('language'):
+                            all_language = request.POST.getlist('language')
                             
                             for l in all_language:
                                 id = int(l)
                                 f_language = Master_Language.objects.get(pk=id)
                                 userpro.language.add(f_language)
                         
-                        if request.POST.has_key('medium_of_education_during_school'):     
-                            medium_of_education_during_school = request.POST['medium_of_education_during_school']            
+                        if request.POST.has_key('medium_of_education_during_school'):
+                            medium_of_education_during_school = request.POST['medium_of_education_during_school']
                             
                             for l in medium_of_education_during_school:
                                 id = int(l)
@@ -244,8 +273,8 @@ def process_sign_up(request):
                                 userpro.medium_of_education_during_school = f_medium_of_education_during_school
                                 userpro.save()
                               
-                        if request.POST.has_key('district'):     
-                            district = request.POST['district']            
+                        if request.POST.has_key('district'):
+                            district = request.POST['district']
                             
                             for l in district:
                                 id = int(l)
@@ -253,8 +282,8 @@ def process_sign_up(request):
                                 userpro.district = f_district
                                 userpro.save()
 
-                        if request.POST.has_key('education_qualification'):     
-                            education_qualification = request.POST['education_qualification']            
+                        if request.POST.has_key('education_qualification'):
+                            education_qualification = request.POST['education_qualification']
                             
                             for l in education_qualification:
                                 id = int(l)
@@ -262,8 +291,8 @@ def process_sign_up(request):
                                 userpro.education_qualification = f_education_qualification
                                 userpro.save()
                                 
-                        if request.POST.has_key('domain'):     
-                            domain = request.POST['domain']            
+                        if request.POST.has_key('domain'):
+                            domain = request.POST['domain']
                             
                             for l in domain:
                                 id = int(l)
@@ -272,23 +301,23 @@ def process_sign_up(request):
                                 userpro.save()
                         
                         if request.POST.getlist('interests'):
-                            all_interests = request.POST.getlist('interests') 
+                            all_interests = request.POST.getlist('interests')
                             for i in all_interests:
                                 id = int(i)
                                 f_interests = Master_InterestTags.objects.get(pk=id)
-                                userpro.interests.add(f_interests)  
+                                userpro.interests.add(f_interests)
                             
                         data = {
                             'form': SignUpForm(),
-                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
+                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
                             }
                         messages.success(request,"Record saved successfully!!!")
                         log.info("User registration successful for %s."%(f_username))
-                        return render_to_response('login/home.html',data,context_instance=RequestContext(request))                              
+                        return render_to_response('login/home.html',data,context_instance=RequestContext(request))
                     else:
                         data = {
                             'form': SignUpForm(request.POST),
-                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
+                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
                             }
                         messages.error(request,"Please fill in all fields!!!")
                         log.error("All fields not entered correctly while user registration.")
@@ -297,21 +326,21 @@ def process_sign_up(request):
                 else:
                     data = {
                         'form': SignUpForm(request.POST),
-                        'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
-                        } 
+                        'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
+                        }
                     messages.error(request,"Confirm password correctly!!!")
                     log.error("Password not confirmed correctly.")
                     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-                return HttpResponseRedirect(reverse('home')) 
+                return HttpResponseRedirect(reverse('home'))
             except:
                 log.exception("User registration failed for %s."%(f_username))
-                traceback.print_exc() 
+                traceback.print_exc()
                 messages.error(request, "Registration Failed!!!Try again.")
                
         else:
             data = {
                 'form': SignUpForm(),
-                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
+                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
                 }
             messages.error(request, "Recaptcha entered incorrectly!!!")
             log.error("Recaptcha entered incorrectly while user registration.")
@@ -359,7 +388,7 @@ def process_sign_out(request):
         'translated_sentences':s,
         'published_articles':a
         } 
-    messages.success(request,"You're logged out successfully!!!")
+    messages.success(request,"Thanks for spending some quality time with the Website today.")
     log.info("%s logged out succesfully."%(user))
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))   
 
@@ -956,3 +985,16 @@ def stats():
         s = 0
         
     return (u,a,s)
+
+def find():
+    u = Group.objects.all()
+    l = "" 
+    count = Group.objects.all().count()
+    i = 0
+    if count>0:
+        l = u[i].name
+        i+=1
+        while i < count:
+            l = l + ',' + u[i].name
+            i += 1
+    return l

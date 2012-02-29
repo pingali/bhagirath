@@ -3,6 +3,11 @@
 
 {% block script %}
 <link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
+<link type="text/css" rel="stylesheet" href="/static/stylesheets/jquery-ui.css" />
+
+<script type="text/javascript" src="/static/scripts/jquery.js"></script>
+<script type="text/javascript" src="/static/scripts/jquery-ui.js"></script>
+
 
 <script type="text/javascript" Language="JavaScript">
 	function OnSignUp() {
@@ -11,9 +16,15 @@
 	}
 
 	$(document).ready(function() {
+		var word = $('#g').text().split(',');
+		
 		jQuery.each($('select[@multiple="multiple"]'), function () {  
 		 SelectFilter.init(this.id, "", 0, "/media/");  
-		}); 			
+		}); 
+		
+		$("#groups").autocomplete({
+				source: word
+			});
 	});
 </script>
 {% endblock %}
@@ -49,9 +60,10 @@
 				<p><label>Select Roles:</label>{{form.translator|default_if_none:"on"}}Translator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				     {{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				     {{form.evaluator|default_if_none:"off"}}Evaluator</p>
-				
+				<p><label>Groups:</label>{{form.groups|capfirst}}</p>
 				<p><div style="margin-left:10px;">{{html_captcha|safe}}</div></p>
 				<button name="sign_up" id="sign_up" class="signup" onclick="OnSignUp();">Create Account</button>
+				<div id="g" style="visibility:hidden">{{list}}</div>
 			</fieldset>
 		</div>
 	</div>
