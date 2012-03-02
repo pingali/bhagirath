@@ -41,12 +41,7 @@ urlpatterns = patterns('translation.views',
     url(r'^account/(?P<uid>\d+)/settings/$','account_settings',name="account_settings"),
     #saves the changes made by user in his profile
     url(r'^account/(?P<uid>\d+)/settings/done/$','process_account_settings',name="process_account_settings"),
-    
-    
-    url(r'^english2hindi/$','english2hindi',name="english2hindi"),
-    url(r'^subtask/$','subtask',name="subtask"),
-    url(r'^staticmicro/$','staticmicro',name="staticmicro"),
-    url(r'^microtask/$','microtask',name="microtask"),
+   
 )
 
 urlpatterns += patterns('',
@@ -59,6 +54,7 @@ urlpatterns += patterns('',
     #adding django-admin-tools urls.
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^current_activity/', include(admin_urls)),
+    url(r'^background_task/', include(admin_urls)),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),

@@ -1,6 +1,6 @@
 from django.template import RequestContext
 from django.contrib import auth, messages
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,Permission
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
@@ -10,6 +10,7 @@ from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
+from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import captcha
 import traceback
 import logging
@@ -24,77 +25,22 @@ path = 'rolling_log'
 rolling_handler = logging.handlers.RotatingFileHandler(path, maxBytes=52428800)
 log.addHandler(rolling_handler)
 
-def english2hindi(request):
-    F = open("/home/ankita/Desktop/enghin/a_new.txt")
-    line = F.read()
-    parts = line.split('\n')
-    i = 0
-    j = len(parts)
-    
-    while i < j:
-        if parts[i]:
-            part = parts[i].split(',')
-            p = Master_English2Hindi()
-            p.english_word = part[0]
-            p.pos = part[1]
-            p.hindi_word = part[2]
-            p.save()
-        i += 1
-   
-    return HttpResponse("DONE!!!")
 
-def subtask(request):
-    tasks = Task.objects.all()
-    i = Task.objects.all().count()
-    j = 0
-    while  j< i:
-        t = tasks[j]
-        subtaskParser(t.html_doc_name)
-        j +=1
-    return HttpResponse("DONE!!!") 
-
-def staticmicro(request):
-    i = 0
-    while i < 5:
-        microtaskParser()
-        i += 1  
-    return HttpResponse("DONE!!!") 
-
-def microtask(request):
-    i = 0
-    static = StaticMicrotask.objects.filter(assigned = 0)
-    while i < 50:
-        s = static[i]
-        x = Master_Experiment.objects.get(bit_array = s.bit_array)
-        z = x.bit_array
-        val = int(z[6:10],2) 
-        j = 0
-        while j < val:
-            m = Microtask()
-            m.task = s.task
-            m.subtask = s.subtask
-            m.static_microtask = s
-            m.original_sentence = s.original_sentence
-            m.assigned = 0
-            m.assign_timestamp = datetime.datetime.now()
-            m.save()
-            j += 1
-        s.assigned = 1
-        s.save()
-        i += 1 
-    return HttpResponse("DONE!!!") 
-           
 def home(request):
     """
     This function displays some information about bhagirath project, current statistics, 
     weekly and overall top users and provides login facility to the user. 
     """
     (u,a,s) = stats()
+    overall_leaderboard = get_overall_leaderboard()
+    weekly_leaderboard = get_weekly_leaderboard()
     data = {
             'form': LoginForm(),
             'registered_users':u,
             'translated_sentences':s,
-            'published_articles':a
+            'published_articles':a,
+            'overall_leaderboard':overall_leaderboard,
+            'weekly_leaderboard':weekly_leaderboard,
         }
     return render_to_response('login/home.html',data,context_instance=RequestContext(request))
 
@@ -103,11 +49,15 @@ def about_us(request):
     This function gives detailed information about bhagirath along with statistics and leaderboards.
     """
     (u,a,s) = stats()
+    overall_leaderboard = get_overall_leaderboard()
+    weekly_leaderboard = get_weekly_leaderboard()
     data = {
             'form': LoginForm(),
             'registered_users':u,
             'translated_sentences':s,
-            'published_articles':a
+            'published_articles':a,
+            'overall_leaderboard':overall_leaderboard,
+            'weekly_leaderboard':weekly_leaderboard,
         }
     return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))
           
@@ -382,11 +332,15 @@ def process_sign_out(request):
     auth.logout(request)
     
     (u,a,s) = stats()
+    overall_leaderboard = get_overall_leaderboard()
+    weekly_leaderboard = get_weekly_leaderboard()
     data = {
         'form': LoginForm(),
         'registered_users':u,
         'translated_sentences':s,
-        'published_articles':a
+        'published_articles':a,
+        'overall_leaderboard':overall_leaderboard,
+        'weekly_leaderboard':weekly_leaderboard,
         } 
     messages.success(request,"Thanks for spending some quality time with the Website today.")
     log.info("%s logged out succesfully."%(user))
@@ -401,7 +355,9 @@ def account(request):
     uid = user.pk
 
     if user.is_authenticated():
-        (u,a,s) = stats()          
+        (u,a,s) = stats()   
+        overall_leaderboard = get_overall_leaderboard()
+        weekly_leaderboard = get_weekly_leaderboard()       
         user_pro = UserProfile.objects.filter(user = uid)
         user_profile = user_pro[0]
         data = {
@@ -413,7 +369,9 @@ def account(request):
                 'registered_users':u,
                 'translated_sentences':s,
                 'published_articles':a,
-                'username':user
+                'username':user,
+                'overall_leaderboard':overall_leaderboard,
+                'weekly_leaderboard':weekly_leaderboard,
         } 
         log.info("%s visited its home page."%(user))
         return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
@@ -974,8 +932,10 @@ def stats():
     This function returns statistics - no. of registered users, sentences and articles translated.
     """
     sta = StatCounter.objects.all().order_by('created_on')
+    count = StatCounter.objects.all().count()
+    
     if sta:
-        st = sta[0]
+        st = sta[count- 1]
         u = st.registered_users
         s = st.translated_sentences
         a = st.published_articles
@@ -983,7 +943,7 @@ def stats():
         u = 0
         a = 0
         s = 0
-        
+    print (u,a,s)    
     return (u,a,s)
 
 def find():
@@ -998,3 +958,12 @@ def find():
             l = l + ',' + u[i].name
             i += 1
     return l
+
+def get_overall_leaderboard():
+    u = OverallLeaderboard.objects.all().order_by('overall_points_earned')[:10]
+    print u
+    return u
+
+def get_weekly_leaderboard():
+    u = WeeklyLeaderboard.objects.all().order_by('points_earned_this_week')[:10]
+    return u

@@ -44,7 +44,7 @@ class Command(BaseCommand):
         
         db_setting = options['db']
         if (not settings.DATABASES.has_key(db_setting)):
-            print "Unknown database %s " % dbname
+            #print "Unknown database %s " % dbname
             sys.exit(1) 
             return 
         db = settings.DATABASES[db_setting] 

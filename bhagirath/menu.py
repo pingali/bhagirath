@@ -32,6 +32,7 @@ class CustomMenu(Menu):
                 _('Administration'),
                 models=('django.contrib.*',)
             ),
+            
             items.MenuItem('Current Activity',
                 children=[
                     items.MenuItem('Logged-in users', '/current_activity/active_users/'),
@@ -41,7 +42,23 @@ class CustomMenu(Menu):
                     items.MenuItem('Total sentences translated', '/current_activity/total_translations/'),
                     items.MenuItem('Average translation rate', '/current_activity/avg_translation_rate/'),
                     items.MenuItem('Average convergence rate', '/current_activity/avg_convergence_rate/'),
-                    items.MenuItem('Microtask similarity score', '/current_activity/microtask_similarity_score/')
+                    #items.MenuItem('Microtask similarity score', '/current_activity/microtask_similarity_score/')
+                ]
+            ),
+                           
+            items.MenuItem('Background Tasks',
+                children=[
+                    items.MenuItem('Populate Subtask', '/background_task/populate_subtask/'),
+                    items.MenuItem('Populate StaticMicrotask', '/background_task/populate_staticmicrotask/'),
+                    items.MenuItem('Populate Microtask', '/background_task/populate_microtask/'),
+                    items.MenuItem('Unassign Microtask', '/background_task/unassign_microtask/'),
+                    items.MenuItem('Upload Priviledge', '/background_task/upload_priviledge/'),
+                    items.MenuItem('Update Weekly Leaderboard', '/background_task/update_weekly_leaderboard/'),
+                    items.MenuItem('Update Overall Leaderboard', '/background_task/update_overall_leaderboard/'),
+                    items.MenuItem('Update Statistics Counter', '/background_task/update_statistics_counter/'),
+                    items.MenuItem('Document Stability', '/background_task/document_stability/'),
+                    items.MenuItem('Reputation Score', '/background_task/reputation_score/'),
+                    items.MenuItem('Assign Rank', '/background_task/assign_rank/')
                 ]
             ),
         ]

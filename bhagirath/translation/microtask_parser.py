@@ -3,7 +3,7 @@ from bhagirath.translation.models import Task,Subtask,StaticMicrotask,Master_Exp
 import re
 
 splitlist = []
-RE = re.compile('\bRetd|Ltd|Inc|Mrs|Mr|Ms|Prof|Dr|Gen|Rep|Sen|C.O|U.S|U.K|i.e|ex|rep|prof|dr|Co|co|ltd|mr|ms|mrs|\
+RE = re.compile('\bSgt|p|v|pp|cf|Retd|Ltd|Inc|Mrs|Mr|Ms|Prof|Dr|Gen|Rep|Sen|C.O|U.S|U.K|i.e|ex|rep|prof|dr|Co|co|ltd|mr|ms|mrs|\
                 Sgt|sgt|Maj|maj|Col|col|etc|e.g|Ing|Asso|asso\b')
 
 def microtaskParser():
@@ -18,13 +18,23 @@ def microtaskParser():
     sub.assigned = 1 
      
     data = str(sub.original_data)
-     
-    #data = data.encode('utf-8')   
+  
     data = re.sub('[\t\n]+','\n',data)
+    
+    data = re.sub('(\[see\])',r'', data)
+    data = re.sub('(\[citation needed\])',r'', data)
+    data = re.sub('(\[cite.*\])',r'', data)
+    data = re.sub('(\[deadlink\])',r'', data)
+    data = re.sub('(\[disambi*\])',r'', data)
+    data = re.sub('(\[note*\])',r'', data)
+    data = re.sub('([\s\W]*)(\[[0-9]+\])', r'',data)
+
     lst = data.split("\n")
+    
     string = ''
     for each1 in lst:
         sent = each1.split(". ")
+        
         if len(sent) > 1:
             #for hamdling acronyms LIST TO BE UPDATED
             for each in sent:
@@ -33,11 +43,15 @@ def microtaskParser():
                 for i in match_list:
                         if each.endswith(i):
                             #join this and next sentence and relace the two sentences in the list
-                            join_after = sent.pop(each_index + 1)
+                            
                             join_before = sent.pop(each_index)
+                            try:
+                                join_after = sent.pop(each_index + 1)
+                            except:
+                                join_after = ''
                             each = join_before + '. ' + join_after
                             sent.insert(each_index,each)
-                            #print each + "\n" #dump 
+                            
                             break
                 string = string + '. SEN_END ' + (''.join(str(each))).lstrip()
         else:
@@ -46,7 +60,7 @@ def microtaskParser():
     string = re.sub('([\?\.\!]+\s*)(\[\d+\]\s*)(\w+)', r'\1 SEN_END\2\3', string)
     string = re.sub('(SEN_END)\s*([a-z]+)',r'\2', string)
     string = re.sub('([\s\W]+)([A-Z0-9][\.\?\!]\s+)(SEN_END)', r'\1\2',string)
-    string = re.sub('(\.)+','.', string)
+    
     
     flag = 0
     i = 0
@@ -57,7 +71,7 @@ def microtaskParser():
         
         if not(each == '. ' or each == '' or each == ' '):        
                         #if single word translate and replace...google api??
-                        if (len(each.split(' '))<=1):
+                        if (len(each.split(' '))<=4):
                             flag = 1
                             #code yet to be written
                             #translate that word as it is and store, code to be writen, google api??
@@ -68,11 +82,11 @@ def microtaskParser():
                             micro = StaticMicrotask()  
                             micro.subtask = subtask
                             micro.task = task
+                            print each
                             micro.original_sentence = each
                             micro.bit_array = a
                             micro.save()
                             i += 1
                              
     sub.save()
-   
     

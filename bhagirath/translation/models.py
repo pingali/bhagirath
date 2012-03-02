@@ -347,7 +347,8 @@ class Task(models.Model):
     age_group_tag = models.ForeignKey(Master_AgeGroup,on_delete=models.PROTECT,null=True)
     geographical_region = models.ForeignKey(Master_GeographicalRegion,on_delete=models.PROTECT,null=True)
     published = models.BooleanField(default=False)
-        
+    parsed = models.BooleanField(default=False)
+    
     class Meta:
         ordering = ['time_to_publish',]
  

@@ -18,12 +18,14 @@ class PopulateSubtaskCronJob(CronJobBase):
     code = 'bhagirath.translation.populate_subtask_cron_job' # a unique code
     
     def job(self):
-        tasks = Task.objects.all()
-        i = Task.objects.all().count()
+        tasks = Task.objects.all().filter(parsed=False)
+        i = Task.objects.all().filter(parsed=False).count()
         j = 0
         while  j< i:
             t = tasks[j]
             subtaskParser(t.html_doc_name)
+            t.parsed = True
+            t.save()
             j +=1
 
 #2.Populate StaticMicortask - DONE
@@ -99,8 +101,7 @@ class UnassignMicrotaskCronJob(CronJobBase):
             if u.translated_sentence:
                 pass
             else:
-                micro = Microtask.objects.filter(assigned = 1 , original_sentence = u.original_sentence)
-                m = micro[0]
+                m = u.microtask
                 m.assigned = 0
                 m.save()
             j += 1 
@@ -158,7 +159,10 @@ class UpdateOverallLeaderBoardCronJob(CronJobBase):
     def job(self):
         user = UserProfile.objects.order_by('-overall_score')
         count = UserProfile.objects.all().count()
-        over = OverallLeaderboard.objects.all().delete()
+        entries = OverallLeaderboard.objects.all().count()
+        
+        if entries > 0:
+            over = OverallLeaderboard.objects.all().delete()
         i = 0 
         while i < count:
             over = OverallLeaderboard()
@@ -182,14 +186,29 @@ class UpdateWeeklyLeaderBoardCronJob(CronJobBase):
 
     def job(self):
         user = UserProfile.objects.order_by('-prev_week_score')
-        week = OverallLeaderboard.objects.all()
-        i = 0   
-        while i < 10:
-            w = week[i]
-            w.username = user[i].user
-            w.points_earned_this_week = user[i].prev_week_score
-            w.save()
-            i += 1
+        count = UserProfile.objects.order_by('-prev_week_score').count()
+        if count > 10:
+            count = 10
+        entries = WeeklyLeaderboard.objects.all().count()
+        if entries > 0: 
+            week = WeeklyLeaderboard.objects.all()
+            i = 0   
+            while i < count:
+                w = week[i]
+                w.username = user[i].user
+                w.rank = OverallLeaderboard.objects.get(username = user[i].user)
+                w.points_earned_this_week = user[i].prev_week_score
+                w.save()
+                i += 1
+        else:
+            i = 0  
+            while i < count:
+                w = WeeklyLeaderboard()
+                w.username = user[i].user
+                w.rank = OverallLeaderboard.objects.get(username = user[i].user)
+                w.points_earned_this_week = user[i].prev_week_score
+                w.save()
+                i += 1
         userpro = UserProfile.objects.all()
         count = UserProfile.objects.all().count()
         i = 0 
@@ -344,24 +363,24 @@ class AssignRankCronJob(CronJobBase):
             amateur = int(amateur) + 1
             
         j = 0
-        while j < amateur:
+        while j < amateur  and j < count:
             u = user[j]
-            u.rank = "Amateur"    
+            u.rank = Master_Rank.objects.get(position="Amatuer")   
             u.save()
             j += 1
 
         k = 0
-        while k < active:
+        while k < active  and j < count:
             u = user[j]
-            u.rank = "Active translator" 
+            u.rank = Master_Rank.objects.get(position="Active translator") 
             u.save()
             j += 1
             k += 1
 
         k = 0
-        while k < senior:
+        while k < senior  and j < count:
             u = user[j]
-            u.rank = "Senior translator"  
+            u.rank = Master_Rank.objects.get(position="Senior translator")  
             u.save()
             j += 1
             k += 1
@@ -369,13 +388,13 @@ class AssignRankCronJob(CronJobBase):
         k = 0
         while k < master and j < count:
             u = user[j]
-            u.rank = "Master translator" 
+            u.rank = Master_Rank.objects.get(position="Master translator") 
             u.save()
             j += 1
             k += 1
 
         while j < count:
             u = user[j]
-            u.rank = "Rockstar translator" 
+            u.rank = Master_Rank.objects.get(position="Rockstar translator") 
             u.save()
             j += 1         

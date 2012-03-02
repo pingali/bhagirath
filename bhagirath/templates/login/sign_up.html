@@ -3,11 +3,6 @@
 
 {% block script %}
 <link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
-<link type="text/css" rel="stylesheet" href="/static/stylesheets/jquery-ui.css" />
-
-<script type="text/javascript" src="/static/scripts/jquery.js"></script>
-<script type="text/javascript" src="/static/scripts/jquery-ui.js"></script>
-
 
 <script type="text/javascript" Language="JavaScript">
 	function OnSignUp() {
@@ -16,15 +11,9 @@
 	}
 
 	$(document).ready(function() {
-		var word = $('#g').text().split(',');
-		
 		jQuery.each($('select[@multiple="multiple"]'), function () {  
 		 SelectFilter.init(this.id, "", 0, "/media/");  
 		}); 
-		
-		$("#groups").autocomplete({
-				source: word
-			});
 	});
 </script>
 {% endblock %}
