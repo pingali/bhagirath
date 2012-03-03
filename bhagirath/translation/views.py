@@ -21,10 +21,6 @@ def findpath(path):
     return os.path.abspath(os.path.join(parent_dir,path))
 
 log = logging.getLogger("translation.views")
-path = 'rolling_log'
-rolling_handler = logging.handlers.RotatingFileHandler(path, maxBytes=52428800)
-log.addHandler(rolling_handler)
-
 
 def home(request):
     """

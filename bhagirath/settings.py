@@ -195,7 +195,7 @@ handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)-6s: %(name)s - %(levelname)s - %(message)s',
-                    filename= 'logfile', 
+                    filename= 'bhagirath.log', 
                     filemode= 'a+',
                     handlers=[handler],
                     )
