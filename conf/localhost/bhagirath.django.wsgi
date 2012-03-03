@@ -6,6 +6,7 @@ def findpath(path):
 
 # put the Django project on sys.path
 sys.path.insert(0, findpath("../.."))
+sys.path.insert(0, findpath("../../bhagirath"))
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "bhagirath.settings"
 

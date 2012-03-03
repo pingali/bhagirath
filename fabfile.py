@@ -209,7 +209,7 @@ env.project_name = 'bhagirath'
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
-    env.user = 'ubuntu'
+    env.user = 'pingali'
     env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
 
@@ -311,7 +311,7 @@ def install_site():
     #sudo('/etc/init.d/celeryd restart')
     #sudo('/etc/init.d/celeryevcam restart')
     #sudo('/etc/init.d/celerybeat restart')
-    sudo('cd /etc/apache2/sites-available/; a2ensite %(project_name)s' % env, pty=True) 
+    sudo('cd /etc/apache2/sites-available/; a2ensite 000-%(project_name)s' % env, pty=True) 
     
 def install_requirements():
     "Install the required packages from the requirements file using pip"
@@ -331,8 +331,6 @@ def migrate():
     sudo('cd %(path)s; chmod -R a+w shared' % env)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py syncdb --noinput' % env, pty=True)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py migrate' % env, pty=True)
-    run('cd %(path)s/releases/current/%(project_name)s/../oauth2client;  ../../../bin/python manage.py syncdb --noinput' % env, pty=True)
-    run('cd %(path)s/releases/current/%(project_name)s/../oauth2client;  ../../../bin/python manage.py migrate' % env, pty=True)
     sudo('cd %(path)s; chmod -R a+w shared' % env)  # make the db readable
     
 def restart_webserver():
