@@ -10,10 +10,13 @@
 	return true;
 	}
 
-	$(document).ready(function() {
-		jQuery.each($('select[@multiple="multiple"]'), function () {  
-		 SelectFilter.init(this.id, "", 0, "/media/");  
-		}); 
+	$(function() {
+		var word = $('#g').text().split(',');
+		$("#id_groups").autocomplete({
+			source: word
+		});
+		SelectFilter.init("id_language", "", 0, "/media/");  
+		SelectFilter.init("id_interests", "", 0, "/media/");  
 	});
 </script>
 {% endblock %}
