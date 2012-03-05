@@ -7,3 +7,6 @@ django-ajax-selects
 django-jsonfield 
 django-cron 
 django-admin-tools 
+django-basic-feedback
+lxml
+

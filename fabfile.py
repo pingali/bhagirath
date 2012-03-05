@@ -209,13 +209,13 @@ env.project_name = 'bhagirath'
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
-    env.user = 'pingali'
+    env.user = 'ubuntu'
     env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
 
 def webserver():
     "Use the actual webserver"
-    env.hosts = ['www.bhagirath.com']
+    env.hosts = ['www.translate4india.com']
     env.user = 'ubuntu'
     env.path = '/var/www/%(project_name)s' % env
     env.virtualhost_path = env.path
@@ -234,6 +234,8 @@ def setup():
     """
     require('hosts', provided_by=[localhost,webserver])
     require('path')
+    sudo('apt-get install build-essential libxml2 libxml2-dev libxslt1 libxslt1-dev')
+    sudo('apt-get install build-essential python-setuptools')
     sudo('easy_install pip')
     sudo('pip install virtualenv')
     sudo('aptitude install -y apache2')
