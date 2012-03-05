@@ -200,6 +200,8 @@ do the following.
 """
 from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
+from fabric.contrib.files import exists, append
+from fabric.operations import put, sudo
 
 # globals
 env.project_name = 'bhagirath'
@@ -212,6 +214,11 @@ def localhost():
     env.user = 'ubuntu'
     env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
+    env.disable_known_hosts = True    
+    env.warn_only = True
+    env.show = ['running', 'warnings'] 
+    env.key_filename = ["/home/ubuntu/.ssh/id_dsa"]
+
 
 def webserver():
     "Use the actual webserver"
@@ -234,8 +241,8 @@ def setup():
     """
     require('hosts', provided_by=[localhost,webserver])
     require('path')
-    sudo('apt-get install build-essential libxml2 libxml2-dev libxslt1 libxslt1-dev')
-    sudo('apt-get install build-essential python-setuptools')
+    sudo('apt-get -y install build-essential libxml2 libxml2-dev libxslt1 libxslt1-dev')
+    sudo('apt-get -y install build-essential python-dev python-setuptools')
     sudo('easy_install pip')
     sudo('pip install virtualenv')
     sudo('aptitude install -y apache2')
@@ -246,7 +253,7 @@ def setup():
     sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
     run('ln -fs %(path)s www;' % env, pty=True) # symlink web dir in home
     with cd(env.path):
-        run('virtualenv .;' % env, pty=True)
+        run('virtualenv --clear --distribute .;' % env, pty=True)
         run('mkdir -p logs; mkdir -p releases; mkdir -p shared; mkdir -p packages;  ' % env, pty=True)
         run('touch logs/error.log; touch logs/django.log; touch logs/access.log ; chmod -R a+w logs; chmod -R a+w shared;  ' % env, pty=True)
         run('cd releases; rm current; ln -fs . current; rm previous; ln -fs . previous;', pty=True)
@@ -318,7 +325,7 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -E . -r ./releases/%(release)s/requirements.txt' % env, pty=True)
+    run('cd %(path)s; export PIP_REQUIRE_VIRTUALENV=true; source bin/activate; bin/pip install -r ./releases/%(release)s/requirements.txt' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
@@ -333,6 +340,7 @@ def migrate():
     sudo('cd %(path)s; chmod -R a+w shared' % env)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py syncdb --noinput' % env, pty=True)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py migrate' % env, pty=True)
+    run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py loaddata geographical_region_data.json' % env, pty=True)
     sudo('cd %(path)s; chmod -R a+w shared' % env)  # make the db readable
     
 def restart_webserver():
