@@ -224,8 +224,12 @@ def webserver():
     "Use the actual webserver"
     env.hosts = ['www.translate4india.com']
     env.user = 'ubuntu'
-    env.path = '/var/www/%(project_name)s' % env
+    env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
+    env.disable_known_hosts = True    
+    env.warn_only = True
+    env.show = ['running', 'warnings'] 
+    env.key_filename = ["/home/ubuntu/.ssh/id_dsa"]
     
 # tasks
 
