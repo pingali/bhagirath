@@ -5,8 +5,7 @@ simplejson
 python-dateutil==1.5
 django-ajax-selects 
 django-jsonfield 
-django-cron 
 django-admin-tools 
 django-basic-feedback
 lxml
-
+git+git://github.com/Tivix/django-cron.git
