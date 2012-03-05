@@ -8,4 +8,5 @@ django-jsonfield
 django-admin-tools 
 django-basic-feedback
 lxml
+django-recaptcha
 git+git://github.com/Tivix/django-cron.git
