@@ -184,6 +184,7 @@ class UpdateProfileForm(forms.models.ModelForm):
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
     domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
     medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
+    groups = forms.CharField(max_length=50) 
     #competence_for_each_language      
 
     def __init__(self, *args, **kwargs):      

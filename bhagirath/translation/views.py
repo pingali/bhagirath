@@ -724,6 +724,7 @@ def process_translate(request,id,uid):
         log.error("%s made request before login."%(user))
         return HttpResponse("Please login.You're not logged in!!!")
 
+
 def account_settings(request,uid):
     """
     This function provides user with his account information which is to be updated.
@@ -732,11 +733,13 @@ def account_settings(request,uid):
     u = UserProfile.objects.get(user = uid)
     form =  UpdateProfileForm(instance=u)
     form1 = UpdateProfileForm(instance=user) 
-    
+    l = find()
+   
     data = {
         'form': form,
         'form1':form1,
         'uid':uid,
+        'list':l,
         'username':request.user
     }
     log.info("%s visited account_settings form."%(user))
@@ -759,6 +762,7 @@ def process_account_settings(request,uid):
         f_education_qualification = request.POST['education_qualification']
         f_domain = request.POST['domain']  
         f_medium_of_education_during_school = request.POST['medium_of_education_during_school']
+        f_grp = request.POST['groups']
             
         if request.POST.has_key('translator'):
             f_translator = request.POST['translator']
@@ -832,6 +836,23 @@ def process_account_settings(request,uid):
                             f_interests = Master_InterestTags.objects.get(pk=id)
                             userpro.interests.add(f_interests)
                     
+                    u.groups.clear()        
+                    try:
+                        g = Group.objects.get(name=f_grp)
+                        u.groups.add(g)
+                        u.save()
+                    except:
+                        g = Group.objects.filter(name=f_grp)
+                        if g:
+                            u.groups.add(g)
+                            u.save()  
+                        else:
+                            g = Group()
+                            g.name = f_grp
+                            g.save()
+                            u.groups.add(g)
+                            u.save()
+                    
                     (u,a,s) = stats()
        
                     data = {
@@ -866,6 +887,7 @@ def process_account_settings(request,uid):
             messages.error(request, "Account update Failed!!!Try again.")
             return render_to_response('translation/account_settings.html',context_instance=RequestContext(request))
     return HttpResponse("Error!!!") 
+
     
 def evaluate(request):
     print "to be done"

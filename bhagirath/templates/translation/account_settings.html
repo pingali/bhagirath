@@ -27,10 +27,13 @@
 		return true;
 	}
 	
-	$(document).ready(function() {
-		jQuery.each($('select[@multiple="multiple"]'), function () {  
-		 SelectFilter.init(this.id, "", 0, "/media/");  
-		}); 			
+	$(function() {
+		var word = $('#g').text().split(',');
+		$("#id_groups").autocomplete({
+			source: word
+		});
+		SelectFilter.init("id_language", "", 0, "/media/");  
+		SelectFilter.init("id_interests", "", 0, "/media/");  
 	});
 </script>
 {% endblock %}
@@ -69,8 +72,10 @@
     			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.evaluator|default_if_none:"off"}}Evaluator</p>
     			<p><label>Language:</label>{{form.language}}</p>
+    			<p><label>Groups:</label>{{form.groups|capfirst}}</p>
 				<p>{{html_captcha|safe}}</p>     			
-       			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>          
+       			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>
+       			<div id="g" style="visibility:hidden">{{list}}</div>          
 			</fieldset>
 	</div>
 </div>
