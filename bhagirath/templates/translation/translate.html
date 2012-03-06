@@ -4,187 +4,250 @@
 <p class="account">Welcome, <a>{{username}}.</a></p>
 {% endblock %}
 
+{% block head %}
+	<script src="/static/scripts/jquery-selection.js" type="text/javascript"></script>
+	<script src="/static/scripts/predict.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block script %}
-<script src="/static/scripts/jquery-selection1.js" type="text/javascript"></script>
-<script type="text/javascript" Language="JavaScript">
-	function getCaret(el) {
-	    if (el.selectionStart) {
-	        return el.selectionStart;
-	    } else if (document.selection) {
-	        el.focus();
-	        var r = document.selection.createRange();
-	        if (r == null) {
-	            return 0;
-	        }
-	        var re = el.createTextRange(),
-	            rc = re.duplicate();
-	        re.moveToBookmark(r.getBookmark());
-	        rc.setEndPoint('EndToStart', re);
-	        return rc.text.length;
-	    }
-	    return 0;
-	}
-
-	(function($) {
-		$.print = function(id, message, insertType) {
-			var el = document.getElementById("translated_sentence");
-			insertType = insertType || "append";
-			if (typeof (message) == "object") {
-				var string = "{<br>", values = [], counter = 0;
-				$.each(message, function(key, value) {
-					if(key == 'charCode' || key == 'which' || key == 'altKey' || key == 'timeStamp' || key == 'key' || key == 'shiftKey' || key == 'ctrlKey' || key == 'metaKey'){
-					if (value && value.nodeName) {
-						var domnode = "&lt;" + value.nodeName.toLowerCase();
-						domnode += value.className ? " class='"
-								+ value.className + "'" : "";
-						domnode += value.id ? " id='" + value.id + "'" : "";
-						domnode += "&gt;";
-						value = domnode;	
-					}
-					values[counter++] = key + ": " + value;
-					}
-				});
-				values[counter++] = "pos: " + getCaret(el) ;
-				values[counter++] = "selectedText: " + $('#translated_sentence').getSelection().text;
-				string += values.join(",<br>");
-				string += "<br>} here";
-				message = string;
-			}
-			///appends this to the xyz..
-			var $output = $("#print-output");
-			if (!$output.length) {
-				$output = $("<div id='print-output' />").appendTo("body");
-			}
-			document.getElementById("print-output").innerHTML = message;
-		};
-	})(jQuery);
-
-	var xTriggered = 0;
-	$(document).ready(function() {
-		$('#translated_sentence').keypress(function(event) {
-		$.print("translated_sentence",event);
-		document.getElementById('print').innerHTML = document.getElementById('print').innerHTML + document.getElementById('print-output').innerHTML
-		$('#output1').html(""+document.getElementById('print-output').innerHTML);
-	});
-	});
-	
-	$(function() {
-		appendSpan_english();
-		appendSpan_prev_context();
-		appendSpan_next_context();
-	});
-	
-	function appendSpan_english() {
-		$(function() {	
-		var eng_words = $('#english').text().split(' ');
-	    var newHtml1 = '';
-	    for (i = 0; i < eng_words.length; i++) {
-	        	newHtml1 += '<span id="eng">' + eng_words[i] + '</span> ';
-	    }     
-	    $('#english').html(newHtml1);
-	    $(this).find("span").attr("id", "eng").addClass('eng_bold');
-	    $(this).find("span").attr("id", "eng").mouseover( function() {
-	        $(this).addClass('hlight');
-	        getWord($(this).text());
-	    });
-	    $(this).find("span").attr("id", "eng").mouseout( function() {
-	        $(this).removeClass('hlight');
-	        $('#meaning').remove();
-	    });
-	 });
-	
-	}
-	
-	 function appendSpan_prev_context() {
-	    var prev_context_words = $('#prev_context').text().split(' ');
-		$(function() {	    
-	    var newHtml2 = '';
-	    for (i = 0; i < prev_context_words.length; i++) {
-	        	newHtml2 += '<span id="prev_con">' + prev_context_words[i] + '</span> ';
-	    }     
-	    $('#prev_context').html(newHtml2);
-	    $(this).find("span").attr("id", "prev_con").mouseover( function() {
-	        $(this).addClass('hlight');
-	        getWord($(this).text());
-	    });
-	    $(this).find("span").attr("id", "prev_con").mouseout( function() {
-	        $(this).removeClass('hlight');
-	        $('#meaning').remove();
-	    });   
-	 });
-	 }
-	 
-	 function appendSpan_next_context() {
-	 	var next_context_words = $('#next_context').text().split(' ');
-		$(function() {	
-	    var newHtml3 = '';
-	    for (i = 0; i < next_context_words.length; i++) {
-	        	newHtml3 += '<span id="next_con">' + next_context_words[i] + '</span> ';
-	    }     
-	    $('#next_context').html(newHtml3);      
-	    $(this).find("span").attr("id", "next_con").mouseover( function() {
-	        $(this).addClass('hlight');
-	        getWord($(this).text());
-	    });
-	   $(this).find("span").attr("id", "next_con").mouseout( function() {
-	        $(this).removeClass('hlight');
-	        $('#meaning').remove();
-	    });   
-	});
-	}
-	
-	function getWord(find){
-		var dictionary = $('#dict').text().split(',');
-		var lines = ''; //will contain each line in text as array.	
-		var word = $('#word').text().split(',');
-		$(function() {	
-			for (i = 0; i < word.length; i++) {
-				if (word[i]==find)
-		        {	
-		        	mean = dictionary[i].split('--');
-		        	for (j = 0; j < mean.length; j++) {
-		      			lines = lines + mean[j] + '</br>'; 
-		        	}
-				 }
-		    } 
-		});
-		dict = document.createElement("div");
-		dict.setAttribute('id','meaning');
-		dict.setAttribute('border','0');
-		dict.setAttribute('class','meaning');
-		dict.innerHTML = lines;
-		document.getElementById("original_sentence").appendChild(dict);
-	}
+<script type="text/javascript">
+		// CODE FOR CORRECTION EPISODE STARTS HERE
 		
-	var fontSize = 1;
-	
-	function zoomOut() {
-		fontSize += 0.1;
-	    document.getElementById("original_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	}
-	
-	function zoomIn() {
-	    fontSize -= 0.1;
-	    document.getElementById("original_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	    document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-	}
-	
-	function OnSubmit()	{
-		x = $('#print').text();
-		$('#cmd').val(x);
-		document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/"
-		return true;
-	}
+		function getCaret(el) {
+			if (el.selectionStart) {
+				return el.selectionStart;
+			} else if (document.selection) {
+				el.focus();
+				var r = document.selection.createRange();
+				if (r == null) {
+					return 0;
+				}
+				var re = el.createTextRange(),
+				rc = re.duplicate();
+				re.moveToBookmark(r.getBookmark());
+				rc.setEndPoint('EndToStart', re);
+				return rc.text.length;
+			}
+			return 0;
+		}
 
-	function OnNext()  {
-		document.translate_form.action = "/account/translate/{{uid}}/"
-	  	return true;
-	}	
+		(function($) {
+			$.print = function(id, message, insertType) {
+				var el = document.getElementById("translated_sentence");
+				insertType = insertType || "append";
+				if (typeof (message) == "object") {
+					var string = "{<br>", values = [], counter = 0;
+					$.each(message, function(key, value) {
+						if(key == 'charCode' || key == 'which' || key == 'altKey' || key == 'timeStamp' || key == 'key' || key == 'shiftKey' || key == 'ctrlKey' || key == 'metaKey'){
+							if (value && value.nodeName) {
+								var domnode = "&lt;" + value.nodeName.toLowerCase();
+								domnode += value.className ? " class='" + value.className + "'" : "";
+								domnode += value.id ? " id='" + value.id + "'" : "";
+								domnode += "&gt;";
+								value = domnode;
+							}
+							values[counter++] = key + ": " + value;
+						}
+					});
+					values[counter++] = "pos: " + getCaret(el) ;
+					values[counter++] = "selectedText: " + $('#translated_sentence').getSelection().text;
+					string += values.join(",<br>");
+					string += "<br>} here";
+					message = string;
+				}
+				var $output = $("#print-output");
+				if (!$output.length) {
+					$output = $("<div id='print-output' />").appendTo("body");
+				}
+				document.getElementById("print-output").innerHTML = message;
+			};
+		})(jQuery);
+
+		var xTriggered = 0;
+			$(document).ready(function() {
+			$('#translated_sentence').keypress(function(event) {
+				$.print("translated_sentence",event);
+				document.getElementById('print').innerHTML = document.getElementById('print').innerHTML + document.getElementById('print-output').innerHTML
+				$('#output1').html(""+document.getElementById('print-output').innerHTML);
+			});
+		});
+		// CODE FOR CORRECTION EPISODE ENDS HERE
+		
+		// CODE FOR DICTIONARY MEANING ON MOUSEOVER ENGLISH WORD STARTS HERE		
+		$(function() {
+			appendSpan_english();
+			appendSpan_prev_context();
+			appendSpan_next_context();
+		});
+		
+		function appendSpan_english() {
+			$(function() {
+				var eng_words = $('#english').text().split(' ');
+				var newHtml1 = '';
+				for (i = 0; i < eng_words.length; i++) {
+					newHtml1 += '<span id="eng">' + eng_words[i] + '</span> ';
+				}
+				$('#english').html(newHtml1);
+				$(this).find("span").attr("id", "eng").addClass('eng_bold');
+				$(this).find("span").attr("id", "eng").mouseover( function() {
+					$(this).addClass('hlight');
+					getWord($(this).text());
+				});
+				$(this).find("span").attr("id", "eng").mouseout( function() {
+					$(this).removeClass('hlight');
+					$('#meaning').remove();
+				});
+			});		
+		}
+		
+		function appendSpan_prev_context() {
+			var prev_context_words = $('#prev_context').text().split(' ');
+			$(function() {
+				var newHtml2 = '';
+				for (i = 0; i < prev_context_words.length; i++) {
+					newHtml2 += '<span id="prev_con">' + prev_context_words[i] + '</span> ';
+				}
+				$('#prev_context').html(newHtml2);
+				$(this).find("span").attr("id", "prev_con").mouseover( function() {
+					$(this).addClass('hlight');
+					getWord($(this).text());
+				});
+				$(this).find("span").attr("id", "prev_con").mouseout( function() {
+					$(this).removeClass('hlight');
+					$('#meaning').remove();
+				});
+			});
+		}
+		
+		function appendSpan_next_context() {
+			var next_context_words = $('#next_context').text().split(' ');
+			$(function() {
+				var newHtml3 = '';
+				for (i = 0; i < next_context_words.length; i++) {
+					newHtml3 += '<span id="next_con">' + next_context_words[i] + '</span> ';
+				}
+				$('#next_context').html(newHtml3);
+				$(this).find("span").attr("id", "next_con").mouseover( function() {
+					$(this).addClass('hlight');
+					getWord($(this).text());
+				});
+				$(this).find("span").attr("id", "next_con").mouseout( function() {
+					$(this).removeClass('hlight');
+					$('#meaning').remove();
+				});
+			});
+		}
+		
+		function getWord(find){
+			var dictionary = $('#dict').text().split(',');
+			var lines = ''; //will contain each line in text as array.
+			var word = $('#word').text().split(',');
+			$(function() {
+				for (i = 0; i < word.length; i++) {
+					if (word[i]==find)
+					{
+						mean = dictionary[i].split('--');
+						for (j = 0; j < mean.length; j++) {
+							lines = lines + mean[j] + '</br>';
+						}
+					}
+				}
+			});
+			dict = document.createElement("div");
+			dict.setAttribute('id','meaning');
+			dict.setAttribute('border','0');
+			dict.setAttribute('class','meaning');
+			dict.innerHTML = lines;
+			document.getElementById("original_sentence").appendChild(dict);
+		}
+		// CODE FOR DICTIONARY MEANING ON MOUSEOVER ENGLISH WORD ENDS HERE	
+		
+		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR STARTS HERE	
+				
+		function GetCaretPosition(node) {	
+		 	/* without node.focus() IE will returns -1 when focus is not on node */
+		 	if(node.selectionStart) return node.selectionStart;
+		 	else if(!document.selection) return 0;
+		 	var c = "\001";
+		 	var sel = document.selection.createRange();
+		 	var dul = sel.duplicate();
+		 	var length = 0;
+		 	dul.moveToElementText(node);
+		 	sel.text = c;
+		 	length	= (dul.text.indexOf(c));
+		 	sel.moveStart('character',-1);
+		 	sel.text = "";
+		 	return length;
+		}
+		
+		$(document).ready(function() {
+			$("#translated_sentence").keyup(function(){
+				changeCursor(this);
+			
+				var gDelimeters = new Array(' ', '\t', '\n', '-', '|', '(', ')', ',');
+				var input = document.getElementById("translated_sentence");
+				var caret = GetCaretPosition(input);
+				
+				var i=0;
+				var text = input.value;
+				var ld_index = -1; //index of last delimeter before caret position.
+				var string; //stored  suggestions array converted to string.
+				
+				for(i=0; i<gDelimeters.length; i++) {
+					if(ld_index < text.lastIndexOf(gDelimeters[i], caret - 1)) {
+						ld_index = text.lastIndexOf(gDelimeters[i], caret - 1);	
+					}
+				}	
+				gWordStart = ld_index+1;
+				gWordEnd = caret;
+				
+				var left_str = text.substring(0, ld_index); 
+				var word = text.substring(ld_index+1, caret);
+				var right_str = text.substring(caret);
+	
+				if(word.length>=5)
+				{
+			  		req_url = '/account/translate/7/dictionary/'+word;
+			  		$.get(req_url, function(result) {
+			  			var autolist = new Array();
+			  			autolist =  result.split("      ");
+			  			Predict(autolist);
+					});
+				}
+		 	});
+		});
+		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR ENDS HERE
+				
+		var fontSize = 1;
+		
+		function zoomOut() {
+		fontSize += 0.1;
+		document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		}
+		
+		function zoomIn() {
+		fontSize -= 0.1;
+		document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+		}
+		
+		function OnSubmit() {
+			x = $('#print').text();
+			$('#cmd').val(x);
+			document.translate_form.action = "/account/translate/7//done/"
+			return true;
+		}
+		
+		function OnNext() {
+			document.translate_form.action = "/account/translate/7/"
+			return true;
+		}
+	
 </script>
 {% endblock %}
 
@@ -206,10 +269,8 @@
 	<div class="trans">
 	<p>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+		<label style="color:#A0522D">Use these buttons to zoom-in and zoom-out text : </label>
 		<button type="button" name="zoomin" id="zoomin" class="zoomin" value="+" onclick="zoomOut();">+</button>
 		<button type="button" name="zoomout" id="zoomout" class="zoomout" value="-" onclick="zoomIn();">-</button>
 	</p>
@@ -422,6 +483,12 @@
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
+				<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+				</tr>
 				</table>
 				</td>
 				<td align=center width=20% colspan=4>
@@ -474,8 +541,8 @@
 					<tr>
 						<td align=center>&#x0903;</td>
 						<td align=center>:</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
+						<td align=center>ँ</td>
+						<td align=center>~M</td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>

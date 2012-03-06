@@ -1,0 +1,43 @@
+#suggestion{
+    text-align: left;
+    background-color: #CCCCCC;
+    color: #000033;
+    font-size: .8em;
+    position: absolute;
+    z-index: 2;
+    border-style: groove;
+    border-width: 2px;
+    border-color: #A3A3A3;
+}
+
+.suggestWord{
+    background-color: transparent;
+    border-style: none;
+    color: #000033;
+    text-decoration: none;
+}
+
+.suggestWordHighlight{
+    background-color: #A3A3A3;
+    color: #202020;
+    border-style: none;
+    text-decoration: none;
+}
+
+.divWord{
+    background-color: #CCCCCC;
+    color: #000033;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.divWordHighlight{
+    background-color: #A3A3A3;
+    color: #202020;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+

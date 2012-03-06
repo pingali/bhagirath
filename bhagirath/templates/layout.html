@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="/static/admin/css/widgets.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
 	<link type="text/css" rel="stylesheet" href="/static/stylesheets/ui-autocomplete.css" />
+	<link rel="stylesheet" href="/static/stylesheets/transliterator-autocomplete.css" type="text/css" media="screen, projection" />
 	
 	<script type="text/javascript" src="/static/scripts/autocomplete.js"></script>
 	<script type="text/javascript" src="/static/scripts/ui-autocomplete.js"></script> 
@@ -37,8 +38,8 @@
 	<script type="text/javascript">
 		window.__admin_media_prefix__ = "{% filter escapejs %} {% admin_media_prefix %} {% endfilter %}";
 	</script>
-	<script type="text/javascript" src="/{% admin_media_prefix %}/js/calendar.js"></script>
-	<script type="text/javascript" src="/{% admin_media_prefix %}/js/admin/DateTimeShortcuts.js"></script>
+	<script type="text/javascript" src="{% admin_media_prefix %}/js/calendar.js"></script>
+	<script type="text/javascript" src="{% admin_media_prefix %}/js/admin/DateTimeShortcuts.js"></script>
 	
 	{{ form.media }}
 	<!-- CODE FOR GOOGLE ANALYTICS -->

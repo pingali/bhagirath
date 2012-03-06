@@ -12,6 +12,7 @@ var RU = 3;
 var ZWJ=4;
 var ZWNJ=5;
 var language = "Hindi";
+var find = "";
 
 Symbol[32] = "\u0020"; // space
 Symbol[58] = "\u0903"; // visarg
@@ -772,7 +773,7 @@ function positionChange(evt,hinKB)
 		hinKB.isEng = !hinKB.isEng;
 		ClearAllParameters(hinKB);
 	}
-
+	
 	if (keyCode >= 37 && keyCode <=40)
 	{
 		hinKB.posChanged = true;
@@ -1173,16 +1174,6 @@ function processInput(evt,hinKB)
 
 
 /* HinkHoj APIs */
-function TextBoxInput()
-{
-	//parameters
-	//Id
-	//Name
-	//Class
-	//Value
-	//Size
-	//UseGoogle
-}
 function TextAreaInput()
 {
 	//parameters
@@ -1195,120 +1186,6 @@ function TextAreaInput()
 	//Columns
 	//Logo
 	//UseGoogle
-}
-function CreateHindiGTextBox(elementId)
-{
-	hinTextBoxObj= new TextBoxInput();
-	hinTextBoxObj.Id=elementId;
-	hinTextBoxObj.Name=elementId;
-	hinTextBoxObj.Value="";
-	//alert(hinTextBoxObj.Value);
-	hinTextBoxObj.Size=60;
-	hinTextBoxObj.Help=false;
-	hinTextBoxObj.UseHinkhoj=false;
-	hinTextBoxObj.Logo=false; 
-	CreateHindiTextBoxSelectedParam(hinTextBoxObj);
-}
-function CreateCustomHindiGTextBox(elementId,defaultValue,textBoxSize)
-{
-	hinTextBoxObj= new TextBoxInput();
-	hinTextBoxObj.Id=elementId;
-	hinTextBoxObj.Name=elementId;
-	hinTextBoxObj.Value=defaultValue;
-	//alert(hinTextBoxObj.Value);
-	hinTextBoxObj.Size=textBoxSize;
-	hinTextBoxObj.Help=false;
-	hinTextBoxObj.UseHinkhoj=false;
-	hinTextBoxObj.Logo=false;
-	CreateHindiTextBoxSelectedParam(hinTextBoxObj);
-}
-function CreateHindiTextBox(elementId)
-{
-	CreateCustomHindiTextBox(elementId,"",60,false);
-}
-function CreateCustomHindiTextBox(elementId,defaultValue,textBoxSize,showHelp)
-{
-	hinTextBoxObj= new TextBoxInput();
-	hinTextBoxObj.Id=elementId;
-	hinTextBoxObj.Name=elementId;
-	hinTextBoxObj.Value=defaultValue;
-	//alert(hinTextBoxObj.Value);
-	hinTextBoxObj.Size=textBoxSize;
-	hinTextBoxObj.Help=showHelp;
-	if(!showHelp)
-	{
-		hinTextBoxObj.Logo=false; 
-	}
-	else
-	{
-		hinTextBoxObj.Logo=true;
-	}
-	hinTextBoxObj.UseHinkhoj=true;
-	CreateHindiTextBoxSelectedParam(hinTextBoxObj);
-}
-function CreateHindiTextBoxSelectedParam(textBoxParam)
-{
-	alert("in CreateHindiTextBoxSelectedParam: Id = "+textBoxParam.Id);
-	if(textBoxParam.Id==null)
-	{
-		alert("Error: Id can't be NULL");
-		return;
-	}
-	var awId=textBoxParam.Id+"_awTable";
-	var cbId=textBoxParam.Id+"_cbId";
-	//alert(awId);
-	if(textBoxParam.UseHinkhoj)
-	{
-		inputBoxIds[inputBoxCount] =GetNewKeyboard(textBoxParam.Id,awId);
-	}
-
-	document.write("<input type='text'");
-	if(textBoxParam.Value!=null)
-	{
-		document.write(" value='"+textBoxParam.Value+"'"); 
-	} 
-	if(textBoxParam.Size!=null)
-	{
-		document.write(" size='"+textBoxParam.Size+"'"); 
-	}
-	if(textBoxParam.Class!=null)
-	{
-		document.write(" Class='"+textBoxParam.Class+"'"); 
-	}
-	if(textBoxParam.Name!=null)
-	{
-		document.write(" Name='"+textBoxParam.Name+"'"); 
-	}
-
-	document.write(" id='"+textBoxParam.Id+"'");
-	if(textBoxParam.UseHinkhoj)
-	{
-		document.write(" onkeypress='if (!inputBoxIds["+inputBoxCount+"].isEng){ return processInput(event,inputBoxIds["+inputBoxCount+"]);} else {return true;}' onKeyUp='changeCursor(this);' onkeydown='positionChange(event,inputBoxIds["+inputBoxCount+"]);' onFocus='changeCursor(this);' onClick='changeCursor(this);'");
-	}
-	else
-	{
-		document.write(" onmouseout=ChangeHindi('"+textBoxParam.Id+"') ");
-	}
-	document.write(">");
-	if(!textBoxParam.UseHinkhoj)
-	{
-		document.write('<input type="checkbox" id="'+cbId+'" onclick="javascript:checkboxClickHandler(\''+cbId+'\')" checked>Hindi-[<font color="green">Use <b>ALT-k</b> to change langauge</font>]</input>');
-	}
-	if(textBoxParam.Logo!=null && textBoxParam.Logo)
-	{
-		document.write("<a style='text-decoration:none' href='http://www.hinkhoj.com/api'><span style='font-size:8pt;color:black'>Powered By:</span><span style='font-size:8pt;color:black;margin-left:5px'><b>HinKhoj.Com</b></span></a>"); 
-	}
-
-	if(textBoxParam.Help!=null && textBoxParam.Help)
-	{
-//		alert(awId);
-		document.write("<center><table width='100%' id='"+awId+"' border='0' class='awDiv'></table></center>");
-	}
-	if(textBoxParam.UseHinkhoj)
-	{
-		inputBoxCount++;
-	}
-
 }
 function CreateHindiTextArea(elementId)
 {
@@ -1381,7 +1258,7 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 	document.write(" id='"+textAreaParam.Id+"' ");
 	if(textAreaParam.UseHinkhoj)
 	{
-		document.write(" onkeypress='if (!inputBoxIds["+inputBoxCount+"].isEng){ return processInput(event,inputBoxIds["+inputBoxCount+"]);} else {return true;}' onKeyUp='changeCursor(this);' onkeydown='positionChange(event,inputBoxIds["+inputBoxCount+"]);' onFocus='changeCursor(this);' onClick='changeCursor(this);'");
+		document.write(" onkeypress='if (!inputBoxIds["+inputBoxCount+"].isEng){ return processInput(event,inputBoxIds["+inputBoxCount+"]);} else {return true;}' onKeyUp='changeCursor(this);' onkeydown='positionChange(event,inputBoxIds["+inputBoxCount+"]);' onFocus='changeCursor(this);' onClick='changeCursor(this);' ondblclick='OnmouseOver(this);'");
 	}
 	document.write(" >");
 
@@ -1411,4 +1288,3 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 		inputBoxCount++;
 	}
 }
-

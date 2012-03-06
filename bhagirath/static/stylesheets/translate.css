@@ -8,7 +8,7 @@
 }
 
 #translate .trans p {
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 2px 20px;
 	font-weight: bold;
 	font-size: .80em;
 	color: #242424;
@@ -74,7 +74,7 @@ button.zoomin{
     color: #000000;
     font-variant: small-caps;
     font-size: 1.2em;
-    background-color: #FF7359;
+    background-color:#E9E9E9;
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
@@ -86,7 +86,7 @@ button.zoomin:hover{
     color: #000000;
     font-variant: small-caps;
     font-size: 1.2em;
-    background-color:#E65940 ;
+    background-color:#C2EBFF;;
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
@@ -97,7 +97,7 @@ button.zoomout{
     color: #000000;
     font-variant: small-caps;
     font-size: 1.2em;
-    background-color: #FF7359;
+    background-color:#E9E9E9;
     border-style: solid;
     border-width: 1px;
     cursor: pointer;
@@ -109,7 +109,7 @@ button.zoomout:hover{
     color: #000000;
     font-variant: small-caps;
     font-size: 1.2em;
-    background-color:#E65940 ;
+    background-color:#C2EBFF;
     border-style: solid;
     border-width: 1px;
     cursor: pointer;

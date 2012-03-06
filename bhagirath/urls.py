@@ -41,7 +41,10 @@ urlpatterns = patterns('translation.views',
     url(r'^account/(?P<uid>\d+)/settings/$','account_settings',name="account_settings"),
     #saves the changes made by user in his profile
     url(r'^account/(?P<uid>\d+)/settings/done/$','process_account_settings',name="process_account_settings"),
-   
+    #auto-correct feature for transliteration
+    url(r'^account/translate/(?P<uid>\d+)/autocorrect/(?P<word>\S+)$','autocorrect',name="autocorrect"),  
+    #auto-completion feature for transliteration
+    url(r'^account/translate/(?P<uid>\d+)/dictionary/(?P<prefix_val>\S+)$','autocomplete',name="autocomplete"),
 )
 
 urlpatterns += patterns('',

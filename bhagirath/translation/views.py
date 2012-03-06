@@ -11,6 +11,7 @@ from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
 from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
+import jellyfish
 import captcha
 import traceback
 import logging
@@ -890,7 +891,7 @@ def process_account_settings(request,uid):
 
     
 def evaluate(request):
-    print "to be done"
+    """to be done"""
     ta = TransactionAction()
     ta.session = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
     ta.user = request.user
@@ -900,9 +901,35 @@ def evaluate(request):
     return HttpResponseRedirect(reverse('account'))
     
 def process_evaluate(request):
-    print "to be done"
+    """to be done"""
     return HttpResponseRedirect(reverse('account'))
 
+def autocomplete(request,uid,prefix_val):
+    word_list = []
+
+    try:
+        list = Master_HindiWords.objects.filter(original__startswith=prefix_val).values()
+        for i in list:
+            word_list.append(i['original'])    
+        return HttpResponse(word_list)
+    except:
+        return HttpResponse("  ")
+
+def autocorrect(request,uid,word):
+    auto = []
+    i = 0
+    words = list(Master_HindiWords.objects.all())
+    count = Master_HindiWords.objects.all().count()
+    
+    while i < count:
+        try:
+            a = jellyfish.jaro_distance(word,str(words[i]))
+        except:
+            log.exception("Something wrong with call")
+        if a > 0.85:
+            auto.append(str(words[i]))
+        i += 1
+    return HttpResponse(auto)
 
 def load_context(sid,prev_context_count):
     """
@@ -960,8 +987,7 @@ def stats():
     else:
         u = 0
         a = 0
-        s = 0
-    print (u,a,s)    
+        s = 0    
     return (u,a,s)
 
 def find():
@@ -979,7 +1005,6 @@ def find():
 
 def get_overall_leaderboard():
     u = OverallLeaderboard.objects.all().order_by('overall_points_earned')[:10]
-    print u
     return u
 
 def get_weekly_leaderboard():
