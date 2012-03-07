@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.admin import widgets 
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.admin import ModelAdmin as myadmin
-from captcha.fields import ReCaptchaField
+from captcha.fields import CaptchaField
 from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
 from bhagirath.translation.models import *
@@ -52,69 +50,28 @@ class SignUpForm(forms.models.ModelForm):
     This form class extends UserProfile model and is rendered while user-registration.
     """
     class Meta:
-        model = UserProfile
-        widgets = {'date_of_birth':DateJSField(required=False,), 
-                   'translator':forms.CheckboxInput,
-                   'contributor':forms.CheckboxInput,
-                   'evaluator':forms.CheckboxInput,
-                 }
-    EXPERTISE_CHOICES = (('1', '1'),
-                         ('2', '2'),
-                         ('3', '3'))
-    GENDER_CHOICES = (
-        (u'Male',u'Male'),
-        (u'Female', u'Female'),
-    )
-    first_name = forms.CharField(max_length=50)
-    last_name = forms.CharField(max_length=50)
+        model = User
+        fields = ('username', 'email', 'password', 'confirm_password')
+        
     email = forms.EmailField()
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
-    confirm_password = forms.CharField( widget=forms.PasswordInput)
-    gender = ChoiceField(widget=RadioSelect, choices=GENDER_CHOICES)
-    district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all(),widget=forms.Select)
-    language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all())
-    interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all())
-    education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
-    domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
-    medium_of_education_during_school = forms.ModelChoiceField(queryset=Master_Language.objects.all(),widget=forms.Select)
-    #competence_for_each_language
-    groups = forms.CharField(max_length=50)      
-    captcha = ReCaptchaField(label="Please enter text you see or hear")
-    
-    def __init__(self, *args, **kwargs):      
-        super(SignUpForm, self).__init__(*args, **kwargs)
-        self.fields['date_of_birth'].widget = widgets.AdminDateWidget()
+    confirm_password = forms.CharField(widget=forms.PasswordInput)    
+    captcha = CaptchaField()
     
     def clean(self):
-        first_name = self.cleaned_data.get('first_name')
-        last_name = self.cleaned_data.get('last_name')
-        date_of_birth = self.cleaned_data.get('date_of_birth')
-        city = self.cleaned_data.get('city')
-        translator = self.cleaned_data.get('translator')
-        contributor = self.cleaned_data.get('contributor')
-        evaluator = self.cleaned_data.get('evaluator')
-        interests = self.cleaned_data.get('interests')
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password') 
-        language = self.cleaned_data.get('language')     
         
         if password == confirm_password:
-            if username and email and first_name and last_name and date_of_birth and city:
+            if username and email:
                 pass 
-                if not translator:
-                    self.cleaned_data.setdefault('translator')
-                if not contributor:
-                    self.cleaned_data.setdefault('contributor')
-                if not evaluator:
-                    self.cleaned_data.setdefault('evaluator')    
             else:
-                raise forms.ValidationError("Please enter all * marked fields are case-sensitive.") 
+                raise forms.ValidationError("Please enter all fields.") 
         else:
-            raise forms.ValidationError("Please confirm password correctly.")
-        
+            raise forms.ValidationError("Please confirm password correctly.") 
         return self.cleaned_data
                   
 class UploadForm(forms.models.ModelForm):
@@ -165,8 +122,16 @@ class UpdateProfileForm(forms.models.ModelForm):
     """
     This form class extends UserProfile model and is rendered while updating user-profile.
     """
+    GENDER_CHOICES = (
+        (u'Male',u'Male'),
+        (u'Female', u'Female'),
+    )
+    
     class Meta:
         model = UserProfile
+        exclude = ('ip_address','user','competence_for_each_language','overall_score',
+                   'prev_week_score','total_translated_sentences','total_evaluated_sentences',
+                   'total_uploaded_tasks','no_of_perfect_translations','rank')
         widgets = {'date_of_birth':DateJSField(required=False,), 
                    'translator':forms.CheckboxInput,
                    'contributor':forms.CheckboxInput,
@@ -178,8 +143,9 @@ class UpdateProfileForm(forms.models.ModelForm):
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField( widget=forms.PasswordInput)
+    gender = ChoiceField(widget=RadioSelect, choices=GENDER_CHOICES)
     district = forms.ModelChoiceField(queryset=Master_GeographicalRegion.objects.all().order_by('geographical_region'),widget=forms.Select)
-    language = forms.ModelMultipleChoiceField(queryset=Master_LanguageExpertise.objects.all())
+    language = forms.ModelMultipleChoiceField(queryset=Master_Language.objects.all())
     interests = forms.ModelMultipleChoiceField(queryset=Master_InterestTags.objects.all(),)
     education_qualification = forms.ModelChoiceField(queryset=Master_EducationQualification.objects.all(),widget=forms.Select)
     domain = forms.ModelChoiceField(queryset=Master_EducationDomain.objects.all(),widget=forms.Select)
@@ -192,4 +158,41 @@ class UpdateProfileForm(forms.models.ModelForm):
         self.fields['date_of_birth'].widget = widgets.AdminDateWidget()
         self.fields['username'].widget.attrs['readonly'] = True
 
+    def clean(self):
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        confirm_password = self.cleaned_data.get('confirm_password') 
+        date_of_birth = self.cleaned_data.get('date_of_birth')
+        gender = self.cleaned_data.get('gender')
+        district = self.cleaned_data.get('district')
+        language = self.cleaned_data.get('language')  
+        interests = self.cleaned_data.get('interests')
+        translator = self.cleaned_data.get('translator')
+        contributor = self.cleaned_data.get('contributor')
+        evaluator = self.cleaned_data.get('evaluator')
+        education_qualification = self.cleaned_data.get('education_qualification')
+        domain = self.cleaned_data.get('domain')
+        medium_of_education_during_school = self.cleaned_data.get('medium_of_education_during_school')
+        groups = self.cleaned_data.get('groups') 
+               
+        if password == confirm_password:
+            if first_name and last_name and email and username and date_of_birth and gender and district and language and interests and education_qualification and domain and medium_of_education_during_school and groups:
+                if not translator:
+                    self.cleaned_data.setdefault('translator')
+                if not contributor:
+                    self.cleaned_data.setdefault('contributor')
+                if not evaluator:
+                    self.cleaned_data.setdefault('evaluator')        
+        else:
+            raise forms.ValidationError("Please confirm password correctly.")
+        
+        if self._get_errors().has_key('confirm_password'):
+            self._get_errors().pop('confirm_password')
             
+        if self._get_errors().has_key('password'):
+            self._get_errors().pop('password')
+        
+        return self.cleaned_data 

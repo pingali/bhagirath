@@ -1,0 +1,12 @@
+django
+django-staticfiles
+south
+simplejson
+python-dateutil==1.5
+django-ajax-selects 
+django-jsonfield 
+django-admin-tools 
+django-basic-feedback
+lxml
+django-simple-captcha
+git+git://github.com/Tivix/django-cron.git

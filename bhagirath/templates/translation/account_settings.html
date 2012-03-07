@@ -2,21 +2,23 @@
 {% block menu %}
 	<ul>
 		<li title="Your home page"><a href="/account/">Home</a></li>
-		<li title="Upload file for translation (Disabled)"><a href="">Contribute</a></li>
+		<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
 		<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
-		<li title="Evaluate translations (Disabled)"><a href="">Evaluate</a></li>
-		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Settings</a></li>
+		<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
+		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
 		<li title="Logout"><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
 
 {% block status_message %}
-<p class="account">Welcome, <a>{{username}}.</a></p>
+	<p class="account">Welcome, <a>{{username}}.</a></p>
+{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
 {% endblock %}
 
 {% block script %}
-<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
-
 <script type="text/javascript" Language="JavaScript">
 	function OnChangePassword()  {
 		Animate('passwd');
@@ -59,6 +61,7 @@
 						{{form.password}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.confirm_password}}	
 				</div></p>		
     			<p><label>Date of Birth:</label>{{form.date_of_birth}}</p>
+    			<p><label>Gender:</label>{{form.gender}}</p>
     			<p><label>District:</label>{{form.district|capfirst}}</p>
     			<p><label>Educational Qualification:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -72,7 +75,7 @@
     			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.evaluator|default_if_none:"off"}}Evaluator</p>
     			<p><label>Language:</label>{{form.language}}</p>
-    			<p><label>Groups:</label>{{form.groups|capfirst}}</p>
+    			<p><label>Groups:</label><input type="text" id="id_groups" value="{{grps}}"></input></p>
 				<p>{{html_captcha|safe}}</p>     			
        			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>
        			<div id="g" style="visibility:hidden">{{list}}</div>          

@@ -125,9 +125,9 @@ body {
 #content .messages .debug{
 	float: center;
 	list-style-type:none;
-	width: 480px;
+	width: 450px;
 	background:#CCCCFF;
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 1px 2px;
 	font-weight: bold;
 	font-size: 13px;
 	color: #242424;
@@ -137,9 +137,9 @@ body {
 #content .messages .info{
 	float: center;
 	list-style-type:none;
-	width: 480px;
+	width: 450px;
 	background:#CCCCFF;
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 1px 2px;
 	font-weight: bold;
 	font-size: 13px;
 	color: #242424;
@@ -149,9 +149,9 @@ body {
 #content .messages .warning{
 	float: center;
 	list-style-type:none;
-	width: 480px;
+	width: 450px;
 	background:#FFB2B2;
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 1px 2px;
 	font-weight: bold;
 	font-size: 13px;
 	color: #242424;
@@ -161,9 +161,9 @@ body {
 #content .messages .error{
 	float: center;
 	list-style-type:none;
-	width: 480px;
+	width: 450px;
 	background:#FFB2B2;
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 1px 2px;
 	font-weight: bold;
 	font-size: 13px;
 	color: #242424;
@@ -174,9 +174,9 @@ body {
 #content .messages .success{
 	float: center;
 	list-style-type:none;
-	width: 480px;
+	width: 450px;
 	background:#E0FFA3;
-	padding: 12px 0 10px 20px;
+	padding: 2px 0 1px 2px;
 	font-weight: bold;
 	font-size: 13px;
 	color: #242424;

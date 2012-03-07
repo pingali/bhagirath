@@ -2,10 +2,10 @@
 {% block menu %}
 	<ul>
 		<li title="Your home page"><a href="/account/">Home</a></li>
-		<li title="Upload file for translation"><a href="/account/upload/">Contribute</a></li>
+		<li title="Upload file for translation"><a href="/account/evaluate/">Contribute</a></li>
 		<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li title="Evaluate translations"><a href="/account/evaluate/">Evaluate</a></li>
-		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Settings</a></li>
+		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
 		<li title="Logout"><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
@@ -14,4 +14,4 @@
 <p class="account">Welcome, <a>{{username}}.</a></p>
 {% endblock %}
 
-{% block center_panel_other_content %}{% endblock %}
+{% block center_panel_other_content %}<label>This feature is coming soon!!!</label>{% endblock %}

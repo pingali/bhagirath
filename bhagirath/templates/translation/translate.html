@@ -254,10 +254,10 @@
 {% block menu %}
 	<ul>
 		<li title="Your home page"><a href="/account/">Home</a></li>
-		<li title="Upload file for translation (Disabled)"><a href="">Contribute</a></li>
+		<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
 		<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
-		<li title="Evaluate translations (Disabled)"><a href="">Evaluate</a></li>
-		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Settings</a></li>
+		<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
+		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
 		<li title="Logout"><a href="/logout/">Logout</a></li>
 	</ul>
 {% endblock %}
@@ -300,8 +300,8 @@
 					<button name="submit" id="submit" class="save" onclick="return OnSubmit();">Save Translation</button><img src="/static/images/save.png"/>
 					<button type="button" name="reset" id="reset" class="reset" value="reset" onclick="translated_sentence.value=' '">Reset</button>
 					<button name="next" id="next" value="next" class="next_btn" onclick="return OnNext();" >Next</button>
-					<button type="button" name="display_help" id="display_help" class="help" onclick="helpClicked(this,'help');">View Help</button><img src="/static/images/help.png"/>
-					<button type="button" name="prev_translations" id="prev_translations" class="prev_translations" onclick="previous_TranslationsClicked(this,'previous');">View Alternate Translations</button>
+					<button type="button" name="display_help" id="display_help" class="help" onclick="helpClicked(this);">View Help</button><img src="/static/images/help.png"/>
+					<button type="button" name="prev_translations" id="prev_translations" class="prev_translations" onclick="previous_TranslationsClicked(this);">View Alternate Translations</button>
 				</td>
 			</tr>
 		</table>

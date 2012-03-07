@@ -1,27 +1,26 @@
 from django.template import RequestContext
 from django.contrib import auth, messages
-from django.contrib.auth.models import Group,Permission
+from django.contrib.auth.models import Group
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse,HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core import serializers
 from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
-from bhagirath.translation.subtask_parser import subtaskParser
-from bhagirath.translation.microtask_parser import microtaskParser
-from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import jellyfish
 import captcha
 import traceback
 import logging
-import os
-
-def findpath(path):
-    parent_dir = os.path.dirname(__file__)
-    return os.path.abspath(os.path.join(parent_dir,path))
 
 log = logging.getLogger("translation.views")
+"""
+def bhagirath_404_view(request):
+    return render_to_response('login/home.html',context_instance=RequestContext(request))
+    
+def bhagirath_error_view(request):
+    return render_to_response('login/home.html',context_instance=RequestContext(request))
+"""
 
 def home(request):
     """
@@ -63,42 +62,44 @@ def sample_translations(request,id):
     This function provides sample translations having english sentence, 
     its machine translation and user translation.  
     """
-    sample_translations = Master_SampleTranslations.objects.get(pk=id)
-    original_sentence = sample_translations.original_sentence;
-    google_translation = sample_translations.google_translation;
-    user_translation = sample_translations.user_translation;
-    
-    count = Master_SampleTranslations.objects.all().count()
- 
-    if int(id) == int(count):
-        next_id = 1
-    else:
-        next_id = int(id) + 1
-    
-    if int(id) == 1:
-        prev_id = int(count)
-    else:
-        prev_id = int(id) - 1
+    if int(id) <= 15 and int(id) > 0:
+        sample_translations = Master_SampleTranslations.objects.get(pk=id)
+        original_sentence = sample_translations.original_sentence;
+        google_translation = sample_translations.google_translation;
+        user_translation = sample_translations.user_translation;
         
-    data = {
-            'original_sentence':original_sentence,
-            'google_translation':google_translation,
-            'user_translation':user_translation,
-            'next_id':next_id,
-            'prev_id':prev_id
-        }
-    return render_to_response('login/sample_translations.html',data,context_instance=RequestContext(request))
+        count = Master_SampleTranslations.objects.all().count()
+     
+        if int(id) == int(count):
+            next_id = 1
+        else:
+            next_id = int(id) + 1
+        
+        if int(id) == 1:
+            prev_id = int(count)
+        else:
+            prev_id = int(id) - 1
+            
+        data = {
+                'original_sentence':original_sentence,
+                'google_translation':google_translation,
+                'user_translation':user_translation,
+                'next_id':next_id,
+                'prev_id':prev_id
+            }
+        return render_to_response('login/sample_translations.html',data,context_instance=RequestContext(request))
+    else:
+        return HttpResponseNotFound("<h1>Page not found</h1>")
+
 
 def sign_up(request):
     """
     This function loads sign up form for new user's registration. 
     """
     l = find()
-    data = {
-        'form': SignUpForm(),
-        'list':l,
-        'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False), 
-    }
+    data = { 'form': SignUpForm(),
+             'list':l
+           }
     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
     
 def process_sign_up(request):
@@ -110,189 +111,58 @@ are valid and all checks are passed it registers the user by creating a record i
 """
     user = request.user
     if request.method == 'POST':
-        check_captcha = captcha.client.submit(request.POST['recaptcha_challenge_field'],
-                                       request.POST['recaptcha_response_field'],
-                                       settings.RECAPTCHA_PRIVATE_KEY,
-                                       request.META['REMOTE_ADDR'])
-        
-        if check_captcha.is_valid:
-            f_password = request.POST['password']
-            f_confirm_password = request.POST['confirm_password']
-            f_email = request.POST['email']
-            f_username = request.POST['username']
-            f_first_name = request.POST['first_name']
-            f_last_name = request.POST['last_name']
-            f_gender = request.POST['gender']
-            f_date_of_birth = request.POST['date_of_birth']
-            f_grp = request.POST['groups'].upper()
-                 
-            if request.POST.has_key('translator'):
-                f_translator = request.POST['translator']
-            else:
-                f_translator = False
-            if request.POST.has_key('contributor'):
-                f_contributor = request.POST['contributor']
-            else:
-                f_contributor = False
-            if request.POST.has_key('evaluator'):
-                f_evaluator = request.POST['evaluator']
-            else:
-                f_evaluator = False
-                      
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            print form.cleaned_data
+            f_username = form.cleaned_data['username']
+            f_password = form.cleaned_data['password']
+            f_email = form.cleaned_data['email']           
             try:
                 count = 0
-                if f_password == f_confirm_password:
-                    if f_email and f_username and f_first_name and f_last_name and f_gender and f_date_of_birth and f_grp:
-                        count = User.objects.filter(email=f_email).count()
-                        if count !=0:
-                            data = {
-                                'form': SignUpForm(request.POST),
-                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                                }
-                            messages.error(request,"EmailID already in use.Try another one!!!")
-                            log.error("Exisiting email-id used while user-registration.")
-                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-                        
-                        count = User.objects.all().filter(username = f_username).count()
-                                
-                        if count != 0:
-                            data = {
-                                'form': SignUpForm(request.POST),
-                                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                                }
-                            messages.error(request,"Username already in use.Try another one!!!")
-                            log.error("Exisiting username used while user-registration.")
-                            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-                        
-                        u = User.objects.create_user(f_username, f_email, f_password)
-                        u.is_active = True
-                        u.first_name =f_first_name
-                        u.last_name = f_last_name
-                        u.save()
-                        u.set_password(f_password)
-                        u.save()
-                        try:
-                            g = Group.objects.get(name=f_grp)
-                            u.groups.add(g)
-                            u.save()
-                        except:
-                            g = Group.objects.filter(name=f_grp)
-                            if g:
-                                u.groups.add(g)
-                                u.save()  
-                            else:
-                                g = Group()
-                                g.name = f_grp
-                                g.save()
-                                u.groups.add(g)
-                                u.save()
-                            
-                        user = User.objects.get(username__exact=f_username)
-                        
-                        #user.userprofile_set.create(date_of_birth=f_date_of_birth,ip_address=request.META['REMOTE_ADDR'],gender=f_gender,
-                        #                           translator=f_translator,contributor=f_contributor,evaluator=f_evaluator)
-                        p = UserProfile()
-                        p.user = user
-                        p.date_of_birth = f_date_of_birth
-                        p.ip_address = request.META['REMOTE_ADDR']
-                        p.gender = f_gender
-                        p.translator = f_translator
-                        p.contributor = f_contributor
-                        p.evaluator = f_evaluator
-                        p.save()
-                        
-                        userpro = UserProfile.objects.get(user=user)
-                        
-                        if request.POST.getlist('language'):
-                            all_language = request.POST.getlist('language')
-                            
-                            for l in all_language:
-                                id = int(l)
-                                f_language = Master_Language.objects.get(pk=id)
-                                userpro.language.add(f_language)
-                        
-                        if request.POST.has_key('medium_of_education_during_school'):
-                            medium_of_education_during_school = request.POST['medium_of_education_during_school']
-                            
-                            for l in medium_of_education_during_school:
-                                id = int(l)
-                                f_medium_of_education_during_school = Master_Language.objects.get(pk=id)
-                                userpro.medium_of_education_during_school = f_medium_of_education_during_school
-                                userpro.save()
-                              
-                        if request.POST.has_key('district'):
-                            district = request.POST['district']
-                            
-                            for l in district:
-                                id = int(l)
-                                f_district = Master_GeographicalRegion.objects.get(pk=id)
-                                userpro.district = f_district
-                                userpro.save()
-
-                        if request.POST.has_key('education_qualification'):
-                            education_qualification = request.POST['education_qualification']
-                            
-                            for l in education_qualification:
-                                id = int(l)
-                                f_education_qualification = Master_EducationQualification.objects.get(pk=id)
-                                userpro.education_qualification = f_education_qualification
-                                userpro.save()
-                                
-                        if request.POST.has_key('domain'):
-                            domain = request.POST['domain']
-                            
-                            for l in domain:
-                                id = int(l)
-                                f_domain = Master_EducationDomain.objects.get(pk=id)
-                                userpro.domain = f_domain
-                                userpro.save()
-                        
-                        if request.POST.getlist('interests'):
-                            all_interests = request.POST.getlist('interests')
-                            for i in all_interests:
-                                id = int(i)
-                                f_interests = Master_InterestTags.objects.get(pk=id)
-                                userpro.interests.add(f_interests)
-                            
-                        data = {
-                            'form': SignUpForm(),
-                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                            }
-                        messages.success(request,"Record saved successfully!!!")
-                        log.info("User registration successful for %s."%(f_username))
-                        return render_to_response('login/home.html',data,context_instance=RequestContext(request))
-                    else:
-                        data = {
-                            'form': SignUpForm(request.POST),
-                            'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                            }
-                        messages.error(request,"Please fill in all fields!!!")
-                        log.error("All fields not entered correctly while user registration.")
-                        return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-    
-                else:
-                    data = {
-                        'form': SignUpForm(request.POST),
-                        'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                        }
-                    messages.error(request,"Confirm password correctly!!!")
-                    log.error("Password not confirmed correctly.")
+                          
+                #Check for unique email-id
+                count = User.objects.filter(email=f_email).count()
+                if count !=0:
+                    data = {'form': SignUpForm(request.POST)}
+                    messages.error(request,"EmailID already in use.Try another one!!!")
+                    log.error("Exisiting email-id used while user-registration.")
                     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-                return HttpResponseRedirect(reverse('home'))
+                    
+                #Check for unique username
+                count = User.objects.all().filter(username = f_username).count()
+                if count != 0:
+                    data = {'form': SignUpForm(request.POST)}
+                    messages.error(request,"Username already in use.Try another one!!!")
+                    log.error("Exisiting username used while user-registration.")
+                    return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
+                            
+                u = User.objects.create_user(f_username, f_email, f_password)
+                u.is_active = True
+                u.save()
+                u.set_password(f_password)
+                u.save()
+                                    
+                user = User.objects.get(username__exact=f_username)
+                                
+                p = UserProfile()
+                p.user = user
+                p.ip_address = request.META['REMOTE_ADDR']
+                p.save()
+                                
+                data = {'form': SignUpForm()}
+                messages.success(request,"Record saved successfully!!!")
+                log.info("User registration successful for %s."%(f_username))
+                return render_to_response('login/home.html',data,context_instance=RequestContext(request))
             except:
                 log.exception("User registration failed for %s."%(f_username))
-                traceback.print_exc()
-                messages.error(request, "Registration Failed!!!Try again.")
-               
+                messages.error(request,"User Registration failed!!!")
+                return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
         else:
-            data = {
-                'form': SignUpForm(),
-                'html_captcha':captcha.client.displayhtml(settings.RECAPTCHA_PUBLIC_KEY, attrs = {'theme' : 'red'}, use_ssl = False),
-                }
-            messages.error(request, "Recaptcha entered incorrectly!!!")
-            log.error("Recaptcha entered incorrectly while user registration.")
+            data = {'form': SignUpForm(request.POST)}
+            messages.error(request,form._get_errors().as_text())
+            log.error("All fields not entered correctly while user registration.")
             return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-    return HttpResponse("Registration Failed - Some error occurred!!!")
+
 
 def process_sign_in(request):
     """
@@ -734,6 +604,11 @@ def account_settings(request,uid):
     u = UserProfile.objects.get(user = uid)
     form =  UpdateProfileForm(instance=u)
     form1 = UpdateProfileForm(instance=user) 
+    all_groups = Group.objects.filter(user=user)
+    if all_groups:
+        groups = all_groups[0].name
+    else:
+        groups = ""
     l = find()
    
     data = {
@@ -741,6 +616,7 @@ def account_settings(request,uid):
         'form1':form1,
         'uid':uid,
         'list':l,
+        'grps':groups,
         'username':request.user
     }
     log.info("%s visited account_settings form."%(user))
@@ -752,46 +628,47 @@ def process_account_settings(request,uid):
     except his username cannot be changed.
     """
     user = request.user 
-    if request.method == 'POST':
-        f_password = request.POST['password']
-        f_confirm_password = request.POST['confirm_password']
-        f_email = request.POST['email']
-        f_first_name = request.POST['first_name']
-        f_last_name = request.POST['last_name']
-        f_date_of_birth = request.POST['date_of_birth']
-        f_district = request.POST['district']
-        f_education_qualification = request.POST['education_qualification']
-        f_domain = request.POST['domain']  
-        f_medium_of_education_during_school = request.POST['medium_of_education_during_school']
-        f_grp = request.POST['groups']
-            
-        if request.POST.has_key('translator'):
-            f_translator = request.POST['translator']
-        else:
-            f_translator = False
-        if request.POST.has_key('contributor'):
-            f_contributor = request.POST['contributor']
-        else:
-            f_contributor = False
-        if request.POST.has_key('evaluator'):           
-            f_evaluator = request.POST['evaluator']
-        else:
-            f_evaluator = False
-                
-        try:
-            #find user record
-            if f_password == f_confirm_password:
-                if f_email and f_first_name and f_last_name:
-                    count = User.objects.exclude(username=request.user).filter(email=f_email).count() 
-                                            
-                    if count !=0:
-                        data = {
-                            'form': SignUpForm(request.POST), 
-                        }
-                        messages.error(request,"EmailID already in use.Try another one!!!")
-                        log.error("%s changed email-id to an existing one while updating profile."%(user))
-                        return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
-                    #update record
+    if request.method == 'POST': 
+        form = UpdateProfileForm(request.POST)
+        
+        if form.is_valid():
+            if form.cleaned_data.has_key('password'):
+                f_password = form.cleaned_data['password']
+            else:
+                f_password = ""
+            f_email = form.cleaned_data['email']
+            f_first_name = form.cleaned_data['first_name']
+            f_last_name = form.cleaned_data['last_name']
+            f_date_of_birth = form.cleaned_data['date_of_birth']
+            f_gender = form.cleaned_data['gender']
+            f_district = form.cleaned_data['district']
+            f_education_qualification = form.cleaned_data['education_qualification']
+            f_domain = form.cleaned_data['domain']  
+            f_medium_of_education_during_school = form.cleaned_data['medium_of_education_during_school']
+            f_grp = form.cleaned_data['groups'].upper()
+            if request.POST.has_key('translator'):
+                f_translator = request.POST['translator']
+            else:
+                f_translator = False
+            if request.POST.has_key('contributor'):
+                f_contributor = request.POST['contributor']
+            else:
+                f_contributor = False
+            if request.POST.has_key('evaluator'):
+                f_evaluator = request.POST['evaluator']
+            else:
+                f_evaluator = False
+        
+            try:
+                #Check for unique email-id
+                count = User.objects.exclude(username=request.user).filter(email=f_email).count() 
+                if count !=0:
+                    data = {'form': UpdateProfileForm(request.POST)}
+                    messages.error(request,"EmailID already in use.Try another one!!!")
+                    log.error("%s changed email-id to an existing one while updating profile."%(user))
+                    return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+                    
+                else:
                     u = User.objects.get(username = request.user)
                     u.first_name =f_first_name
                     u.last_name = f_last_name
@@ -804,9 +681,10 @@ def process_account_settings(request,uid):
                     userpro = UserProfile.objects.get(user=user)
                         
                     userpro.date_of_birth = f_date_of_birth
-                    userpro.district = Master_GeographicalRegion.objects.get(pk=f_district)
-                    userpro.domain = Master_EducationDomain.objects.get(pk=f_domain)
-                    userpro.education_qualification = Master_EducationQualification.objects.get(pk=f_education_qualification)
+                    userpro.gender = f_gender
+                    userpro.district = f_district
+                    userpro.domain = f_domain
+                    userpro.education_qualification = f_education_qualification
                     userpro.translator = f_translator
                     userpro.evaluator = f_evaluator
                     userpro.contributor = f_contributor
@@ -857,7 +735,7 @@ def process_account_settings(request,uid):
                     (u,a,s) = stats()
        
                     data = {
-                        'form': SignUpForm(), 
+                        'form': UpdateProfileForm(request.POST), 
                         'username':user,
                         'registered_users':u,
                         'translated_sentences':s,
@@ -866,38 +744,46 @@ def process_account_settings(request,uid):
                     messages.success(request,"Record saved successfully!!.")
                     log.info("Profile updated successfully for user: %s."%(user))
                     return render_to_response('translation/account.html',data,context_instance=RequestContext(request))                              
-                else:
-                    data = {
-                        'form': SignUpForm(request.POST),
-                        }
-                    messages.error(request,"Please fill in all fields!!!")
-                    log.error("All fields not entered correctly while updating user profile.")
-                    return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
-    
+            except:
+                log.exception("Profile Update Failed!!!")
+                traceback.print_exc() 
+                return render_to_response('translation/account_settings.html',context_instance=RequestContext(request))
+        else:   
+            if form._get_errors().has_key('confirm_password'):
+                form._get_errors().pop('confirm_password')
+            
+            if form._get_errors().has_key('password'):
+                form._get_errors().pop('password')
+                        
+            a = form._get_errors().as_text()
+            user = User.objects.get(pk=uid)
+            u = UserProfile.objects.get(user = uid)
+            form =  UpdateProfileForm(instance=u)
+            form1 = UpdateProfileForm(instance=user) 
+            all_groups = Group.objects.filter(user=user)
+            if all_groups:
+                groups = all_groups[0].name
             else:
-                data = {
-                    'form': SignUpForm(request.POST),
-                } 
-                messages.error(request,"Confirm password correctly!!!")
-                log.error("Password not confirmed correctly.")
-                return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
-            return HttpResponseRedirect(reverse('home')) 
-        except:
-            log.exception("Update Failed!!!")
-            traceback.print_exc() 
-            messages.error(request, "Account update Failed!!!Try again.")
-            return render_to_response('translation/account_settings.html',context_instance=RequestContext(request))
-    return HttpResponse("Error!!!") 
+                groups = ""
+            l = find()
+   
+            data = {
+                    'form': form,
+                    'form1':form1,
+                    'uid':uid,
+                    'list':l,
+                    'username':request.user,
+                    'groups':groups
+                }
+                       
+            messages.error(request,a)
+            log.error("All fields not entered correctly while user registration.")
+            return render_to_response('translation/account_settings.html',data,context_instance=RequestContext(request))
+    return HttpResponse("Some error occured!!!") 
 
-    
 def evaluate(request):
     """to be done"""
-    ta = TransactionAction()
-    ta.session = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
-    ta.user = request.user
-    ta.action = Master_Action.objects.filter(action="Evaluate")[0]
-    ta.action_timestamp = datetime.datetime.now()
-    ta.save()
+    messages.success(request, "This feature is coming soon!!!")
     return HttpResponseRedirect(reverse('account'))
     
 def process_evaluate(request):

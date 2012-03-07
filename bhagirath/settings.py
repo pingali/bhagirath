@@ -183,14 +183,15 @@ FIXTURE_DIRS = (
 AUTH_PROFILE_MODULE = 'bhagirath.UserProfile'
 
 ##############################################################
-# Recaptcha 
+# CAPTCHA SETTINGS 
 ##############################################################
-#RECAPTCHA_PUBLIC_KEY = '76wtgdfsjhsydt7r5FFGFhgsdfytd656sad75fgh'
-#RECAPTCHA_PRIVATE_KEY = '98dfg6df7g56df6gdfgdfg65JHJH656565GFGFGs'
-#RECAPTCHA_USE_SSL = False
-RECAPTCHA_PUBLIC_KEY="6LefI8sSAAAAAPW4I8Bs0Qb5DZToQLe_Q6Uq-zaH"
-RECAPTCHA_PRIVATE_KEY="6LefI8sSAAAAAL5jzNKsivcBWJG-Fxwak8pRLPxb"
-RECAPTCHA_USE_SSL=False
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
+CAPTCHA_FONT_SIZE = 30
+CAPTCHA_LETTER_ROTATION = None
+CAPTCHA_BACKGROUND_COLOR = "#ffffff"
+CAPTCHA_FOREGROUND_COLOR = "#000000"
+CAPTCHA_TIMEOUT = 10
+CAPTCHA_OUTPUT_FORMAT = u'%(image)s %(hidden_field)s %(text_field)s' 
 
 handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)

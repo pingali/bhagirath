@@ -37,8 +37,7 @@
 }
 
 #signin .sign_in h2 {
-	padding: 12px 0 10px 20px;
-	background: url(../images/signin_top.png) no-repeat;
+	padding: 12px 0 10px 20px;;
 	font-weight: bold;
 	font-size: .80em;
 	color:#282828;

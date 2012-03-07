@@ -1,5 +1,5 @@
-from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
+from django.conf.urls.defaults import *
 from django.views.generic.simple import redirect_to
 from bhagirath.translation import admin_urls
 
@@ -8,7 +8,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('translation.views', 
-    
     #loading home page of bhagirath
     url(r'^home/$','home',name="home"),
     #Displaying about_us template that gives more info about bhagirath
@@ -50,7 +49,8 @@ urlpatterns = patterns('translation.views',
 urlpatterns += patterns('',
     ('^/?$', redirect_to, {"url": "/home"}),
     (r'^my_admin/jsi18n', 'django.views.i18n.javascript_catalog'),
-        
+    url(r'^captcha/', include('captcha.urls')),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
         
@@ -65,6 +65,9 @@ urlpatterns += patterns('',
     url(r'^feedback/', include('django_basic_feedback.urls')),
 
 )
+
+#handler404 = 'translation.views.bhagirath_404_view'
+#handler500 = 'translation.views.bhagirath_error_view'
 
 
 if settings.DEBUG:
