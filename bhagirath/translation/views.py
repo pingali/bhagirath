@@ -4,12 +4,10 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect,HttpResponse,HttpResponseNotFound
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.core import serializers
 from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
 import jellyfish
-import captcha
 import traceback
 import logging
 
@@ -801,7 +799,7 @@ def autocomplete(request,uid,prefix_val):
     except:
         return HttpResponse("  ")
 
-def autocorrect(request,uid,word):
+def autocorrect(request,word):
     auto = []
     i = 0
     words = list(Master_HindiWords.objects.all())

@@ -1288,3 +1288,187 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 		inputBoxCount++;
 	}
 }
+
+//autocorrect
+
+function OnmouseOver(){
+	$(function() {
+		var hin_words = $('textarea#translated_sentence').val().split(' ');
+	    var newHtml1 = '';
+	    for (i = 0; i < hin_words.length; i++) {
+	        	newHtml1 += '<span id="hin">' + hin_words[i] + '</span> ';
+	    }   
+		$('#hindi').html(newHtml1);
+		document.getElementById('translated_sentence').style.display = 'none';
+		document.getElementById('hindi').style.display = 'block';
+		$(this).find("span").attr("id", "hin").mouseover( function() {
+	        $(this).addClass('hlight');
+	        $('#autocorrect').remove();
+	    });
+	    $(this).find("span").attr("id", "hin").mouseout( function() {
+	        $(this).removeClass('hlight');
+	     
+	    });
+	     $("span").click(function(e){
+		 	find = $(this).text();
+	        getOption(find);      	
+  		});
+	});
+}
+
+function getOption(find){
+		var textnode ="";
+		var left = 60; //left coordinate of input box relative to its parent element.
+		var top = 35; //top coordinate of input box relative to its parent element.
+		var numLines=0;
+		var max = 0;
+		
+		req_url = '/account/translate/autocorrect/'+find;
+		$.get(req_url, function(data){
+			var lines = new Array();
+			lines = data.split('      ');	
+		
+			for(i in lines) {
+				numLines += parseInt((lines[i].length)/42); //42 characters in one line.
+				if (parseInt(lines[i].length) > max) {
+					max = parseInt(lines[i].length);
+				}
+			}
+			max = max*10;
+			numLines += lines.length;
+			var element = document.getElementById("translated_sentence")
+			var pos = GetCaretPosition(element);
+			
+			left += (((lines[(lines.length) - 1]).length)%42)*10; //10 pixels horizontoly for one character
+			top += (numLines)*18; //approx height of line in pixels.
+			left += pos;
+			
+			dict = document.createElement("div");
+			dict.setAttribute('id','autocorrect');
+			dict.style.left = left + "px";
+			dict.style.top = top + "px";
+			dict.style.width = max + "px";
+		
+			document.getElementById("hindi").appendChild(dict);
+		
+			for(i in lines) {
+				divSuggestWrd = document.createElement('div');
+				divSuggestWrd.setAttribute('id', "div" + lines[i]);
+				divSuggestWrd.setAttribute('class','divWord');
+				divSuggestWrd.onmouseover = HandleMouseOverDivAutoCorrect;
+ 				divSuggestWrd.onclick = HandleClickOnDivAutoCorrect;
+				
+				aSuggestWrd = document.createElement('a');
+				aSuggestWrd.setAttribute('id',lines[i]);
+				aSuggestWrd.setAttribute('class','suggestWord');
+				aSuggestWrd.setAttribute('href',"");
+ 				aSuggestWrd.onmouseover = HandleMouseOverAAutoCorrect;
+ 				aSuggestWrd.onkeydown = SuggestionKeyDownAutoCorrect;
+ 				aSuggestWrd.onfocus = HighlightAutoCorrect;
+				textNode = document.createTextNode(lines[i]);
+				
+				aSuggestWrd.appendChild(textNode);
+				divSuggestWrd.appendChild(aSuggestWrd);
+				dict.appendChild(divSuggestWrd);
+				
+			}
+		});
+	}
+
+function HandleClickOnDivAutoCorrect(){
+	//id is divXYZ, we want XYZ which is the id of < a > element which is main for us.
+	var id = document.getElementById(((this.id).substring(3))).id;
+	//complete word when user clicks on it.
+	CompleteAutoCorrect(id, find);
+	return false;
+}
+	
+function HandleMouseOverAAutoCorrect() {
+	this.focus();
+}
+function HandleMouseOverDivAutoCorrect() {
+	document.getElementById((this.id).substring(3)).focus();
+}	
+	
+function SuggestionKeyDownAutoCorrect(event) {
+	var keyCode;
+	var i=0;
+	var selected=-1;
+	if(window.event) {
+		keyCode = window.event.keyCode;
+	}
+	else if(event) {
+		keyCode = event.which;
+	}
+	if(keyCode == 27) { //27 = escape key
+		var divSuggestBox = document.getElementById("suggest");
+		if(divSuggestBox != null ) {
+			document.getElementById("main").removeChild(divSuggestBox);
+		}
+		document.getElementById("input").focus();
+		gEscapePressed = 1;
+	}
+	else if(keyCode == 13 || keyCode == 9) { //13 = Enter, 9 = TAB
+		CompleteAutoCorrect(this, document.getElementById("translated_sentence"));
+		return false;
+	}
+	else if(keyCode == 32) { //32 = space
+		CompleteAutoCorrect(this, document.getElementById("translated_sentence"));
+	}
+	else if(keyCode == 38 || keyCode == 40) { //38=Up Key, 40 = Down Key
+		for(i in gSuggestions) {
+			document.getElementById(lists[i]).setAttribute('class', 'suggestWord');
+		}
+		for(i in lists) {
+			selected++;
+			if(lists[i] == this.id) {
+				break;
+			}
+		}
+		if(keyCode == 38) {
+			selected--;
+			if(selected == -1) {
+				selected = lists.length - 1;
+			}
+		}
+		else if(keyCode == 40) {
+			selected++;
+			if (selected == lists.length) {
+					selected = 0;
+			}				
+		}
+		document.getElementById(lists[selected]).focus();
+		return false;
+	}
+	
+}
+	
+function CompleteAutoCorrect(id, source) {
+	$('#autocorrect').remove();
+	var text1 = "";
+	var text = "";
+
+	var word = $('#hindi').text().split(' ');
+		$(function() {	
+			for (i = 0; i < word.length; i++) {
+				if (word[i]==source)
+		        {	
+		        	word[i] = id;
+		        }
+		        text1 = text1 + '<span id= "hin">' + word[i] + '</span> '; 
+		        text = text + word[i] + ' ';
+			}
+		});
+	$('#hindi').html(text1);
+	$('textarea#translated_sentence').val(text);
+	OnmouseOver(this);
+}
+
+function HighlightAutoCorrect(){
+	for(i in lists) {
+		document.getElementById(lists[i]).setAttribute('class', 'suggestWord');
+		document.getElementById("div" + lists[i]).setAttribute('class', 'divWord');
+	}
+	this.setAttribute('class', 'suggestWordHighlight');
+	document.getElementById("div" + this.id).setAttribute('class', 'divWordHighlight');
+}

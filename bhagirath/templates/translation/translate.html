@@ -217,6 +217,23 @@
 		 	});
 		});
 		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR ENDS HERE
+		
+		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
+		
+		function OnClick(){
+		$(function() {
+			$('#autocorrect').remove();
+		});
+		}
+
+		$(document).keydown(function(event) {
+	 		document.getElementById('hindi').style.display = "none";
+			document.getElementById('translated_sentence').style.display = 'block';
+			var pos = GetCaretPosition(document.getElementById('translated_sentence'));
+			SetCaretPosition(document.getElementById('translated_sentence'), pos);
+		});
+		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
+		
 				
 		var fontSize = 1;
 		
@@ -290,6 +307,7 @@
 				<td>
 					<label style=" color: #FF7359">Type in translation here:</label>
 					<script>CreateCustomHindiTextArea("translated_sentence","",40,10,true);</script>
+					<div class="original_sentence" id="hindi" style="display:none;" onclick = "OnClick();"></div>
 				</td>
 			</tr>	
 		</table>

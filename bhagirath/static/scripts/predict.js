@@ -112,8 +112,8 @@ function ShowSuggest(element) {
 	//show suggestions only if there are suggestions !!!
 	if(gSuggestions.length >=1) {
 		var i=0; //for iterating in array.
-		var left = 60; //left coordinate of input box relative to its arent element.
-		var top = 35; //top coordinate of input box relative to its arent element.
+		var left = 60; //left coordinate of input box relative to its parent element.
+		var top = 35; //top coordinate of input box relative to its parent element.
 		var lines; //will contain each line in text as array.
 		var numLines=0; //calculate numLines. both due to \n and if sentence is typed larger than width of box.
 		var text;
