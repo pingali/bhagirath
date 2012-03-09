@@ -1258,7 +1258,7 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 	document.write(" id='"+textAreaParam.Id+"' ");
 	if(textAreaParam.UseHinkhoj)
 	{
-		document.write(" onkeypress='if (!inputBoxIds["+inputBoxCount+"].isEng){ return processInput(event,inputBoxIds["+inputBoxCount+"]);} else {return true;}' onKeyUp='changeCursor(this);' onkeydown='positionChange(event,inputBoxIds["+inputBoxCount+"]);' onFocus='changeCursor(this);' onClick='changeCursor(this);' ondblclick='OnmouseOver(this);'");
+		document.write(" onkeypress='if (!inputBoxIds["+inputBoxCount+"].isEng){ return processInput(event,inputBoxIds["+inputBoxCount+"]);} else {return true;}' onKeyUp='changeCursor(this);' onkeydown='positionChange(event,inputBoxIds["+inputBoxCount+"]);' onFocus='changeCursor(this);' onClick='changeCursor(this);'");
 	}
 	document.write(" >");
 

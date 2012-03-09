@@ -82,7 +82,6 @@ def microtaskParser():
                             micro = StaticMicrotask()  
                             micro.subtask = subtask
                             micro.task = task
-                            print each
                             micro.original_sentence = each
                             micro.bit_array = a
                             micro.save()

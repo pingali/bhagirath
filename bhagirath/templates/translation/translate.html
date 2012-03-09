@@ -220,18 +220,26 @@
 		
 		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
 		
-		function OnClick(){
-		$(function() {
-			$('#autocorrect').remove();
-		});
-		}
-
-		$(document).keydown(function(event) {
-	 		document.getElementById('hindi').style.display = "none";
-			document.getElementById('translated_sentence').style.display = 'block';
-			var pos = GetCaretPosition(document.getElementById('translated_sentence'));
-			SetCaretPosition(document.getElementById('translated_sentence'), pos);
-		});
+		{% if auto_correction %}
+			$(document).ready(function() {
+				$('#translated_sentence').dblclick(function(event) {
+					OnmouseOver(this);
+				});
+			});
+		
+			function OnClick(){
+			$(function() {
+				$('#autocorrect').remove();
+			});
+			}
+	
+			$(document).keydown(function(event) {
+		 		document.getElementById('hindi').style.display = "none";
+				document.getElementById('translated_sentence').style.display = 'block';
+				var pos = GetCaretPosition(document.getElementById('translated_sentence'));
+				SetCaretPosition(document.getElementById('translated_sentence'), pos);
+			});
+		{% endif %}		
 		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
 		
 				
@@ -310,6 +318,9 @@
 					<div class="original_sentence" id="hindi" style="display:none;" onclick = "OnClick();"></div>
 				</td>
 			</tr>	
+			{% if auto_correction %}
+				<tr><td></td><td><label style=" color: #FF7359">Double click on above area each time to enable auto-correction. </label></td></tr>
+			{% endif %}
 		</table>
 		</div>
 		<table>

@@ -111,7 +111,6 @@ are valid and all checks are passed it registers the user by creating a record i
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            print form.cleaned_data
             f_username = form.cleaned_data['username']
             f_password = form.cleaned_data['password']
             f_email = form.cleaned_data['email']           
@@ -175,10 +174,8 @@ def process_sign_in(request):
         s = Session()
         s.user = user
         s.login_timestamp = datetime.datetime.now()
-        s.save()
-        msg = "Welcome,%s"%(request.user)   
+        s.save()   
         next = "/account/"
-        messages.success(request,msg)
         log.info("%s logged in succesfully."%(user)) 
         return HttpResponseRedirect(next) 
     else:
@@ -223,9 +220,10 @@ def account(request):
         (u,a,s) = stats()   
         overall_leaderboard = get_overall_leaderboard()
         weekly_leaderboard = get_weekly_leaderboard()       
-        user_pro = UserProfile.objects.filter(user = uid)
-        user_profile = user_pro[0]
-        data = {
+        user_pro = User.objects.get(pk = uid)
+        try:
+            user_profile = UserProfile.objects.get(user = user_pro)
+            data = {
                 'uid':uid,
                 'total_translated_sentences':user_profile.total_translated_sentences,
                 'no_of_perfect_translations': user_profile.no_of_perfect_translations,
@@ -237,9 +235,15 @@ def account(request):
                 'username':user,
                 'overall_leaderboard':overall_leaderboard,
                 'weekly_leaderboard':weekly_leaderboard,
-        } 
-        log.info("%s visited its home page."%(user))
-        return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
+            } 
+            log.info("%s visited its home page."%(user))
+            return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
+        except:
+            messages.error(request,"You have not registered!!!")
+            log.error("%s made request before registration."%(user))
+            next = "/home/"
+            return HttpResponseRedirect(next) 
+            
     else:
         data = {
         'form': LoginForm(),
@@ -380,7 +384,6 @@ def process_upload(request):
     except:
         log.exception("Upload Failed!!!")
         traceback.print_exc() 
-        messages.error(request, "Upload Failed")
    
 def translate(request,uid):
     """
@@ -506,7 +509,6 @@ def translate(request,uid):
         except:
             log.exception("Load microtask for translation failed.")
             traceback.print_exc() 
-            messages.error(request, "Load microtask for translation failed!!!")
     #if user is not logged in
     else:
         (u,a,s) = stats()
@@ -588,7 +590,6 @@ def process_translate(request,id,uid):
             except:
                 log.exception("Save translated microtask failed.")
                 traceback.print_exc() 
-                messages.error(request, "Save translated microtask Failed!!!")
     else:
         log.error("%s made request before login."%(user))
         return HttpResponse("Please login.You're not logged in!!!")
