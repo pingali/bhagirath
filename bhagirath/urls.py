@@ -66,7 +66,7 @@ urlpatterns += patterns('',
 
 )
 
-#handler404 = 'translation.views.bhagirath_404_view'
+handler404 = 'translation.views.bhagirath_404_view'
 #handler500 = 'translation.views.bhagirath_error_view'
 
 

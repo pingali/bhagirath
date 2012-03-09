@@ -12,10 +12,12 @@ import traceback
 import logging
 
 log = logging.getLogger("translation.views")
-"""
+
 def bhagirath_404_view(request):
-    return render_to_response('login/home.html',context_instance=RequestContext(request))
-    
+    data = {}
+    return render_to_response('404.html',data,context_instance=RequestContext(request))
+
+"""    
 def bhagirath_error_view(request):
     return render_to_response('login/home.html',context_instance=RequestContext(request))
 """
@@ -87,8 +89,8 @@ def sample_translations(request,id):
             }
         return render_to_response('login/sample_translations.html',data,context_instance=RequestContext(request))
     else:
-        return HttpResponseNotFound("<h1>Page not found</h1>")
-
+        data = {}
+        return render_to_response('404.html',data,context_instance=RequestContext(request))
 
 def sign_up(request):
     """
@@ -191,23 +193,19 @@ def process_sign_out(request):
     s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
     s.logout_timestamp = datetime.datetime.now()
     s.save()
+
     auth.logout(request)
     
-    (u,a,s) = stats()
-    overall_leaderboard = get_overall_leaderboard()
-    weekly_leaderboard = get_weekly_leaderboard()
-    data = {
-        'form': LoginForm(),
-        'registered_users':u,
-        'translated_sentences':s,
-        'published_articles':a,
-        'overall_leaderboard':overall_leaderboard,
-        'weekly_leaderboard':weekly_leaderboard,
-        } 
+    try:
+        request.session.flush()
+    except:
+        pass
+    
     messages.success(request,"Thanks for spending some quality time with the Website today.")
     log.info("%s logged out succesfully."%(user))
-    return render_to_response('login/home.html',data,context_instance=RequestContext(request))   
-
+    next = "/home/"
+    return HttpResponseRedirect(next) 
+    
 def account(request):
     """
     This function provides information such as current statistics and user's contribution
