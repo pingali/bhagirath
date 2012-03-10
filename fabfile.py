@@ -324,11 +324,12 @@ def install_site():
     
     # Copy the configurations 
     sudo('cd %(path)s/releases/current/; cp conf/%(conf_dir)s/bhagirath-vhost.conf /etc/apache2/sites-available/000-%(project_name)s' % env)
+    sudo('cd %(path)s/releases/current/; cp conf/%(conf_dir)s/apache-ports.conf /etc/apache2/ports.conf' % env)
     sudo('cd %(path)s/releases/current/; cp -f conf/%(conf_dir)s/wsgi.load /etc/apache2/mods-available/' % env)
-    sudo('cd %(path)s/releases/current/; cp -f conf/%(conf_dir)s/bhagirath-nginx.conf /etc/nginx/sites-available/000-%(project_name)' % env)
+    sudo('cd %(path)s/releases/current/; cp -f conf/%(conf_dir)s/bhagirath-nginx.conf /etc/nginx/sites-available/000-%(project_name)s' % env)
     
     # Enable the sites 
-    sudo('ln -fs /etc/nginx/sites-available/000-%(project_name) /etc/nginx/sites-enabled/' % env)
+    sudo('ln -fs /etc/nginx/sites-available/000-%(project_name)s /etc/nginx/sites-enabled/' % env)
     sudo('cd /etc/apache2/sites-available/; a2ensite 000-%(project_name)s' % env, pty=True) 
     
 def install_requirements():
