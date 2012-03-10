@@ -12,6 +12,8 @@ urlpatterns = patterns('translation.views',
     url(r'^home/$','home',name="home"),
     #Displaying about_us template that gives more info about bhagirath
     url(r'^about_us/$','about_us',name="about_us"),
+     #Login form
+    url(r'^sign_in/$','sign_in',name="sign_in"),
     #Displaying sample_translations template that provides few translations
     url(r'^sample_translations/(?P<id>\d+)/$','sample_translations',name="sample_translations"),
     #Sign up form for registration of new users
@@ -67,7 +69,7 @@ urlpatterns += patterns('',
 )
 
 handler404 = 'translation.views.bhagirath_404_view'
-#handler500 = 'translation.views.bhagirath_error_view'
+handler500 = 'translation.views.bhagirath_error_view'
 
 
 if settings.DEBUG:

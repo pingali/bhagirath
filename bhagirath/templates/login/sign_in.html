@@ -1,0 +1,29 @@
+{% extends "layout1.html" %}
+{% load adminmedia %}
+
+{% block script %}
+<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
+
+<script type="text/javascript" Language="JavaScript">
+	function OnSignIn()  {
+		document.login_form.action = "/login/"
+	  	return true;
+		}
+</script>
+{% endblock %}
+
+{% block other_content %}
+<form action="." name="login_form" id="login_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+{% csrf_token %}
+	<div id="signin">
+		<div class="sign_in">
+			<h2>Already have an account? Sign In</h2>
+			<fieldset>
+				<p class=""><label style="font-size:15px;">Username</label>{{form.username}}</p>			
+				<p class=""><label style="font-size:15px;">Password</label>{{form.password}}</p>				
+				<button name="sign_in" id="sign_in" class="reset" onclick="OnSignIn();">SignIn</button>
+			</fieldset>
+		</div>
+	</div>
+</form>
+{% endblock %}

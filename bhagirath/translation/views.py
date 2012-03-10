@@ -17,10 +17,9 @@ def bhagirath_404_view(request):
     data = {}
     return render_to_response('404.html',data,context_instance=RequestContext(request))
 
-"""    
 def bhagirath_error_view(request):
-    return render_to_response('login/home.html',context_instance=RequestContext(request))
-"""
+    data = {}
+    return render_to_response('500.html',data,context_instance=RequestContext(request))
 
 def home(request):
     """
@@ -31,7 +30,6 @@ def home(request):
     overall_leaderboard = get_overall_leaderboard()
     weekly_leaderboard = get_weekly_leaderboard()
     data = {
-            'form': LoginForm(),
             'registered_users':u,
             'translated_sentences':s,
             'published_articles':a,
@@ -162,6 +160,22 @@ are valid and all checks are passed it registers the user by creating a record i
             log.error("All fields not entered correctly while user registration.")
             return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
 
+def sign_in(request):
+    """
+    This function loads sign form for user's login. 
+    """
+    (u,a,s) = stats()
+    overall_leaderboard = get_overall_leaderboard()
+    weekly_leaderboard = get_weekly_leaderboard()
+    data = {
+            'form': LoginForm(),
+            'registered_users':u,
+            'translated_sentences':s,
+            'published_articles':a,
+            'overall_leaderboard':overall_leaderboard,
+            'weekly_leaderboard':weekly_leaderboard,
+        }
+    return render_to_response('login/sign_in.html',data,context_instance=RequestContext(request))
 
 def process_sign_in(request):
     """
