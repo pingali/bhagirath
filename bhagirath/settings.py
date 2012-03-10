@@ -3,12 +3,39 @@ import os
 import sys
 import logging
 
+#####################################
+# Path helper functions 
+#####################################
+
 def findpath(path):
     """
      This function provides absolute path of file specified.
     """ 
     parent_dir = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(parent_dir,path))
+
+def findglobalpath(path):
+    """
+     This function provides absolute path of file specified.
+    """ 
+    this_dir = os.path.dirname(__file__)
+    root_dir = os.path.abspath(os.path.join(this_dir,"../../.."))
+    return os.path.abspath(os.path.join(root_dir,path))
+
+# Is this production deployment? 
+if findpath(".").find('releases') > 0: 
+    dbfile = findglobalpath('shared/bhagirath.db') 
+    admin_media_path = findglobalpath('lib/python2.7/site-packages/admin_tools/media/admin_tools')
+    logfile = findglobalpath('logs/bhagirath.log')
+else:    
+    dbfile = findpath('bhagirath.db') 
+    admin_media_path = '/usr/local/lib/python2.7/dist-packages/admin_tools/media/admin_tools'
+    logfile = findpath('bhagirath.log')
+
+
+#####################################
+# Main configuration 
+#####################################
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -22,7 +49,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': findpath('bhagirath.db'),                      # Or path to database file if using sqlite3.
+        'NAME': dbfile,                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -86,7 +113,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     findpath('static'),
-    '/usr/local/lib/python2.7/dist-packages/admin_tools/media/admin_tools'
+    admin_media_path, 
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -197,7 +224,7 @@ handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)-6s: %(name)s - %(levelname)s - %(message)s',
-                    filename= 'bhagirath.log', 
+                    filename= logfile, 
                     filemode= 'a+',
                     handlers=[handler],
                     )
