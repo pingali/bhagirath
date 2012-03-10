@@ -4,7 +4,7 @@ import sys
 import logging
 
 #####################################
-# Path helper functions 
+# Helper functions 
 #####################################
 
 def findpath(path):
@@ -16,14 +16,18 @@ def findpath(path):
 
 def findglobalpath(path):
     """
-     This function provides absolute path of file specified.
+     This function provides absolute path of file specified on the 
+     deployed server
     """ 
     this_dir = os.path.dirname(__file__)
     root_dir = os.path.abspath(os.path.join(this_dir,"../../.."))
     return os.path.abspath(os.path.join(root_dir,path))
 
+def is_production_server(): 
+    return (findpath(".").find('releases') > 0)
+
 # Is this production deployment? 
-if findpath(".").find('releases') > 0: 
+if is_production_server(): 
     dbfile = findglobalpath('shared/bhagirath.db') 
     admin_media_path = findglobalpath('lib/python2.7/site-packages/admin_tools/media/admin_tools')
     logfile = findglobalpath('logs/bhagirath.log')
@@ -37,7 +41,11 @@ else:
 # Main configuration 
 #####################################
 
-DEBUG = True
+if is_production_server(): 
+    DEBUG = False
+else: 
+    DEBUG = True 
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -220,6 +228,9 @@ CAPTCHA_FOREGROUND_COLOR = "#000000"
 CAPTCHA_TIMEOUT = 10
 CAPTCHA_OUTPUT_FORMAT = u'%(image)s %(hidden_field)s %(text_field)s' 
 
+##############################################################
+# Logging
+##############################################################
 handler = logging.StreamHandler(sys.stderr)
 handler.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG,
