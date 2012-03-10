@@ -249,6 +249,7 @@ def setup():
     require('path')
     sudo('apt-get -y install build-essential libxml2 libxml2-dev libxslt1 libxslt1-dev')
     sudo('apt-get -y install build-essential python-dev python-setuptools')
+    sudo('apt-get install -y libjpeg62-dev zlib1g-dev libfreetype6-dev liblcms1-dev')
     sudo('easy_install pip')
     sudo('pip install virtualenv')
     sudo('aptitude install -y apache2 nginx')
