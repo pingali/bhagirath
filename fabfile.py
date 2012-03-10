@@ -211,6 +211,7 @@ env.project_name = 'bhagirath'
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
+    env.conf_dir = 'localhost'
     env.user = 'ubuntu'
     env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
@@ -222,7 +223,8 @@ def localhost():
 
 def webserver():
     "Use the actual webserver"
-    env.hosts = ['www.translate4india.com']
+    env.hosts = ['translate4india.com']
+    env.conf_dir = 'translate4india'
     env.user = 'ubuntu'
     env.path = '/home/%(user)s/workspace/%(project_name)s' % env
     env.virtualhost_path = env.path
@@ -249,11 +251,12 @@ def setup():
     sudo('apt-get -y install build-essential python-dev python-setuptools')
     sudo('easy_install pip')
     sudo('pip install virtualenv')
-    sudo('aptitude install -y apache2')
+    sudo('aptitude install -y apache2 nginx')
     sudo('aptitude install -y libapache2-mod-wsgi') # beware, outdated on hardy!
     # we want to get rid of the default apache config
-    sudo('cd /etc/apache2/sites-available/; a2dissite default;', pty=True)
+    sudo('a2dissite default;', pty=True)
     sudo('a2enmod authz_host alias wsgi dir autoindex ssl rewrite', pty=True)
+    sudo('cd /etc/nginx/sites-enabled/; rm default;', pty=True)
     sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
     run('ln -fs %(path)s www;' % env, pty=True) # symlink web dir in home
     with cd(env.path):
@@ -316,14 +319,17 @@ def upload_tar_from_git():
     local('rm %(release)s.tar.gz' % env)
     
 def install_site():
-    "Add the virtualhost file to apache"
+    "Add the virtualhost file to apache and nginx"
     require('release', provided_by=[deploy, setup])
-    sudo('cd %(path)s/releases/current/; cp conf/%(host)s/bhagirath-vhost.conf /etc/apache2/sites-available/000-%(project_name)s' % env)
-    sudo('cd %(path)s/releases/current/; cp -f conf/%(host)s/wsgi.load /etc/apache2/mods-available/' % env)
-    #sudo('cd %(path)s/releases/current/conf/%(host)s/; cp celeryd celeryevcam celerybeat  /etc/init.d/; cp celeryd-defaults /etc/default/celeryd' % env)
-    #sudo('/etc/init.d/celeryd restart')
-    #sudo('/etc/init.d/celeryevcam restart')
-    #sudo('/etc/init.d/celerybeat restart')
+    
+    # Copy the configurations 
+    sudo('cd %(path)s/releases/current/; cp conf/%(conf_dir)s/bhagirath-vhost.conf /etc/apache2/sites-available/000-%(project_name)s' % env)
+    sudo('cd %(path)s/releases/current/; cp conf/%(conf_dir)s/apache-ports.conf /etc/apache2/ports.conf' % env)
+    sudo('cd %(path)s/releases/current/; cp -f conf/%(conf_dir)s/wsgi.load /etc/apache2/mods-available/' % env)
+    sudo('cd %(path)s/releases/current/; cp -f conf/%(conf_dir)s/bhagirath-nginx.conf /etc/nginx/sites-available/000-%(project_name)s' % env)
+    
+    # Enable the sites 
+    sudo('ln -fs /etc/nginx/sites-available/000-%(project_name)s /etc/nginx/sites-enabled/' % env)
     sudo('cd /etc/apache2/sites-available/; a2ensite 000-%(project_name)s' % env, pty=True) 
     
 def install_requirements():
@@ -350,3 +356,4 @@ def migrate():
 def restart_webserver():
     "Restart the web server"
     sudo('/etc/init.d/apache2 reload', pty=True)
+    sudo('/etc/init.d/nginx reload', pty=True)
