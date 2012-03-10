@@ -10,7 +10,7 @@ def findpath(path):
     parent_dir = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(parent_dir,path))
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

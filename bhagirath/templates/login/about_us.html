@@ -1,4 +1,29 @@
-{% extends "layout1.html" %}
+
+{% extends "layout.html" %}
+{% block title %}Bhagirath-Knowledge knows no language {% endblock %}
+
+{% block center_panel_content %}
+<div align="left" id="stats">
+	<ul>
+		<li><a><label>{{registered_users}}</label>  Registered users</a></li>
+		<li><a><label>{{translated_sentences}}</label>  Sentences translated</a></li>
+		<li><a><label>{{published_articles}}</label>  Articles translated</a></li>
+	</ul>	
+</div>
+{% if messages %}
+	<div align="center">
+	  	<ul class="messages">
+	  		{% for message in messages %}
+	   			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+					{% autoescape off %}
+						{{ message }}
+					{% endautoescape %} 
+		      	</li>
+		     {% endfor %}
+		</ul>
+	</div>
+{% endif %}
+
 
 {% block other_content %}
 <form action="." name="about_us_form" id="about_us_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
@@ -24,4 +49,25 @@
 		   So <a href="/sign_up/">register</a> immediately and be part of Project Bhagiratha.</p>		
 </div>
 </form>
+{% endblock %}
+{%endblock%}
+
+{% block right_panel_content %}
+<div id="right_panel">
+	<div class="credits">
+	<p class="heading">Contributors : </p>
+	<div class="members">
+	<ul>
+	<li><b>Dr. Venkata Pingali</b>,<br>Scientist at TRDDC<br>
+	<li><b>Dr. Shirish Karande</b>, <br>Scientist at TRDDC
+	<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher at TRDDC
+	</ul>
+	<ul>
+	<li><b>Ms. Ankita Jain</b>, <br>B.Tech (Information Technology), COEP					
+	<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (Computer), COEP
+	<li><b>Ms. Reena Kabra</b>, <br>B.Tech (Computer), COEP		
+	</ul>					
+	</div>
+	</div>			
+</div>
 {% endblock %}
