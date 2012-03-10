@@ -1,8 +1,8 @@
 .about {
 	float: left;
-	margin-left: 20px;
+	margin-left:15px;
 	margin-top: 10px;
-	width: 660px;
+	width: 670px;
 	background:#FDF7EF;
 }
 
@@ -16,8 +16,11 @@
 
 .about .info {
 	margin-left: 5px;
-	font-size:12px;
+	font-size:12.7px;
 	font-family:verdana,sans-serif;
+	text-align:justify;
+	padding:0.3;
+	margin:7px;
 }
 
 .about .stats {
@@ -27,3 +30,28 @@
 	font-family:sans-serif;
 }
 
+.credits {
+	float: left;
+	margin-top: 63px;
+	width: 250px;
+	background:#efefef;
+	
+}
+
+.credits .heading {
+	margin-left: 10px;
+	font-weight:bold;
+	font-size:17px;
+	font-family:times,sans-serif;
+	color:#660033;
+}
+
+.credits .members{
+		   background-color: #efefef; 
+		   color: #333; 
+		   font-family: Georgia,Palatino,'Book Antiqua',serif;
+		   	   
+}
+.credits .members ul{
+			list-style-type: square	;
+			}
