@@ -149,7 +149,8 @@ are valid and all checks are passed it registers the user by creating a record i
                 data = {'form': SignUpForm()}
                 messages.success(request,"Record saved successfully!!!")
                 log.info("User registration successful for %s."%(f_username))
-                return render_to_response('login/home.html',data,context_instance=RequestContext(request))
+                next = "/home/"
+                return HttpResponseRedirect(next) 
             except:
                 log.exception("User registration failed for %s."%(f_username))
                 messages.error(request,"User Registration failed!!!")
@@ -383,7 +384,8 @@ def process_upload(request):
                     ta.save()
                     messages.success(request,"File uploaded sucessfully!!!")
                     log.info("File %s uploaded succesfully"%(newtask.html_doc_name))
-                    return render_to_response('translation/account.html',data,context_instance=RequestContext(request))
+                    next = "/account/"
+                    return HttpResponseRedirect(next) 
             else:
                 messages.error(request,"Please fill in all fields!!!")
                 log.error("All fields not entered correctly while file upload.")
@@ -532,7 +534,8 @@ def translate(request,uid):
         } 
         messages.error(request,"Please login.You're not logged in!!!")
         log.error("%s made request before login."%(user))
-        return render_to_response('login/home.html',data,context_instance=RequestContext(request))
+        next = "/home/"
+        return HttpResponseRedirect(next) 
     return HttpResponse("Error!!!")
 
 def process_translate(request,id,uid):
@@ -754,7 +757,8 @@ def process_account_settings(request,uid):
                     }
                     messages.success(request,"Record saved successfully!!.")
                     log.info("Profile updated successfully for user: %s."%(user))
-                    return render_to_response('translation/account.html',data,context_instance=RequestContext(request))                              
+                    next = "/account/"
+                    return HttpResponseRedirect(next) 
             except:
                 log.exception("Profile Update Failed!!!")
                 traceback.print_exc() 
