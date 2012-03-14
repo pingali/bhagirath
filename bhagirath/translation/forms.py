@@ -175,17 +175,19 @@ class UpdateProfileForm(forms.models.ModelForm):
         evaluator = self.cleaned_data.get('evaluator')
         education_qualification = self.cleaned_data.get('education_qualification')
         domain = self.cleaned_data.get('domain')
-        medium_of_education_during_school = self.cleaned_data.get('medium_of_education_during_school')
-        groups = self.cleaned_data.get('groups') 
-               
+        medium_of_education_during_school = self.cleaned_data.get('medium_of_education_during_school') 
+        groups = self.cleaned_data.get('groups')
+        
         if password == confirm_password:
-            if first_name and last_name and email and username and date_of_birth and gender and district and language and interests and education_qualification and domain and medium_of_education_during_school and groups:
+            if first_name and last_name and email and username and date_of_birth and gender and district and language and interests and education_qualification and domain and medium_of_education_during_school:
                 if not translator:
                     self.cleaned_data.setdefault('translator')
                 if not contributor:
                     self.cleaned_data.setdefault('contributor')
                 if not evaluator:
-                    self.cleaned_data.setdefault('evaluator')        
+                    self.cleaned_data.setdefault('evaluator')
+                if not groups:
+                    self.cleaned_data['groups'] = groups        
         else:
             raise forms.ValidationError("Please confirm password correctly.")
         
@@ -194,5 +196,5 @@ class UpdateProfileForm(forms.models.ModelForm):
             
         if self._get_errors().has_key('password'):
             self._get_errors().pop('password')
-        
+       
         return self.cleaned_data 

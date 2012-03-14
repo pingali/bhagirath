@@ -1,6 +1,13 @@
-
 {% extends "layout.html" %}
-{% block title %}Bhagirath-Knowledge knows no language {% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" href="/static/stylesheets/layout1.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="/static/stylesheets/aboutUs.css" type="text/css" media="screen, projection" />
+	
+	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
+	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
+	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
+{% endblock %}
 
 {% block center_panel_content %}
 <div align="left" id="stats">
@@ -55,25 +62,25 @@
 {% block right_panel_content %}
 <div id="right_panel">
 	<div class="credits">
-	<p class="heading">Contributors : </p>
-	<div class="members">
-	Advisors:
-	<ul>
-	<li><b>Prof. Harrick Vin</b>, <br>Head, SRL, TRDDC</li>
-	<li><b>Dr. Sachin Lodha</b>, <br>Principal Scientist, TRDDC</li>
-	</ul>
-	Team: 
-	<ul>
-	<li><b>Dr. Shirish Karande</b>, <br>Scientist, TRDDC</li>
-	<li><b>Dr. Venkata Pingali</b>,<br>Scientist, TRDDC</li>
-	<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher, TRDDC</li>
-	</ul>
-	<ul>
-	<li><b>Ms. Ankita Jain</b>, <br>B.Tech (IT), COEP</li>
-	<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (CS), COEP</li>
-	<li><b>Ms. Reena Kabra</b>, <br>B.Tech (CS), COEP</li>
-	</ul>					
-	</div>
+		<p class="heading">Contributors : </p>
+		<div class="members">
+			<label>Advisors:</label>
+			<ul>
+			<li><b>Prof. Harrick Vin</b>, <br>Head, SRL, TRDDC</li>
+			<li><b>Dr. Sachin Lodha</b>, <br>Principal Scientist, TRDDC</li>
+			</ul>
+			<label>Team:</label> 
+			<ul>
+			<li><b>Dr. Shirish Karande</b>, <br>Scientist, TRDDC</li>
+			<li><b>Dr. Venkata Pingali</b>,<br>Scientist, TRDDC</li>
+			<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher, TRDDC</li>
+			</ul>
+			<ul>
+			<li><b>Ms. Ankita Jain</b>, <br>B.Tech (IT), COEP</li>
+			<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (CS), COEP</li>
+			<li><b>Ms. Reena Kabra</b>, <br>B.Tech (CS), COEP</li>
+			</ul>					
+		</div>
 	</div>			
 </div>
 {% endblock %}

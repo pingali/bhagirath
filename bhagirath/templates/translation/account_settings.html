@@ -15,7 +15,18 @@
 {% endblock %}
 
 {% block head %}
+	<link rel="stylesheet" href="/static/stylesheets/account_settings.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="/static/stylesheets/signup.css" type="text/css" media="screen, projection" />
+	<link type="text/css" rel="stylesheet" href="/static/stylesheets/ui-autocomplete.css" />
+		
+	<script type="text/javascript" src="/static/scripts/autocomplete.js"></script>
+	<script type="text/javascript" src="/static/scripts/ui-autocomplete.js"></script> 
+	<script src="/static/scripts/django-admin.multiselect.js" type="text/javascript"></script>
+	
+	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
+	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
+	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
 {% endblock %}
 
 {% block script %}
@@ -28,7 +39,7 @@
 		document.settings_form.action = "/account/{{uid}}/settings/done/"
 		return true;
 	}
-	
+		
 	$(function() {
 		var word = $('#g').text().split(',');
 		$("#id_groups").autocomplete({
@@ -37,6 +48,7 @@
 		SelectFilter.init("id_language", "", 0, "/media/");  
 		SelectFilter.init("id_interests", "", 0, "/media/");  
 	});
+	
 </script>
 {% endblock %}
 
@@ -75,7 +87,7 @@
     			{{form.contributor|default_if_none:"off"}}Contributor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     			{{form.evaluator|default_if_none:"off"}}Evaluator</p>
     			<p><label>Language:</label>{{form.language}}</p>
-    			<p><label>Groups:</label><input type="text" id="id_groups" value="{{grps}}"></input></p>
+    			<p><label>Groups:</label>{{form1.groups}}</p>
 				<p>{{html_captcha|safe}}</p>     			
        			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>
        			<div id="g" style="visibility:hidden">{{list}}</div>          

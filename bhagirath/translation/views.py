@@ -193,12 +193,12 @@ def process_sign_in(request):
         s.login_timestamp = datetime.datetime.now()
         s.save()   
         next = "/account/"
-        log.info("%s logged in succesfully."%(user)) 
-        return HttpResponseRedirect(next) 
+        log.info("%s logged in succesfully."%(user))  
     else:
         messages.error(request, "Incorrect username or password!!!")
-        log.error("Login failed for user: %s."%(uname))   
-    return HttpResponseRedirect(reverse('home'))
+        log.error("Login failed for user: %s."%(uname))
+        next = "/sign_in/"
+    return HttpResponseRedirect(next)    
     
 def process_sign_out(request):
     """
@@ -614,23 +614,25 @@ def account_settings(request,uid):
     """
     This function provides user with his account information which is to be updated.
     """
+    
     user = User.objects.get(pk=uid)
     u = UserProfile.objects.get(user = uid)
-    form =  UpdateProfileForm(instance=u)
-    form1 = UpdateProfileForm(instance=user) 
+    
     all_groups = Group.objects.filter(user=user)
     if all_groups:
         groups = all_groups[0].name
     else:
         groups = ""
     l = find()
-   
+    
+    form =  UpdateProfileForm(instance=u)
+    form1 = UpdateProfileForm(instance=user,initial={'groups':groups}) 
+    
     data = {
         'form': form,
         'form1':form1,
         'uid':uid,
         'list':l,
-        'grps':groups,
         'username':request.user
     }
     log.info("%s visited account_settings form."%(user))

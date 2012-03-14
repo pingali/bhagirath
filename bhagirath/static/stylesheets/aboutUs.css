@@ -32,7 +32,7 @@
 
 .credits {
 	float: left;
-	margin-top: 63px;
+	margin-top: 10px;
 	width: 250px;
 	background:#efefef;
 	
@@ -47,11 +47,19 @@
 }
 
 .credits .members{
-		   background-color: #efefef; 
-		   color: #333; 
-		   font-family: Georgia,Palatino,'Book Antiqua',serif;
+	background-color: #efefef; 
+	color: #333; 
+	font-family: Georgia,Palatino,'Book Antiqua',serif;
 		   	   
 }
+
 .credits .members ul{
-			list-style-type: square	;
-			}
+	list-style-type: square	;
+}
+
+.credits .members label {
+	margin-left: 15px;
+	font-size:14px;
+	color:#660033;
+	font-family:sans-serif;
+}
