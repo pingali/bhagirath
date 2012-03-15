@@ -67,7 +67,8 @@ def microtaskParser():
     splitlist = string.split("SEN_END")
     b = Master_Experiment.objects.all()
     for each in splitlist:
-        each1= unicode(each)
+        each1= each
+        
         
         if not(each == '. ' or each == '' or each == ' '):        
                         #if single word translate and replace...google api??

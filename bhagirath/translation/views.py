@@ -159,8 +159,9 @@ are valid and all checks are passed it registers the user by creating a record i
             data = {'form': SignUpForm(request.POST)}
             messages.error(request,form._get_errors().as_text())
             log.error("All fields not entered correctly while user registration.")
-            return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
-
+            next = "/sign_up/"
+            return HttpResponseRedirect(next) 
+        
 def sign_in(request):
     """
     This function loads sign form for user's login. 
@@ -394,7 +395,8 @@ def process_upload(request):
                         'uid':  uid,
                         'username':user,
                 }
-                return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
+                next = "/upload/"
+                return HttpResponseRedirect(next) 
     except:
         log.exception("Upload Failed!!!")
         traceback.print_exc() 
@@ -607,8 +609,9 @@ def process_translate(request,id,uid):
                 traceback.print_exc() 
     else:
         log.error("%s made request before login."%(user))
-        return HttpResponse("Please login.You're not logged in!!!")
-
+        messages.error(request,"Please login.You're not logged in!!!")
+        next = "/home/"
+        return HttpResponseRedirect(next) 
 
 def account_settings(request,uid):
     """
