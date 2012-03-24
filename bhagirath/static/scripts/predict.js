@@ -133,10 +133,15 @@ function ShowSuggest(element) {
 			numLines += parseInt((lines[i].length)/42); //42 characters in one line.
 		}
 		numLines += lines.length;
-	
-		left += (((lines[(lines.length) - 1]).length)%42)*10; //8 pixels horizontoly for one character
-		top += (numLines)*18; //approx height of line in pixels.
-	
+		
+		pos = GetCaretPosition(element);
+		if (pos > 67) {
+			pos = pos/67;
+		}
+		left += 450; //8 pixels horizontoly for one character
+		top += (numLines*10) + 80; //approx height of line in pixels.
+		left += pos;
+		
 		divSuggestBox  = document.createElement('div');
 		divSuggestBox.setAttribute('id',"suggestion"); //Set its ID
 		divSuggestBox.style.left = left + "px";

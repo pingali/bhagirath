@@ -275,12 +275,12 @@
 		function OnSubmit() {
 			x = $('#print').text();
 			$('#cmd').val(x);
-			document.translate_form.action = "/account/translate/7//done/"
+			document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/"
 			return true;
 		}
 		
 		function OnNext() {
-			document.translate_form.action = "/account/translate/7/"
+			document.translate_form.action = "/account/translate/{{uid}}/"
 			return true;
 		}
 	
