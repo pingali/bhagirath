@@ -544,7 +544,7 @@ def process_translate(request,id,uid):
     """
     This function store translation submitted by user.
     """
-    user = request.user    
+    user = request.user
     if user.is_authenticated():
         if request.method == 'POST':
             try:
@@ -601,7 +601,7 @@ def process_translate(request,id,uid):
                         'hindi':"",
                         'username':user,
                     }
-                messages.success(request,"Record saved sucessfully!!!")
+                messages.success(request,"Record saved sucessfully!!! Click on Next for new sentence.")
                 log.info("Microtask (id:%s) saved successfully after translation."%(id))
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             except:
@@ -612,6 +612,8 @@ def process_translate(request,id,uid):
         messages.error(request,"Please login.You're not logged in!!!")
         next = "/home/"
         return HttpResponseRedirect(next) 
+    
+    return HttpResponse("Error!!!")
 
 def account_settings(request,uid):
     """

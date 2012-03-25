@@ -8,16 +8,20 @@
 	<link rel="stylesheet" href="/static/stylesheets/keyboard.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="/static/stylesheets/translate.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/transliterator-autocomplete.css" type="text/css" media="screen, projection" />
-	
+		
 	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
 	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
 	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
 	
 	<script src="/static/scripts/animate.js" type="text/javascript"></script>
     <script src="/static/scripts/keyboard.js" type="text/javascript"></script>
-	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>
+	
 	<script src="/static/scripts/jquery-selection.js" type="text/javascript"></script>
 	<script src="/static/scripts/predict.js" type="text/javascript"></script>
+	
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
 {% endblock %}
 
 {% block script %}
@@ -218,7 +222,7 @@
 	
 				if(word.length>=5)
 				{
-			  		req_url = '/account/translate/7/dictionary/'+word;
+			  		req_url = '/account/translate/{{uid}}/dictionary/'+word;
 			  		$.get(req_url, function(result) {
 			  			var autolist = new Array();
 			  			autolist =  result.split("      ");
@@ -239,9 +243,9 @@
 			});
 		
 			function OnClick(){
-			$(function() {
-				$('#autocorrect').remove();
-			});
+				$(function() {
+					$('#autocorrect').remove();
+				});
 			}
 	
 			$(document).keydown(function(event) {
@@ -272,18 +276,86 @@
 		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 		}
 		
-		function OnSubmit() {
-			x = $('#print').text();
-			$('#cmd').val(x);
-			document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/"
-			return true;
-		}
-		
 		function OnNext() {
 			document.translate_form.action = "/account/translate/{{uid}}/"
 			return true;
 		}
-	
+		
+		$(document).ajaxSend(function(event, xhr, settings) {
+			function getCookie(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = jQuery.trim(cookies[i]);
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			function sameOrigin(url) {
+				// url could be relative or scheme relative or absolute
+				var host = document.location.host; // host + port
+				var protocol = document.location.protocol;
+				var sr_origin = '//' + host;
+				var origin = protocol + sr_origin;
+				// Allow absolute or scheme relative URLs to same origin
+				return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+				(url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+				// or any other URL that isn’t scheme relative or absolute i.e relative.
+				!(/^(\/\/|http:|https:).*/.test(url));
+			}
+			function safeMethod(method) {
+				return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			}
+			if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+				xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+			}
+		});
+		
+		function myconfirm(title,message,target,data) {
+   			$('body').append('<div id="dialog-confirm" title="'+title+'" style="display:none"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 120px 0;"></span>'+message+'</p></div>');
+   			$('#dialog-confirm').dialog({
+      			resizable: false,
+      			modal: true,
+      			show: 'clip',
+      			hide: 'explode',
+      			width: 400,
+      			buttons: {
+                  	"Yes": function() {
+                    	$(this).dialog("close");
+						$.post(target,data,function(data) {
+     						alert("Record saved successfully. Click on Next for new sentence."); 
+   						});
+                  	},
+                  	Cancel: function() {
+                    	 $(this).dialog("close");
+                  	}
+                },
+      			close: function(event, ui) { $('#dialog-confirm').remove(); }
+   			});
+   			return false;
+		}
+		
+		function OnSubmit() {
+			x = $('#print').text();
+			$('#cmd').val(x);
+			var default_translation = ""; 
+			var user_translation = document.getElementById("translated_sentence").value;
+									
+			if (default_translation == user_translation) {
+				data = {cmd:x,translated_sentence:user_translation};
+				return myconfirm('Are you sure?','Do you think this is the perfect translation for this sentence?','/account/translate/{{uid}}/{{curr_id}}/done/',data);
+			}
+			else {
+				document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/";
+				return true;
+			}
+		}
 </script>
 {% endblock %}
 
