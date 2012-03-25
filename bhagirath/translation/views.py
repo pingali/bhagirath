@@ -206,7 +206,9 @@ def process_sign_out(request):
     This function is used to logout user successfully from the site.
     """
     user=request.user
-    s = Session.objects.filter(user=request.user,logout_timestamp=None)[0]
+    s = Session.objects.filter(user=request.user,logout_timestamp=None)
+    cnt = Session.objects.filter(user=request.user,logout_timestamp=None).count()
+    s = s[cnt-1]
     s.logout_timestamp = datetime.datetime.now()
     s.save()
 
@@ -592,18 +594,12 @@ def process_translate(request,id,uid):
                 ta.static_microtask = h.static_microtask
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
-                
-                data = {
-                        'form': TranslateForm(),
-                        'uid': uid,
-                        'curr_id':h.microtask_id,
-                        'english': h.original_sentence,
-                        'hindi':"",
-                        'username':user,
-                    }
-                messages.success(request,"Record saved sucessfully!!! Click on Next for new sentence.")
+             
+                messages.success(request,"Record saved sucessfully!!!")
                 log.info("Microtask (id:%s) saved successfully after translation."%(id))
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
+                next = "/account/translate/" + uid + "/"
+                return HttpResponseRedirect(next) 
+                
             except:
                 log.exception("Save translated microtask failed.")
                 traceback.print_exc() 

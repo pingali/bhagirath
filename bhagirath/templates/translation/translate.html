@@ -317,7 +317,7 @@
 			}
 		});
 		
-		function myconfirm(title,message,target,data) {
+		function myconfirm(title,message,target,data,alert_msg) {
    			$('body').append('<div id="dialog-confirm" title="'+title+'" style="display:none"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 120px 0;"></span>'+message+'</p></div>');
    			$('#dialog-confirm').dialog({
       			resizable: false,
@@ -329,7 +329,8 @@
                   	"Yes": function() {
                     	$(this).dialog("close");
 						$.post(target,data,function(data) {
-     						alert("Record saved successfully. Click on Next for new sentence."); 
+     						alert(alert_msg); 
+     						window.location = "/account/translate/{{uid}}/";
    						});
                   	},
                   	Cancel: function() {
@@ -344,13 +345,17 @@
 		function OnSubmit() {
 			x = $('#print').text();
 			$('#cmd').val(x);
-			var default_translation = ""; 
+			var default_translation = "आ"; 
 			var user_translation = document.getElementById("translated_sentence").value;
-									
-			if (default_translation == user_translation) {
+				
+			if (user_translation == "") {
+				alert("Error!!!You cannot submit blank translation.");
+				return false;
+			} 					
+			else if (default_translation == user_translation) {
 				data = {cmd:x,translated_sentence:user_translation};
-				return myconfirm('Are you sure?','Do you think this is the perfect translation for this sentence?','/account/translate/{{uid}}/{{curr_id}}/done/',data);
-			}
+				return myconfirm('Are you sure?','You are about to submit the same translation. Do you think this is the perfect translation for this sentence?','/account/translate/{{uid}}/{{curr_id}}/done/',data,"Record saved successfully!!!");
+			}			
 			else {
 				document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/";
 				return true;
@@ -396,14 +401,17 @@
 	   			    </div>
    			    </td>
 				<td>
-					<label style=" color: #FF7359">Type in translation here:</label>
+					<label style=" color: #FF7359">Type in translation in Hindi here:</label>
 					<script>CreateCustomHindiTextArea("translated_sentence","",40,10,true);</script>
 					<div class="original_sentence" id="hindi" style="display:none;" onclick = "OnClick();"></div>
 				</td>
 			</tr>	
-			{% if auto_correction %}
-				<tr><td></td><td><label style=" color: #FF7359">Double click on above area each time to enable auto-correction. </label></td></tr>
-			{% endif %}
+			<tr>
+				<td><label style=" color: #FF7359">Hover on the english word above for its meaning in Hindi. </label></td>
+				{% if auto_correction %}
+				<td><label style=" color: #FF7359">Double click on above area each time to enable auto-correction. </label></td>
+				{% endif %}
+			</tr>
 		</table>
 		</div>
 		<table>
