@@ -856,7 +856,15 @@ def dict(h):
     """
     This function returns the hindi meaning of all the words in english sentence.
     """
-    dict = h.original_sentence.split(' ')
+    a = h.original_sentence.split(' ')
+    c = len(a)
+    i = 0
+    dict=[]
+    while i<c:
+        s = a[i]
+        b = s.lower()
+        dict.append(b)
+        i += 1
     count = len(dict)
     k = 0
     word = ''
