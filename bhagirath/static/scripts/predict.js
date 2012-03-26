@@ -337,6 +337,11 @@ function TextAreaKeyDown(event) {
 			document.getElementById(gSuggestions[0]).focus();
 			return false;
 		}
+		else if(keyCode == 32){
+			document.getElementById("translate").removeChild(divSuggestBox);
+			gEscapePressed = 1;
+			this.focus();
+		}
 	}
 }
 
