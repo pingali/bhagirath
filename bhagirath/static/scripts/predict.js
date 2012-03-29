@@ -260,6 +260,9 @@ function SuggestionKeyDown(event) {
 	else if(event) {
 		keyCode = event.which;
 	}
+	
+	alert(keyCode);
+	
 	if(keyCode == 27) { //27 = escape key
 		var divSuggestBox = document.getElementById("suggestion");
 		if(divSuggestBox != null ) {
@@ -276,6 +279,7 @@ function SuggestionKeyDown(event) {
 		Complete(this, document.getElementById("translated_sentence"));
 	}
 	else if(keyCode == 38 || keyCode == 40) { //38=Up Key, 40 = Down Key
+		alert("in");
 		for(i in gSuggestions) {
 			document.getElementById(gSuggestions[i]).setAttribute('class', 'suggestWord');
 		}
@@ -330,17 +334,14 @@ function TextAreaKeyDown(event) {
 			return false;
 		}
 		else if(keyCode == 38){
+			var dx = (gSuggestions.length)-1;
+			var indx = parseInt(dx, 10); 
 			document.getElementById(gSuggestions[(gSuggestions.length)-1]).focus();
 			return false;
 		}
 		else if(keyCode == 40){
 			document.getElementById(gSuggestions[0]).focus();
 			return false;
-		}
-		else if(keyCode == 32){
-			document.getElementById("translate").removeChild(divSuggestBox);
-			gEscapePressed = 1;
-			this.focus();
 		}
 	}
 }

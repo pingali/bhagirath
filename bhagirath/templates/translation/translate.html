@@ -154,27 +154,38 @@
 		}
 		
 		function getWord(find){
-			var dictionary = $('#dict').text().split(',');
-			var lines = ''; //will contain each line in text as array.
-			var word = $('#word').text().split(',');
-			$(function() {
-				for (i = 0; i < word.length; i++) {
-					if (word[i]==find)
-					{
-						mean = dictionary[i].split('--');
-						for (j = 0; j < mean.length; j++) {
-							lines = lines + mean[j] + '</br>';
-						}
-					}
-				}
-			});
-			dict = document.createElement("div");
-			dict.setAttribute('id','meaning');
-			dict.setAttribute('border','0');
-			dict.setAttribute('class','meaning');
-			dict.innerHTML = lines;
-			document.getElementById("original_sentence").appendChild(dict);
-		}
+            var max = 0;
+            var top = 225;
+            var left = 225;
+            var numLines=0;
+            var dictionary = $('#dict').text().split('+');
+            var lines = ''; //will contain each line in text as array.
+            var word = $('#word').text().split('+');
+                        
+            $(function() {
+                for (i = 0; i < word.length; i++) {
+                    if (word[i]==find)
+                    {
+                        mean = dictionary[i].split('--');
+                        for (j = 0; j < mean.length; j++) {
+                            lines = lines + mean[j] + '</br>';
+                            if ((mean[j].length)>max)
+                                max = (mean[j].length);
+                        }
+                    }
+                }               
+            });
+            max = max*9;
+            dict = document.createElement("div");
+            dict.setAttribute('id','meaning');
+            dict.style.width = max + "px";
+            dict.style.top = top + "px";
+            dict.style.left = left + "px";
+            dict.setAttribute('class','meaning');
+            dict.innerHTML = lines;
+            $('.meaning').hide();
+            document.getElementById("suggest").appendChild(dict);
+        }
 		// CODE FOR DICTIONARY MEANING ON MOUSEOVER ENGLISH WORD ENDS HERE	
 		
 		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR STARTS HERE	

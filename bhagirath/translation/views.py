@@ -496,7 +496,7 @@ def translate(request,uid):
                 s.hop_count = s.hop_count + 1
                 s.save()               
                                 
-                (word,hindi_dictionary) = dict(h)               
+                (word,hindi_dictionary) = dict(h.original_sentence)               
                                 
                 data = {
                         'form': TranslateForm(),
@@ -856,12 +856,19 @@ def dict(h):
     """
     This function returns the hindi meaning of all the words in english sentence.
     """
-    a = h.original_sentence.split(' ')
+    a = h.split(' ')
     c = len(a)
     i = 0
+    o = [".",",",";","?","!",":","'",")","]","}",'"']
+    p = ["'","(","[","{",'"']
     dict=[]
-    while i<c:
+    while i < c:
         s = a[i]
+        if s:
+            if s[-1] in o:
+                s = s[:-1]
+            if s[0] in p:
+                s = s[1:]
         b = s.lower()
         dict.append(b)
         i += 1
@@ -871,16 +878,25 @@ def dict(h):
     hindi_dictionary = ''
     meaning = ''
     while k < count:
-        mean = Master_English2Hindi.objects.filter(english_word = dict[k])            
+        mean = Master_English2Hindi.objects.filter(english_word = dict[k])           
         if mean:
             i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
             m = 0
+            meaning = ''
             while m < i:
                 meaning = mean[m].hindi_word + '--' + meaning
                 m += 1
+            me = meaning.split('--')
+            me = list(set(me))
+            i = len(me)
+            m = 1
+            meaning = ''
+            while m < i:
+                meaning = me[m] + '--' + meaning
+                m += 1
             if meaning:
-                hindi_dictionary = hindi_dictionary + ',' + meaning 
-                word = word + ',' + dict[k]    
+                hindi_dictionary = hindi_dictionary + '+' + meaning
+                word = word + '+' + a[k]  
         k += 1
     return (word,hindi_dictionary)
 
