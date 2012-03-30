@@ -164,12 +164,9 @@ def populate_subtask(request):
     try:
         tasks = Task.objects.all().filter(parsed=False)
         i = Task.objects.all().filter(parsed=False).count()
-        print tasks
         j = 0
         while  j < i:
             t = tasks[j]
-            print t
-            print t.parsed
             subtaskParser(t.html_doc_name)
             t.parsed = True
             t.save()

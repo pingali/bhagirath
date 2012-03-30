@@ -317,7 +317,7 @@ def process_upload(request):
     uid = user.pk
     try:
         if request.method == 'POST':
-            if request.POST.getlist('target_language') and request.POST['html_doc_name'] and request.FILES['html_doc_content'] and request.POST['time_to_publish_0'] and request.POST['time_to_publish_1'] and request.POST.getlist('interest_tags'):  
+            if request.POST.getlist('target_language') and request.FILES['html_doc_content'] and request.POST['time_to_publish_0'] and request.POST['time_to_publish_1'] and request.POST.getlist('interest_tags'):  
                 all_language = request.POST.getlist('target_language')
                 for l in all_language:
                     id = int(l)
@@ -325,13 +325,12 @@ def process_upload(request):
                     newtask = Task()
                     if request.POST.has_key('link'):
                         newtask.html_doc_name = request.POST['html_doc_name']
+                        #newtask.html_doc_content = urllib2.urlopen(request.POST['html_doc_name'])
                     else:
                         newtask.html_doc_name = request.FILES['html_doc_content'].name
-                    if request.POST.has_key('file'):
                         newtask.html_doc_content = request.FILES['html_doc_content']
-                    else:
-                        pass
-                        #newtask.html_doc_content = urllib2.urlopen(request.POST['html_doc_name'])
+                    
+                   
                     newtask.upload_timestamp = datetime.datetime.now()
                     upload_ts = newtask.upload_timestamp
                     dt = datetime.datetime.strptime(request.POST['time_to_publish_0'],'%Y-%m-%d')   
@@ -398,7 +397,7 @@ def process_upload(request):
                         'uid':  uid,
                         'username':user,
                 }
-                next = "/upload/"
+                next = "/account/upload/"
                 return HttpResponseRedirect(next) 
     except:
         log.exception("Upload Failed!!!")
