@@ -9,6 +9,8 @@ from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
 from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import traceback
+import os
+
 #############CURRENT ACTIVITY FUNCTIONS###############
 
 def active_users(request):
@@ -167,7 +169,8 @@ def populate_subtask(request):
         j = 0
         while  j < i:
             t = tasks[j]
-            subtaskParser(t.html_doc_name)
+            a = t.html_doc_content
+            subtaskParser(a.path,t.id)
             t.parsed = True
             t.save()
             j +=1
