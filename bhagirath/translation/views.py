@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
+from stemming.porter2 import stem
 import jellyfish
 import traceback
 import logging
@@ -881,6 +882,9 @@ def dict(orig,prev):
                 else:
                     break
         b = s.lower()
+        mean = Master_English2Hindi.objects.filter(english_word = b)
+        if not mean:
+            b = stem(b)
         dict.append(b)
         i += 1
     count = len(dict)
