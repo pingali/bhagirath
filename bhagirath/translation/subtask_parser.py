@@ -3,7 +3,7 @@ import lxml.html
 from lxml.html.clean import Cleaner
 from bhagirath.translation.models import Task,Subtask
 
-def subtaskParser(filename):
+def subtaskParser(filename,id):
     import sys
     if filename is None:
         filename = sys.argv[1:]
@@ -25,7 +25,6 @@ def subtaskParser(filename):
             sys.exit(1)
 
     html_source = f.read()
-   # print html_source.encode('utf-8')
     cleaner = Cleaner(scripts = True, style = True,links = False)
     data =  cleaner.clean_html(html_source)
     obj = lxml.html.fromstring(data)
@@ -33,11 +32,11 @@ def subtaskParser(filename):
     record = cleaned_data
     
     sub = Subtask() 
-    sub.task = Task.objects.get(html_doc_name = file)
+    sub.task = Task.objects.get(pk = id)
     sub.original_data = record
     sub.save()
     
-    print "subtask_done"
+
    
   
  
