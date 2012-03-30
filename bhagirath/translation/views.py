@@ -496,7 +496,7 @@ def translate(request,uid):
                 s.hop_count = s.hop_count + 1
                 s.save()               
                                 
-                (word,hindi_dictionary) = dict(h.original_sentence)               
+                (word,hindi_dictionary) = dict(h.original_sentence,prev_context)               
                                 
                 data = {
                         'form': TranslateForm(),
@@ -852,23 +852,34 @@ def load_context(sid,prev_context_count):
             a += 1
     return prev_context
 
-def dict(h):
+
+def dict(orig,prev):
     """
     This function returns the hindi meaning of all the words in english sentence.
     """
+    h = orig + " " + prev
     a = h.split(' ')
+
     c = len(a)
     i = 0
+    dict=[]
     o = [".",",",";","?","!",":","'",")","]","}",'"']
     p = ["'","(","[","{",'"']
-    dict=[]
+    
     while i < c:
         s = a[i]
         if s:
-            if s[-1] in o:
-                s = s[:-1]
-            if s[0] in p:
-                s = s[1:]
+            print s
+            while s[-1] in o or s[0] in p:
+                if s[-1] in o:
+                    s = s[:-1]
+                if s:
+                    if s[0] in p:
+                        s = s[1:]
+                if s:
+                    pass    
+                else:
+                    break
         b = s.lower()
         dict.append(b)
         i += 1
@@ -878,13 +889,15 @@ def dict(h):
     hindi_dictionary = ''
     meaning = ''
     while k < count:
-        mean = Master_English2Hindi.objects.filter(english_word = dict[k])           
+        mean = Master_English2Hindi.objects.filter(english_word = dict[k])            
+
         if mean:
             i = Master_English2Hindi.objects.filter(english_word = dict[k]).count()
             m = 0
             meaning = ''
             while m < i:
                 meaning = mean[m].hindi_word + '--' + meaning
+
                 m += 1
             me = meaning.split('--')
             me = list(set(me))
@@ -892,11 +905,13 @@ def dict(h):
             m = 1
             meaning = ''
             while m < i:
+
                 meaning = me[m] + '--' + meaning
                 m += 1
             if meaning:
-                hindi_dictionary = hindi_dictionary + '+' + meaning
-                word = word + '+' + a[k]  
+                hindi_dictionary = hindi_dictionary + '+' + meaning 
+                word = word + '+' + a[k]   
+
         k += 1
     return (word,hindi_dictionary)
 

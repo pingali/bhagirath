@@ -168,10 +168,18 @@
                     {
                         mean = dictionary[i].split('--');
                         for (j = 0; j < mean.length; j++) {
-                            lines = lines + mean[j] + '</br>';
-                            if ((mean[j].length)>max)
+                            lines = lines + mean[j];
+                            if ((mean[j].length) > max)
                                 max = (mean[j].length);
+                            k = j+1;
+                            if (k == mean.length){
+                            	lines = lines + '';
+                            }
+                            else {
+                            	lines = lines + '</br>';
+                            }
                         }
+                        break;
                     }
                 }               
             });
