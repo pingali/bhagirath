@@ -870,7 +870,6 @@ def dict(orig,prev):
     while i < c:
         s = a[i]
         if s:
-            print s
             while s[-1] in o or s[0] in p:
                 if s[-1] in o:
                     s = s[:-1]

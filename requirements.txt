@@ -9,5 +9,6 @@ django-admin-tools
 django-basic-feedback
 lxml
 django-simple-captcha
+stemming
 pillow
 git+git://github.com/Tivix/django-cron.git
