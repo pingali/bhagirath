@@ -9,7 +9,6 @@ from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import microtaskParser
 from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import traceback
-import os
 
 #############CURRENT ACTIVITY FUNCTIONS###############
 
@@ -586,3 +585,4 @@ def assign_rank(request):
         data = {'msg':msg}
         messages.error(request, "Update user's reputation score failed.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))   
+
