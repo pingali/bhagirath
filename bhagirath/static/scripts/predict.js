@@ -279,8 +279,7 @@ function SuggestionKeyDown(event) {
 	else if(keyCode == 38 || keyCode == 40) { //38=Up Key, 40 = Down Key
 		for(i in gSuggestions) {
 			document.getElementById(gSuggestions[i]).setAttribute('class', 'suggestWord');
-		}
-		for(i in gSuggestions) {
+		
 			selected++;
 			if(gSuggestions[i] == this.id) {
 				break;
@@ -331,7 +330,7 @@ function TextAreaKeyDown(event) {
 			return false;
 		}
 		else if(keyCode == 38){
-			document.getElementById(gSuggestions[(gSuggestions.length)-2]).focus();
+			document.getElementById(gSuggestions[(gSuggestions.length)-1]).focus();
 			return false;
 		}
 		else if(keyCode == 40){
