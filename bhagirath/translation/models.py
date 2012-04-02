@@ -269,7 +269,7 @@ class OverallLeaderboard(models.Model):
     """
     Stores all users and total points they scored till date
     """
-    username = models.ForeignKey(User,null=False)
+    username = models.ForeignKey(User,null=True)
     overall_points_earned = models.IntegerField(null=True,default=0)
         
     def __unicode__(self):
@@ -279,7 +279,7 @@ class WeeklyLeaderboard(models.Model):
     """
     Stores top 10 week users depending on their weekly score
     """
-    username = models.ForeignKey(User,null=False)
+    username = models.ForeignKey(User,null=True)
     points_earned_this_week = models.IntegerField(null=True,default=0)
     rank = models.ForeignKey(OverallLeaderboard,null=False)
         
@@ -320,7 +320,7 @@ class Session(models.Model):
     It stores the time for which user was active ie
     user id, time he logged in and logged out
     """
-    user = models.ForeignKey(User,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     login_timestamp = models.DateTimeField(null=False)
     logout_timestamp = models.DateTimeField(null=True)
 
@@ -343,7 +343,7 @@ class Task(models.Model):
                                   null = True)
     budget = models.PositiveIntegerField(default=1,null=True)
     dampening_factor = models.FloatField(default=0.5,null=True)
-    user = models.ForeignKey(User,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     age_group_tag = models.ForeignKey(Master_AgeGroup,on_delete=models.PROTECT,null=True)
     geographical_region = models.ForeignKey(Master_GeographicalRegion,on_delete=models.PROTECT,null=True)
     published = models.BooleanField(default=False)
@@ -419,7 +419,7 @@ class UserHistory(models.Model):
     subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
     microtask = models.ForeignKey(Microtask,null=True,on_delete=models.SET_NULL,default=None)
-    user = models.ForeignKey(User,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     original_sentence = models.CharField(max_length=2000,null=False)
     translated_sentence = models.CharField(max_length=2000,null=True)
     assign_timestamp = models.DateTimeField(null=True)
@@ -441,7 +441,7 @@ class TransactionAction(models.Model):
     It can be uploading file, translating sentence, evaluating sentences 
     """
     session = models.ForeignKey(Session,on_delete=models.PROTECT)
-    user = models.ForeignKey(User,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     action = models.ForeignKey(Master_Action,on_delete=models.PROTECT)
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
     subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT,null=True)
