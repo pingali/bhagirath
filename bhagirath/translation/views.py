@@ -413,6 +413,7 @@ def translate(request,uid):
             logged_in_user_id = uid
             i = 0
             c = 0
+            hindi = " "
             # check for sentences previously done by user
             
             available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
@@ -467,6 +468,11 @@ def translate(request,uid):
                     microtask_translation = parent_static_microtask.translated_sentence
                     machine_translation = parent_static_microtask.machine_translation
                 
+                    if microtask_translation == "":
+                        hindi = machine_translation
+                    else:
+                        hindi = microtask_translation  
+                        
                     other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
                     other_translations = ""
 
@@ -475,9 +481,9 @@ def translate(request,uid):
                         if text:
                             other_translations = other_translations + "-> " + text + '\n'
                 else:
-                    microtask_translation = ""
-                    machine_translation = ""
-                    other_translations = ""
+                    microtask_translation = " "
+                    machine_translation = " "
+                    other_translations = " "
                                   
                 #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.  
                 h = UserHistory()
@@ -503,7 +509,7 @@ def translate(request,uid):
                         'curr_id':available_microtask,
                         'uid': uid,
                         'english': h.original_sentence,
-                        'hindi': microtask_translation,
+                        'hindi': hindi,
                         'machine_translation': machine_translation,
                         'other_translations':other_translations,
                         'dictionary': hindi_dictionary,

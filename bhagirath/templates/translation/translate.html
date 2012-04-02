@@ -27,10 +27,8 @@
 <script type="text/javascript">
 
 		$(document).ready(function() {
-			re_url = "http://mymemory.translated.net/api/get?q={{english}}&langpair=en|hin&mt=0";
-			$.get(re_url, function(result) {
-			  			//alert(result);
-			});		
+			var a = "{{hindi}}";
+			document.getElementById("translated_sentence").value = a;
 		});
 
 		// CODE FOR CORRECTION EPISODE STARTS HERE
@@ -371,7 +369,7 @@
 		function OnSubmit() {
 			x = $('#print').text();
 			$('#cmd').val(x);
-			var default_translation = "आ"; 
+			var default_translation = "{{hindi}}"; 
 			var user_translation = document.getElementById("translated_sentence").value;
 				
 			if (user_translation == "") {

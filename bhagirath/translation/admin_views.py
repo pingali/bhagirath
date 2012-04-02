@@ -190,9 +190,9 @@ def populate_staticmicrotask(request):
     try:
         i = 0
         while i < 5:
-            microtaskParser()
+            m = microtaskParser()
             i += 1
-        data = {'msg':''}
+        data = {'msg':m}
         messages.success(request, "StaticMicrotask populated successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
     except: 
