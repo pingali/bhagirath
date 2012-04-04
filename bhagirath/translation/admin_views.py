@@ -193,7 +193,8 @@ def populate_staticmicrotask(request):
             m = microtaskParser()
             i += 1
         data = {'msg':m}
-        messages.success(request, "StaticMicrotask populated successfully.")
+        if m == '':
+            messages.success(request, "StaticMicrotask populated successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
     except: 
         msg = traceback.format_exc()
