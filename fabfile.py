@@ -265,9 +265,9 @@ def setup():
         run('mkdir -p logs; mkdir -p releases; mkdir -p shared; mkdir -p packages;  ' % env, pty=True)
         run('touch logs/error.log; touch logs/django.log; touch logs/access.log ; chmod -R a+w logs; chmod -R a+w shared;  ' % env, pty=True)
         run('cd releases; rm current; ln -fs . current; rm previous; ln -fs . previous;', pty=True)
-    deploy()
+    deploy(first_time=True)
     
-def deploy():
+def deploy(first_time=False):
     """
     Deploy the latest version of the site to the servers, 
     install any required third party modules, 
@@ -281,6 +281,8 @@ def deploy():
     install_requirements()
     symlink_current_release()
     migrate()
+    if (first_time):
+        migrate_during_setup()
     install_site()
     restart_webserver()
     
@@ -351,9 +353,11 @@ def migrate():
     sudo('cd %(path)s; chmod -R a+w shared' % env)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py syncdb --noinput' % env, pty=True)
     run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py migrate' % env, pty=True)
-    run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py loaddata geographical_region_data.json' % env, pty=True)
     sudo('cd %(path)s; chmod -R a+w shared' % env)  # make the db readable
-    
+
+def migrate_during_setup(): 
+   run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py loaddata bhagirath_data' % env, pty=True)
+        
 def restart_webserver():
     "Restart the web server"
     sudo('/etc/init.d/apache2 reload', pty=True)
