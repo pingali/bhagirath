@@ -22,14 +22,14 @@ if settings.DEBUG:
         lambda self, cursor: CursorWrapper(cursor, self)
 #==================================================================
 
-from bhagirath.translation_interface.models import *
+from bhagirath.translation.models import *
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('--show-model',
                     action='store',
                     dest='show_model',
-                    default="Language",
+                    default="Master_Language",
                     help='Show model objects (default=Language)'),
         make_option('--db',
                     action='store',
