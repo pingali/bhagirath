@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     action='store',
                     dest='show_model',
                     default="Master_Language",
-                    help='Show model objects (default=Language)'),
+                    help='Show model objects (default=Master_Language)'),
         make_option('--db',
                     action='store',
                     dest='db',
