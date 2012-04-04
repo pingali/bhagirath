@@ -1,10 +1,10 @@
-django
+django==1.3.1
 django-staticfiles
-south
+south==0.7.3
 simplejson
 python-dateutil==1.5
 django-ajax-selects 
-django-jsonfield 
+django-jsonfield==0.8.0
 django-admin-tools 
 django-basic-feedback
 lxml
