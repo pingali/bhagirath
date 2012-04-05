@@ -468,7 +468,7 @@ def translate(request,uid):
                     microtask_translation = parent_static_microtask.translated_sentence
                     machine_translation = parent_static_microtask.machine_translation
                 
-                    if microtask_translation == "":
+                    if microtask_translation == None:
                         hindi = machine_translation
                     else:
                         hindi = microtask_translation  
