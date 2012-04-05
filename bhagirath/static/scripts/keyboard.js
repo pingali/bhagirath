@@ -13,6 +13,7 @@ var ZWJ=4;
 var ZWNJ=5;
 var language = "Hindi";
 var find = "";
+var lists = new Array();
 
 Symbol[32] = "\u0020"; // space
 Symbol[58] = "\u0903"; // visarg
@@ -1327,7 +1328,8 @@ function getOption(find){
 		$.get(req_url, function(data){
 			var lines = new Array();
 			lines = data.split('      ');	
-		
+			lists = lines;
+			
 			for(i in lines) {
 				numLines += parseInt((lines[i].length)/42); //42 characters in one line.
 				if (parseInt(lines[i].length) > max) {
