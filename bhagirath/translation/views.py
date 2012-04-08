@@ -150,7 +150,7 @@ are valid and all checks are passed it registers the user by creating a record i
                 data = {'form': SignUpForm()}
                 messages.success(request,"Record saved successfully!!!")
                 log.info("User registration successful for %s."%(f_username))
-                next = "/home/"
+                next = "/sign_in/"
                 return HttpResponseRedirect(next) 
             except:
                 log.exception("User registration failed for %s."%(f_username))
