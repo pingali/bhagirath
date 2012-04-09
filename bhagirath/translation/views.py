@@ -966,18 +966,9 @@ def dict(orig,prev):
             m = 0
             meaning = ''
             while m < i:
-                meaning = mean[m].hindi_word + '--' + meaning
-
+                meaning = mean[m].pos + ', ' + mean[m].hindi_word + '--' + meaning
                 m += 1
-            me = meaning.split('--')
-            me = list(set(me))
-            i = len(me)
-            m = 1
-            meaning = ''
-            while m < i:
-
-                meaning = me[m] + '--' + meaning
-                m += 1
+           
             if meaning:
                 hindi_dictionary = hindi_dictionary + '+' + meaning 
                 word = word + '+' + a[k]   
