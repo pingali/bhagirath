@@ -222,7 +222,7 @@
 		$(document).ready(function() {
 			$("#translated_sentence").keyup(function(){
 				changeCursor(this);
-			
+				
 				var gDelimeters = new Array(' ', '\t', '\n', '-', '|', '(', ')', ',');
 				var input = document.getElementById("translated_sentence");
 				var caret = GetCaretPosition(input);
@@ -252,6 +252,10 @@
 			  			autolist =  result.split("      ");
 			  			Predict(autolist);
 					});
+				}
+				else {
+					var divSuggestBox = document.getElementById("suggestion");
+					document.getElementById("translate").removeChild(divSuggestBox);
 				}
 		 	});
 		});
