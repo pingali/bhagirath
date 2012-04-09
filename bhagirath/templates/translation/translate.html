@@ -285,19 +285,24 @@
 		var fontSize = 1;
 		
 		function zoomOut() {
-		fontSize += 0.1;
-		document.getElementById("original_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			if (fontSize<1.5) {
+				fontSize += 0.1;
+			}
+			else {
+				fontSize += 0.0;
+			}
+			document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 		}
 		
 		function zoomIn() {
-		fontSize -= 0.1;
-		document.getElementById("original_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-		document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			fontSize -= 0.1;
+			document.getElementById("original_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 		}
 		
 		function OnNext() {
