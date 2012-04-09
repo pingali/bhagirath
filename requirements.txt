@@ -6,7 +6,6 @@ python-dateutil==1.5
 django-ajax-selects 
 django-jsonfield==0.8.0
 django-admin-tools 
-django-basic-feedback
 lxml
 django-simple-captcha
 stemming

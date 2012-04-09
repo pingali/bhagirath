@@ -204,7 +204,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'django_basic_feedback', 
     'django_cron',
     'captcha',
     'bhagirath.translation',
