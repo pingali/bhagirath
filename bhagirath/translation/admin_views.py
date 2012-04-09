@@ -211,7 +211,7 @@ def populate_microtask(request):
     try:
         i = 0
         static = StaticMicrotask.objects.filter(assigned = 0)
-        while i < 50:
+        while i < 10:
             s = static[i]
             x = Master_Experiment.objects.get(bit_array = s.bit_array)
             z = x.bit_array
