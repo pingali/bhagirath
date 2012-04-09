@@ -2,7 +2,7 @@ from django.template import RequestContext
 from django.contrib import auth, messages
 from django.contrib.auth.models import Group
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect,HttpResponse,HttpResponseNotFound
+from django.http import HttpResponseRedirect,HttpResponse
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from bhagirath.translation.forms import *
@@ -54,8 +54,70 @@ def about_us(request):
             'overall_leaderboard':overall_leaderboard,
             'weekly_leaderboard':weekly_leaderboard,
         }
-    return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))
-          
+    return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))      
+
+def contact_us(request):
+    user = request.user
+    if user.is_authenticated():
+        logged_in = True 
+        uid = user.pk
+        u = User.objects.get(pk=uid)
+        if u.email:
+            email_id = u.email
+            form = ContactUsForm(initial={'email':email_id})
+        else:
+            email_id = ""
+            form = ContactUsForm()
+    else:
+        logged_in = False
+        email_id = ""
+        form = ContactUsForm()
+    data = {'email_id':email_id,'username':user, 'logged_in':logged_in,'form':form }
+    return render_to_response('login/contact_us.html',data,context_instance=RequestContext(request))
+
+def feedback(request):
+    c = request.POST.pop('comment')
+    e = request.POST.pop('email')
+    try:
+        a = Feedback()
+        if request.POST.has_key('feedback_suggestion'):
+            a.type = "suggestion"
+            if c[0] and e[0]:
+                a.comment = c[0]
+                a.email = e[0]
+                a.save()
+                messages.success(request,"Thanks for feedback!!!")
+            else:
+                messages.error(request,"Please enter all fields.")
+                log.error("All fields not entered correctly while user feedback.")
+    
+        elif request.POST.has_key('feedback_collaboration'):
+            a.type = "collaboration"
+            if c[1] and e[1]:
+                a.comment = c[1]
+                a.email = e[1]
+                a.save()
+                messages.success(request,"Thanks for feedback!!!")
+            else:
+                messages.error(request,"Please enter all fields.")
+                log.error("All fields not entered correctly while user feedback.")
+    
+        elif request.POST.has_key('feedback_copyright_issues'):
+            a.type = "copyright_issue"
+            if c[2] and e[2]:
+                a.comment = c[2]
+                a.email = e[2]
+                a.save()
+                messages.success(request,"Thanks for feedback!!!")
+            else:
+                messages.error(request,"Please enter all fields.")
+                log.error("All fields not entered correctly while user feedback.")
+    except:
+        log.exception("Save user feedback failed for %s."%(request.POST['email']))
+        messages.error(request,"User Feedback failed!!!Try again.")   
+    next = "/contact_us/"
+    return HttpResponseRedirect(next) 
+                            
 def sample_translations(request,id):
     """
     This function provides sample translations having english sentence, 

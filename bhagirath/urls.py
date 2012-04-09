@@ -7,15 +7,19 @@ from bhagirath.translation import admin_urls
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('translation.views', 
+urlpatterns = patterns('translation.views',
     #loading home page of bhagirath
     url(r'^home/$','home',name="home"),
     #Displaying about_us template that gives more info about bhagirath
     url(r'^about_us/$','about_us',name="about_us"),
-     #Login form
+    #Login form
     url(r'^sign_in/$','sign_in',name="sign_in"),
     #Displaying sample_translations template that provides few translations
     url(r'^sample_translations/(?P<id>\d+)/$','sample_translations',name="sample_translations"),
+    #Displaying contact_us template 
+    url(r'^contact_us/$','contact_us',name="contact_us"), 
+    #URL's for feedback
+    url(r'^feedback/$','feedback',name="feedback"),
     #Sign up form for registration of new users
     url(r'^sign_up/$','sign_up',name="sign_up"),
     #Get user entered info and store in database when user presses submit button on sign up

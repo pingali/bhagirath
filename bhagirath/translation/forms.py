@@ -104,7 +104,16 @@ class UploadForm(forms.models.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UploadForm, self).__init__(*args, **kwargs)
         self.fields['time_to_publish'].widget = widgets.AdminSplitDateTime()
+
       
+class ContactUsForm(forms.models.ModelForm):
+    """
+    This form class extends Feedback model and is rendered while user feedback (contact_us).
+    """
+    class Meta:
+        model = Feedback
+        exclude = ('type')
+    
 class TranslateForm(forms.models.ModelForm):
     """
     This form class extends UserHistory model and is rendered while translation.

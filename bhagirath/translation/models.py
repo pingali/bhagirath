@@ -249,6 +249,13 @@ class Master_Experiment(models.Model):
     def __unicode__(self):
         return u"%s" % (self.bit_array) 
     
+class Feedback(models.Model):
+    email = models.EmailField()
+    type = models.TextField()
+    comment = models.TextField()
+    
+    def __unicode__(self):
+        return u"%s" % (self.comment)
 
 class StatCounter(models.Model):
     """
