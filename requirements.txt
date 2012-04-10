@@ -7,6 +7,7 @@ django-ajax-selects
 django-jsonfield==0.8.0
 django-admin-tools 
 lxml
+jellyfish
 django-simple-captcha
 stemming
 pillow
