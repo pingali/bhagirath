@@ -218,9 +218,13 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			if (BrowserDetect.browser != "Firefox"  or  BrowserDetect.browser != "Chrome")
-				alert('You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '! ' + '\n' + 'For better results use Firefox or Chrome.');	
-			});
+			if (BrowserDetect.browser == "Firefox" || BrowserDetect.browser == "Chrome") {
+			
+			}
+			else {
+				alert('You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '! ' + '\n' + 'For better results use Firefox or Chrome.');
+			}	
+		});
 	</script>	
 <!-- CODE FOR BROWSER DETECTION ENDS HERE-->
 </html>
