@@ -895,6 +895,7 @@ def autocorrect(request,word):
     
     while i < count:
         try:
+            word = unicode(word)
             a = jellyfish.jaro_distance(word,str(words[i]))
         except:
             log.exception("Something wrong with call")
