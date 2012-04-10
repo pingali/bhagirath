@@ -1,86 +1,97 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<link rel="stylesheet" href="/static/stylesheets/layout1.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/aboutUs.css" type="text/css" media="screen, projection" />
-	
 	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
-	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
-	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
 {% endblock %}
 
-{% block center_panel_content %}
-<div align="left" id="stats">
-	<ul>
-		<li><a><label>{{registered_users}}</label>  Registered users</a></li>
-		<li><a><label>{{translated_sentences}}</label>  Sentences translated</a></li>
-		<li><a><label>{{published_articles}}</label>  Articles translated</a></li>
-	</ul>	
-</div>
-{% if messages %}
-	<div align="center">
-	  	<ul class="messages">
-	  		{% for message in messages %}
-	   			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-					{% autoescape off %}
-						{{ message }}
-					{% endautoescape %} 
-		      	</li>
-		     {% endfor %}
+
+{% block status_message %}
+	{% if logged_in %}
+		<p  class="account">Welcome, <a>{{username}}<a>
+		&nbsp;&nbsp;
+		<a style="color:#707070" href="/logout/"><u>Logout</u></a></li></p>
+	{% else %}
+		<p class="account">Already have an account? <a href="/sign_in/">Sign in</a></p>
+	{% endif %}
+{% endblock %}
+	
+{% block menu %}
+	{% if logged_in %}
+		<ul>
+			<li title="Your home page"><a href="/account/">Home</a></li>
+			<li title="Read about us"><a href="/account/about_us/">About Us</a></li>
+			<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
+			<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
+			<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
+			<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
+			<li title="Blog"><a href="">Blog</a></li>
+			<li title="Contact Us"><a href="/account/contact_us/">Contact Us</a></li>
 		</ul>
-	</div>
-{% endif %}
+	{% else %}
+	<ul>
+		<li title="Home"><a href="/home/">Home</a></li>
+		<li title="Read about us"><a href="/about_us/">About Us</a></li>
+		<li title="Contact Us"><a href="/contact_us/" class="active">Contact Us</a></li>
+		<li title="Create an account"><a href="/sign_up/">SignUp</a></li>
+		<li title="Blog"><a href="">Blog</a></li>	
+	</ul>
+	{% endif %}
+{% endblock %}
 
-
-{% block other_content %}
+{% block center_panel_other_content %}
 <form action="." name="about_us_form" id="about_us_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 {%csrf_token%}
-<div class="about">
-		<p class="heading">About Project Bhagiratha<p>
-		<p class="info">The river Ganga has been of prime significance in Indian mythology. Many Indians believe that the waters of Ganga can provide spiritual upliftment.
-		   The mythological King Bhagiratha is credited to have been responsible for bringing Ganga to earth after deep penance. We too intend to bring upliftment
-		   to many Indians through our project Bhagiratha.</br>However, our belief is that true upliftment of the masses can only occur via education and removal of ignorance.
-		   Given the history of the world, many of today’s knowledge repositories remain inaccessible to large sections of the Indian society (on account of 
-		   insufficient knowhow about English, and often also due to lack of poor communication infrastructure.)</br>In this project, we undertake an ambitious effort to 
-		   translate the Wikipedia into Indian language through a combination of machine learning and crowd sourcing.
-		   It took Bhagiratha 1000 years of hard prayer to bring river Ganga to earth. Now YOU can bring the world’s knowledge to India by just translating 4 sentences every day.
-	    </p>
-	    <p class="stats">
-		   Total number of Wikipedia articles in English = 3.6 million articles</br>
-		   Total number of Wikipedia articles in Hindi = 0.1 million articles</br>
-		   Approximate number of sentences in a Wikipedia article = 100 sentences</br>
-		   Total number of sentences to be translated = 360 million</br>
-		</p>
-		<p class="info">
-		   If 1 million users translate four sentences each every day, we can translate whole of Wikipedia in Hindi in 3 months!
-		   So <a href="/sign_up/">register</a> immediately and be part of Project Bhagiratha.</p>		
-</div>
+<table>
+		<tr>
+			
+			<td align="justify" valign="top">
+				<div class="about">
+						<p class="heading">About Project Bhagiratha<p>
+						<p class="info">The river Ganga has been of prime significance in Indian mythology. Many Indians believe that the waters of Ganga can provide spiritual upliftment.
+						   The mythological King Bhagiratha is credited to have been responsible for bringing Ganga to earth after deep penance. We too intend to bring upliftment
+						   to many Indians through our project Bhagiratha.</br>However, our belief is that true upliftment of the masses can only occur via education and removal of ignorance.
+						   Given the history of the world, many of today’s knowledge repositories remain inaccessible to large sections of the Indian society (on account of 
+						   insufficient knowhow about English, and often also due to lack of poor communication infrastructure.)</br>In this project, we undertake an ambitious effort to 
+						   translate the Wikipedia into Indian language through a combination of machine learning and crowd sourcing.
+						   It took Bhagiratha 1000 years of hard prayer to bring river Ganga to earth. Now YOU can bring the world’s knowledge to India by just translating 4 sentences every day.
+					    </p>
+					    <p class="stats">
+						   Total number of Wikipedia articles in English = 3.6 million articles</br>
+						   Total number of Wikipedia articles in Hindi = 0.1 million articles</br>
+						   Approximate number of sentences in a Wikipedia article = 100 sentences</br>
+						   Total number of sentences to be translated = 360 million</br>
+						</p>
+						<p class="info">
+						   If 1 million users translate four sentences each every day, we can translate whole of Wikipedia in Hindi in 3 months!
+						   So <a href="/sign_up/">register</a> immediately and be part of Project Bhagiratha.</p>		
+				</div>		
+			</td>
+			<td valign="top" style="border-left: 1px dashed #595959">
+				<div id="right_panel">
+					<div class="credits">
+						<p class="heading">Contributors : </p>
+						<div class="members">
+						<label>Advisors:</label>
+						<ul>
+							<li><b>Prof. Harrick Vin</b>, <br>Head, SRL, TRDDC</li>
+							<li><b>Dr. Sachin Lodha</b>, <br>Principal Scientist, TRDDC</li>
+						</ul>
+						<label>Team:</label> 
+						<ul>
+							<li><b>Dr. Shirish Karande</b>, <br>Scientist, TRDDC</li>
+							<li><b>Dr. Venkata Pingali</b>,<br>Scientist, TRDDC</li>
+							<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher, TRDDC</li>
+						</ul>
+						<ul>
+							<li><b>Ms. Ankita Jain</b>, <br>B.Tech (IT), COEP</li>
+							<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (CS), COEP</li>
+							<li><b>Ms. Reena Kabra</b>, <br>B.Tech (CS), COEP</li>
+						</ul>					
+					</div>
+				</div>		
+			</td>
+		</tr>
+	</table>
 </form>
-{% endblock %}
-{%endblock%}
-
-{% block right_panel_content %}
-<div id="right_panel">
-	<div class="credits">
-		<p class="heading">Contributors : </p>
-		<div class="members">
-			<label>Advisors:</label>
-			<ul>
-			<li><b>Prof. Harrick Vin</b>, <br>Head, SRL, TRDDC</li>
-			<li><b>Dr. Sachin Lodha</b>, <br>Principal Scientist, TRDDC</li>
-			</ul>
-			<label>Team:</label> 
-			<ul>
-			<li><b>Dr. Shirish Karande</b>, <br>Scientist, TRDDC</li>
-			<li><b>Dr. Venkata Pingali</b>,<br>Scientist, TRDDC</li>
-			<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher, TRDDC</li>
-			</ul>
-			<ul>
-			<li><b>Ms. Ankita Jain</b>, <br>B.Tech (IT), COEP</li>
-			<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (CS), COEP</li>
-			<li><b>Ms. Reena Kabra</b>, <br>B.Tech (CS), COEP</li>
-			</ul>					
-		</div>
-	</div>			
-</div>
 {% endblock %}

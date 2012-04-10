@@ -1,23 +1,148 @@
 button.change_password{
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 13px;
-    
+    color: #ffffff;
+    font-size: 1em;
+    background-color: #576272;
     font-weight: bold;
-    border-style: solid;
-    border-width: 1px;
     cursor: pointer;
     position:relative;
     left:6px;
 }
 
-button.change_password:hover{
-    color: #245194;
-    font-variant: small-caps;
-    font-size: 13px;
-    
-    font-weight: bold;
-    border-style: solid;
-    border-width: 1px;
-    cursor: pointer;
+#signup .sign_up {
+	float: left;
+	margin: 5px 20px 20px 10px;
+	width: 650px;
 }
+
+#signup .sign_up h2 {
+	padding-bottom: 10px;
+	padding-left:20px;
+	font-weight: normal;
+	font-size: 25px;
+	color:#595959;
+}
+
+#signup { 
+	padding: 20px 0 20px 0; 
+}
+
+#signup p {
+	margin: 0 10px 10px 20px;
+	font-weight: normal;
+	font-size: 18px;
+	color: #595959;
+}
+
+#signup label {
+	margin: 0 0 5px 0;
+	display: block;
+}
+
+.interest {
+	width:500px;
+	height:100px;
+	border-style: solid;
+	border-width: 2px;
+}
+
+
+.selector {
+    width: 580px;
+    float: left;
+}
+
+.selector select {
+    width: 240px;
+    height: 7.2em;
+}
+
+.selector-available, .selector-chosen {
+    float: left;
+    width: 240px;
+    text-align: left;
+    margin-bottom: 2px;
+}
+
+.selector-available h2, .selector-chosen h2 {
+    border: 1px solid #ccc;
+}
+
+.selector .selector-available h2 {
+    color: #666;
+}
+
+.selector .selector-filter {
+    background: white;
+    border: 1px solid #ccc;
+    border-width: 0 1px;
+    padding: 3px;
+    color: #999;
+    font-size: 18px;
+    margin: 0;
+    text-align: left;
+}
+
+.selector .selector-chosen .selector-filter {
+    padding: 2px 2px;
+    width: 210px;
+}
+
+.selector .selector-available input {
+    width: 185px;
+}
+
+.selector ul.selector-chooser {
+    float: left;
+    width: 22px;
+    height: 50px;
+    margin: 8em 3px 0 3px;
+    padding: 0;
+}
+
+.selector-chooser li {
+    margin: 0;
+    padding: 3px;
+    list-style-type: none;
+}
+
+.selector select {
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+.selector-add, .selector-remove {
+    width: 16px;
+    height: 16px;
+    display: block;
+    text-indent: -3000px;
+}
+
+.selector-add {
+    margin-bottom: 2px;
+}
+
+a.selector-chooseall, a.selector-clearall {
+    display: block;
+    width: 6em;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: bold;
+    color: #666;
+    padding: 3px 0 3px 18px;
+}
+
+a.selector-chooseall:hover, a.selector-clearall:hover {
+    color: #036;
+}
+
+button.signup{
+    color: #ffffff;
+    font-size: 1em;
+    background-color: #576272;
+    font-weight: bold;
+    cursor: pointer;
+    position:relative;
+    left:20px;
+}
+

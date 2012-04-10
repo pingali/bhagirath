@@ -6,9 +6,7 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>	
 	
-	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
-	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
-	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
+	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block script %}
@@ -27,7 +25,9 @@
 
 {% block status_message %}
 	{% if logged_in %}
-		<p class="account">Welcome, <a>{{username}}.</a></p>
+		<p  class="account">Welcome, <a>{{username}}<a>
+		&nbsp;&nbsp;
+		<a style="color:#707070" href="/logout/"><u>Logout</u></a></li></p>
 	{% else %}
 		<p class="account">Already have an account? <a href="/sign_in/">Sign in</a></p>
 	{% endif %}
@@ -37,19 +37,21 @@
 	{% if logged_in %}
 		<ul>
 			<li title="Your home page"><a href="/account/">Home</a></li>
+			<li title="Read about us"><a href="/account/about_us/">About Us</a></li>
 			<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
 			<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
 			<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
 			<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
-			<li title="Contact Us"><a href="/contact_us/">Contact Us</a></li>
-			<li title="Logout"><a href="/logout/">Logout</a></li>
+			<li title="Blog"><a href="">Blog</a></li>
+			<li title="Contact Us"><a href="/account/contact_us/">Contact Us</a></li>
 		</ul>
 	{% else %}
 	<ul>
 		<li title="Home"><a href="/home/">Home</a></li>
-		<li title="Create an account"><a href="/sign_up/">SignUp</a></li>
 		<li title="Read about us"><a href="/about_us/">About Us</a></li>
-		<li title="Contact Us"><a href="/contact_us/">Contact Us</a></li>		
+		<li title="Contact Us"><a href="/contact_us/" class="active">Contact Us</a></li>
+		<li title="Create an account"><a href="/sign_up/">SignUp</a></li>
+		<li title="Blog"><a href="">Blog</a></li>	
 	</ul>
 	{% endif %}
 {% endblock %}
@@ -65,9 +67,8 @@
 	<li>Point out copyright issues pertaining to content on the site. </li></br>
 	</ul>
 </label>
-<div style="margin-left:20px;">
+
 	<div class="demo">
-		<div id="tabs">
 			<ul>
 				<li><a href="#suggestions_tab">Suggestions</a></li>
 				<li><a href="#collaboration_tab">Collaboration</a></li>
@@ -90,6 +91,6 @@
 			</div>
 		</div>							
 	</div>
-</div>
+
 </form>
 {% endblock %}

@@ -12,12 +12,14 @@ urlpatterns = patterns('translation.views',
     url(r'^home/$','home',name="home"),
     #Displaying about_us template that gives more info about bhagirath
     url(r'^about_us/$','about_us',name="about_us"),
+    url(r'^account/about_us/$','about_us',name="about_us"),
     #Login form
     url(r'^sign_in/$','sign_in',name="sign_in"),
     #Displaying sample_translations template that provides few translations
     url(r'^sample_translations/(?P<id>\d+)/$','sample_translations',name="sample_translations"),
     #Displaying contact_us template 
     url(r'^contact_us/$','contact_us',name="contact_us"), 
+    url(r'^account/contact_us/$','contact_us',name="contact_us"), 
     #URL's for feedback
     url(r'^feedback/$','feedback',name="feedback"),
     #Sign up form for registration of new users

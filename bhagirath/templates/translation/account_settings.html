@@ -2,32 +2,32 @@
 {% block menu %}
 	<ul>
 		<li title="Your home page"><a href="/account/">Home</a></li>
+		<li title="Read about us"><a href="/account/about_us/">About Us</a></li>
 		<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
 		<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
 		<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
-		<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
-		<li title="Contact Us"><a href="/contact_us/">Contact Us</a></li>
-		<li title="Logout"><a href="/logout/">Logout</a></li>
+		<li title="Change your account settings"><a href="/account/{{uid}}/settings/" class="active">Profile</a></li>
+		<li title="Blog"><a href="">Blog</a></li>
+		<li title="Contact Us"><a href="/account/contact_us/">Contact Us</a></li>
 	</ul>
 {% endblock %}
 
 {% block status_message %}
-	<p class="account">Welcome, <a>{{username}}.</a></p>
+	<p  class="account">Welcome, <a>{{username}}<a>
+	&nbsp;&nbsp;
+	<a style="color:#707070" href="/logout/"><u>Logout</u></a></p>
 {% endblock %}
 
 {% block head %}
 	<link rel="stylesheet" href="/static/stylesheets/account_settings.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/django-admin-widgets.css" type="text/css" media="screen, projection" />
-	<link rel="stylesheet" href="/static/stylesheets/signup.css" type="text/css" media="screen, projection" />
 	<link type="text/css" rel="stylesheet" href="/static/stylesheets/ui-autocomplete.css" />
 		
 	<script type="text/javascript" src="/static/scripts/autocomplete.js"></script>
 	<script type="text/javascript" src="/static/scripts/ui-autocomplete.js"></script> 
 	<script src="/static/scripts/django-admin.multiselect.js" type="text/javascript"></script>
 	
-	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
-	<link rel="stylesheet" type="text/css" href="/static/stylesheets/feedback.css" />
-	<script type="text/javascript" src="/static/scripts/feedback.js"></script>
+	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block script %}
@@ -58,8 +58,7 @@
 {% csrf_token %}
 <div id="signup">
 	<div class="sign_up">
-		<h2>Update your Profile</h2>
-			<fieldset>
+		<h2>&nbsp;&nbsp;Update your Profile</h2>
 				<p><label>Username:</label>{{form1.username}}</p>
 				<p><label>First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -92,7 +91,6 @@
 				<p>{{html_captcha|safe}}</p>     			
        			<button name="sign_up" id="sign_up" class="signup" onclick="OnUpdate();">Update Account</button>
        			<div id="g" style="visibility:hidden">{{list}}</div>          
-			</fieldset>
 	</div>
 </div>
 </form>

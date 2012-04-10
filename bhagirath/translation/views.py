@@ -43,16 +43,21 @@ def about_us(request):
     """
     This function gives detailed information about bhagirath along with statistics and leaderboards.
     """
-    (u,a,s) = stats()
-    overall_leaderboard = get_overall_leaderboard()
-    weekly_leaderboard = get_weekly_leaderboard()
-    data = {
+    user = request.user
+    if user.is_authenticated():
+        logged_in = True 
+        uid = user.pk
+        data = {
             'form': LoginForm(),
-            'registered_users':u,
-            'translated_sentences':s,
-            'published_articles':a,
-            'overall_leaderboard':overall_leaderboard,
-            'weekly_leaderboard':weekly_leaderboard,
+            'username':user,
+            'logged_in':logged_in,
+            'uid':uid 
+        }
+    else:
+        logged_in = False
+        data = {
+            'form': LoginForm(),
+            'logged_in':logged_in
         }
     return render_to_response('login/about_us.html',data,context_instance=RequestContext(request))      
 
@@ -68,11 +73,12 @@ def contact_us(request):
         else:
             email_id = ""
             form = ContactUsForm()
+        data = {'email_id':email_id,'username':user, 'logged_in':logged_in,'form':form,'uid':uid }
     else:
         logged_in = False
         email_id = ""
         form = ContactUsForm()
-    data = {'email_id':email_id,'username':user, 'logged_in':logged_in,'form':form }
+        data = {'email_id':email_id,'username':user, 'logged_in':logged_in,'form':form }
     return render_to_response('login/contact_us.html',data,context_instance=RequestContext(request))
 
 def feedback(request):

@@ -1,9 +1,7 @@
 .about {
 	float: left;
-	margin-left:15px;
 	margin-top: 10px;
 	width: 670px;
-	background:#FDF7EF;
 }
 
 .about .heading {
@@ -11,11 +9,11 @@
 	font-weight:bold;
 	font-size:18px;
 	font-family:times,sans-serif;
-	color:#660033;
+	color:#d7caac;
 }
 
 .about .info {
-	margin-left: 5px;
+	color:#989898;
 	font-size:12.7px;
 	font-family:verdana,sans-serif;
 	text-align:justify;
@@ -26,29 +24,25 @@
 .about .stats {
 	margin-left: 5px;
 	font-size:12px;
-	color:#660033;
+	color:#f7ccab;
 	font-family:sans-serif;
 }
 
 .credits {
 	float: left;
-	margin-top: 10px;
 	width: 250px;
-	background:#efefef;
-	
 }
 
 .credits .heading {
-	margin-left: 10px;
+	margin-left: 20px;
 	font-weight:bold;
 	font-size:17px;
 	font-family:times,sans-serif;
-	color:#660033;
+	color:#d7caac;
 }
 
 .credits .members{
-	background-color: #efefef; 
-	color: #333; 
+	color: #989898; 
 	font-family: Georgia,Palatino,'Book Antiqua',serif;
 		   	   
 }
@@ -58,8 +52,8 @@
 }
 
 .credits .members label {
-	margin-left: 15px;
-	font-size:14px;
-	color:#660033;
+	margin-left: 20px;
+	font-size:13px;
+	color:#f7ccab;
 	font-family:sans-serif;
 }

@@ -1,23 +1,20 @@
 #account .acc {
 	float: left;
-	margin-left: 20px;
 	margin-top: 10px;
+	margin-left: 20px;
 	width: 660px;
-	background:#FDF7EF;
 }
 
 #account .acc .heading {
-	margin-left: 10px;
 	font-weight:bold;
 	font-size:20px;
 	font-family:times,sans-serif;
-	color:#660033;
+	color:#404040;
 }
 
 #account .acc .stats {
-	margin-left: 5px;
 	font-size:15px;
-	color:#660033;
+	color:#3e3535;
 	font-family:sans-serif;
 }
 
