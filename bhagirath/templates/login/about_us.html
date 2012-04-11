@@ -1,8 +1,7 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<link rel="stylesheet" href="/static/stylesheets/aboutUs.css" type="text/css" media="screen, projection" />
-	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
+	<link rel="stylesheet" href="/static/stylesheets/aboutUs.css" type="text/css" media="screen, projection" />	
 {% endblock %}
 
 
@@ -19,7 +18,7 @@
 	{% if logged_in %}
 		<ul>
 			<li title="Your home page"><a href="/account/">Home</a></li>
-			<li title="Read about us"><a href="/account/about_us/">About Us</a></li>
+			<li title="Read about us"><a href="/account/about_us/">Team</a></li>
 			<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
 			<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
 			<li title="Contact Us"><a href="/account/contact_us/">Contact Us</a></li>
@@ -27,8 +26,8 @@
 	{% else %}
 	<ul>
 		<li title="Home"><a href="/home/">Home</a></li>
-		<li title="Read about us"><a href="/about_us/">About Us</a></li>
-		<li title="Contact Us"><a href="/contact_us/" class="active">Contact Us</a></li>
+		<li title="Read about us"><a href="/about_us/" class="active">Team</a></li>
+		<li title="Contact Us"><a href="/contact_us/">Contact Us</a></li>
 		<li title="Create an account"><a href="/sign_up/">SignUp</a></li>
 	</ul>
 	{% endif %}
@@ -36,57 +35,50 @@
 
 {% block center_panel_other_content %}
 <form action="." name="about_us_form" id="about_us_form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-{%csrf_token%}
-<table>
-		<tr>
-			
-			<td align="justify" valign="top">
-				<div class="about">
-						<p class="heading">About Project Bhagiratha<p>
-						<p class="info">The river Ganga has been of prime significance in Indian mythology. Many Indians believe that the waters of Ganga can provide spiritual upliftment.
-						   The mythological King Bhagiratha is credited to have been responsible for bringing Ganga to earth after deep penance. We too intend to bring upliftment
-						   to many Indians through our project Bhagiratha.</br>However, our belief is that true upliftment of the masses can only occur via education and removal of ignorance.
-						   Given the history of the world, many of today’s knowledge repositories remain inaccessible to large sections of the Indian society (on account of 
-						   insufficient knowhow about English, and often also due to lack of poor communication infrastructure.)</br>In this project, we undertake an ambitious effort to 
-						   translate the Wikipedia into Indian language through a combination of machine learning and crowd sourcing.
-						   It took Bhagiratha 1000 years of hard prayer to bring river Ganga to earth. Now YOU can bring the world’s knowledge to India by just translating 4 sentences every day.
-					    </p>
-					    <p class="stats">
-						   Total number of Wikipedia articles in English = 3.6 million articles</br>
-						   Total number of Wikipedia articles in Hindi = 0.1 million articles</br>
-						   Approximate number of sentences in a Wikipedia article = 100 sentences</br>
-						   Total number of sentences to be translated = 360 million</br>
-						</p>
-						<p class="info">
-						   If 1 million users translate four sentences each every day, we can translate whole of Wikipedia in Hindi in 3 months!
-						   So <a href="/sign_up/">register</a> immediately and be part of Project Bhagiratha.</p>		
-				</div>		
-			</td>
-			<td valign="top" style="border-left: 1px dashed #595959">
-				<div id="right_panel">
-					<div class="credits">
-						<p class="heading">Contributors : </p>
-						<div class="members">
-						<label>Advisors:</label>
-						<ul>
-							<li><b>Prof. Harrick Vin</b>, <br>Head, SRL, TRDDC</li>
-							<li><b>Dr. Sachin Lodha</b>, <br>Principal Scientist, TRDDC</li>
-						</ul>
-						<label>Team:</label> 
-						<ul>
-							<li><b>Dr. Shirish Karande</b>, <br>Scientist, TRDDC</li>
-							<li><b>Dr. Venkata Pingali</b>,<br>Scientist, TRDDC</li>
-							<li><b>Mr. Srinivasan Iyengar</b>, <br>Researcher, TRDDC</li>
-						</ul>
-						<ul>
-							<li><b>Ms. Ankita Jain</b>, <br>B.Tech (IT), COEP</li>
-							<li><b>Ms. Bhagyashree Gujar</b>,<br> B.Tech (CS), COEP</li>
-							<li><b>Ms. Reena Kabra</b>, <br>B.Tech (CS), COEP</li>
-						</ul>					
-					</div>
-				</div>		
-			</td>
-		</tr>
-	</table>
+{%csrf_token%}<div class="about">
+		<p class="heading">Team -</p>
+		<p class="info">Bhagiratha is an endeavour at leveraging the power of humans computation to translate knowledge bases in English to Indic languages. 
+		The goal of the project is to dramatically increase available content in Indic languages for education, entertainment, and other purposes. Deployment 
+		of our solution- translate4india.com, is currently in beta testing phase.</p>
+		<p class="heading">People involved -</p>
+		<p class="name">Ankita Jain</p>
+		<p class="info">Ankita is Final year Bachelors of Technology (Information technology) student at College of Engineering, Pune. 
+		Programming is her passion. When she is not programming, she is involved in doing creative and artistic works related to arts
+		and crafts. In her free time she likes listening to music. She is keen on pursuing higher education in Computer Science. And 
+		wants to utilize her talents, knowledge, expertise and proficiency to work in the most challenging position with an organization 
+		that provides opportunities to learn and contribute. </p>
+		<p class="name">Bhagyashree Gujar</p>
+		<p class="info">A design enthusiast, Bhagyashree Gujar, a Computer Engineering graduate from College of Engineering, Pune, excels at everything ranging from
+		programming to designing. In her relentless pursuit of integrating aesthetics with technology, she still finds time for extracurricular activities like basketball and
+		dancing. Her managing skills and work done as the Design Head for MindSpark'11 and College Magazine'11 has been a constant source of inspiration for others. </p>
+		<p class="name">Reena Kabra</p>
+		<p class="info">A Computer Engineering graduate from College of Engineering, Pune, Reena Kabra is extremely passionate about programming. In her leisure time she 
+		enjoys reading and listening to music. Apart from academics she always finds time for creative art and also affiliates herself with the technical festival managing team. 
+		When it comes to new projects, her thirst of keeping pace with the new technologies is what never ceases to motivate her.  </p>
+		<p class="name">Sachin Lodha</p>
+		<p class="info">Sachin is the founder head of the Applied Algorithms and Optimization (AAO) Group in TCS Innovation Labs - TRDDC. The groups current focus includes 
+		problems pertaining to data privacy, data center transformation and workforce management. Their researches have generated many patents, peer reviewed publications, 
+		and manifested into useful products that are acting as strong differentiators and off-shoring enablers for TCS business. 
+		Sachin graduated from the Indian Institute of Technology, Bombay, India, in 1996 and received his Ph.D. in Computer Science from Rutgers University, New Jersey, USA, 
+		in 2002. He is also a recreational math enthusiast.</p>
+		<p class="name">Shirish Karande</p>
+		<p class="info">Shirish wanted to be a cricket scorer but landed up  getting a Ph.D. instead.  His interests can be broadly described as  applications of maching 
+		learning and information sciences.  He is currently involved in a couple of  India centric human computation and augmented reality initiatives. Previously, he has
+		contributed to the areas of signal/image processing, wireless networks and energy management.
+		He got his Ph.D. from Michigan State University and has since worked at University of California- Santa Cruz, Philips Research and TRDDC. He hopes to someday get back to the
+		world of academia to work some combination of AI and computational biology.</p>
+		<p class="name">Venkata Pingali</p>
+		<p class="info">Venkata is a scientist at TRDDC. His primary background is in Internet protocols and architecture. His emerging technical interests include bigdata and human 
+		computation. Outside work he is mainly interested in the intersection of politics, economics, and history. He has spent several years volunteering for a global education non-profit,
+		which made him acutely aware of the need for quality educational content in local languages, and motivated his participation in Bhagiratha. </p>
+		<p class="name">Srinivasan Iyengar</p>
+		<p class="info">Srinivasan is a researcher at Tata Research Development and Design Centre. His current areas of interest include machine learning and crowd sourcing.
+		 Earlier he was active in developing products and creating valuable IPR in the data privacy space. When not caught in deadlines, he likes to develop theories with not-so-
+		 concrete proofs on human behavior, luck and hard word. His hobbies include star gazing (He can name more than 100 constellations!), reading (only interesting stuff. No
+		 special preference for any genre) and spending time in coffee shops thinking on the next big idea :) He completed his Bachelor's degree in Technology (Computer Science)
+		 from College of Engineering, Pune.</p>
+		<p class="name">Contributors</p>
+		<p class="info">The Bhagiratha team would like to thank - Sachin Lodha (Principal Advisor), Niranjan Pedanekar (Logo Designer), Stephen Lee (cloud setup and 		   	deployment), Vijayanand Banahatti (constant encouragement), Harrick Vin (Mentor), Joel Joseph, Rahul Kelkar, Girish Palshikar, Athiappan G. </p>
+	</div>
 </form>
 {% endblock %}
