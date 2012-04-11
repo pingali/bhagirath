@@ -85,3 +85,43 @@ def microtaskParser():
             msg = "No subtask available for parsing"
             
         return msg 
+
+def tempMicrotaskParser():
+        data = ''
+        results = Subtask.objects.filter(assigned = 0)
+        print results
+        if results:
+            subtask = results[0]#subtask id
+            subtask_id = subtask.id
+            sub = Subtask.objects.get(id = subtask_id)
+        
+            task_id = sub.task_id
+            task = Task.objects.get(id = task_id)
+            sub.assigned = 1 
+            
+            k = 0
+            b = Master_Experiment.objects.get(pk=4)
+             
+            data = str(sub.original_data)
+            lst = data.split("\r\n\r\n")
+            
+            td = str(sub.translated_data)
+            itd = td.split("\n\n")
+ 
+            for each in lst:
+                micro = StaticMicrotask()  
+                micro.subtask = subtask
+                micro.task = task
+                micro.original_sentence = each
+                micro.bit_array = b
+                micro.save()
+                micro.machine_translation = itd[k]
+                micro.save()
+                k += 1
+                                 
+            sub.save()
+            msg = ""
+        else:
+            msg = "No subtask available for parsing"
+            
+        return msg 

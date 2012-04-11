@@ -6,7 +6,7 @@ from django.contrib.auth.models import Permission
 from bhagirath.translation.models import Session as BhagirathSession
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
-from bhagirath.translation.microtask_parser import microtaskParser
+from bhagirath.translation.microtask_parser import tempMicrotaskParser
 from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import traceback
 
@@ -190,7 +190,7 @@ def populate_staticmicrotask(request):
     try:
         i = 0
         while i < 5:
-            m = microtaskParser()
+            m = tempMicrotaskParser()
             i += 1
         data = {'msg':m}
         if m == '':
