@@ -962,19 +962,13 @@ def autocomplete(request,uid,prefix_val):
 
 def autocorrect(request,word):
     auto = []
-    i = 0
-    words = list(Master_HindiWords.objects.all())
-    count = Master_HindiWords.objects.all().count()
-    
-    while i < count:
-        try:
-            
-            a = jellyfish.jaro_distance(word,str(words[i]))
-        except:
-            log.exception("Something wrong with call")
+    prefix_val = word[:5]
+    li = Master_HindiWords.objects.filter(original__startswith=prefix_val).values()
+    for i in li:
+        l = i['original']
+        a = jellyfish.jaro_distance(word,str(l))
         if a > 0.85:
-            auto.append(str(words[i]))
-        i += 1
+            auto.append(l)
     return HttpResponse(auto)
 
 def load_context(sid,prev_context_count):

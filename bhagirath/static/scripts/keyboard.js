@@ -1336,17 +1336,13 @@ function OnmouseOver(){
 		document.getElementById('translated_sentence').style.display = 'none';
 		document.getElementById('hindi').style.display = 'block';
 		$(this).find("span").attr("id", "hin").mouseover( function() {
-	        $(this).addClass('hlight');
-	        $('#autocorrect').remove();
+	       find = $(this).text();
+	       getOption(find); 
 	    });
 	    $(this).find("span").attr("id", "hin").mouseout( function() {
 	        $(this).removeClass('hlight');
 	     
 	    });
-	     $("span").click(function(e){
-		 	find = $(this).text();
-	        getOption(find);      	
-  		});
 	});
 }
 
@@ -1496,6 +1492,7 @@ function CompleteAutoCorrect(id, source) {
 		});
 	$('#hindi').html(text1);
 	$('textarea#translated_sentence').val(text);
+	$('#autocorrect').remove();
 	OnmouseOver(this);
 }
 
