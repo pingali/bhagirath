@@ -209,7 +209,7 @@ are valid and all checks are passed it registers the user by creating a record i
                 p.save()
                                 
                 data = {'form': SignUpForm()}
-                messages.success(request,"Record saved successfully!!!")
+                messages.success(request,"Registered successfully!!!")
                 log.info("User registration successful for %s."%(f_username))
                 next = "/sign_in/"
                 return HttpResponseRedirect(next) 
@@ -278,7 +278,6 @@ def process_sign_out(request):
     except:
         pass
     
-    messages.success(request,"Thanks for spending some quality time with the Website today.")
     log.info("%s logged out succesfully."%(user))
     next = "/home/"
     return HttpResponseRedirect(next) 
@@ -733,7 +732,7 @@ def process_translate(request,id,uid):
                 log.info("Make entry into TransactionAction ENDS-") 
                 log.info(datetime.datetime.now())
                 
-                messages.success(request,"Record saved sucessfully!!!")
+                messages.success(request,"Translation saved sucessfully!!!")
                 log.info("Microtask (id:%s) saved successfully after translation."%(id))
                 next = "/account/translate/" + uid + "/"
                 
@@ -900,7 +899,7 @@ def process_account_settings(request,uid):
                         'translated_sentences':s,
                         'published_articles':a
                     }
-                    messages.success(request,"Record saved successfully!!.")
+                    messages.success(request,"Profile updated successfully!!.")
                     log.info("Profile updated successfully for user: %s."%(user))
                     next = "/account/"
                     return HttpResponseRedirect(next) 
