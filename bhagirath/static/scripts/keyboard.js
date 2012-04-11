@@ -294,12 +294,10 @@ function GetVowelCombination(key0, key1)
 function GetConsonantCombination(key0, key1)
 {
 	var i=0;
-	//  alert(ConsonantCombination[i][0]+":"+ConsonantCombination[i][1]);
 	for(i=0;i<ConsonantCombination.length;i++)
 	{
 		if((ConsonantCombination[i][0] == key0) && (ConsonantCombination[i][1]==key1))
 		{
-			// alert(key0+":"+key1);
 			return ConsonantCombination[i][2];
 		}	
 	}
@@ -384,8 +382,12 @@ function displayRelatedWords(keyChar,awTableId)
 	case 'L':
 		activeWord+=keyChar;
 	}
-	displayInDiv(activeWord,awTableId);
-
+	if(keyChar==" ") {
+      resetTableDiv(awTableId);
+    }
+    else {
+		displayInDiv(activeWord,awTableId);
+	}
 }
 
 function displayInDiv(aw,awTableId)
@@ -395,7 +397,7 @@ function displayInDiv(aw,awTableId)
 	{
 		return; 
 	}
-	//divPane.innerHTML="";
+
 	switch(aw)
 	{
 	case 'k':
@@ -797,13 +799,32 @@ function positionChange(evt,hinKB)
 		}
 	}	
 }
+
+var charArray = new Array();
+
+function resetTableDiv(tableId)
+{
+    var tableDiv = document.getElementById(tableId);
+    if(tableDiv.rows!=null)
+		{
+			if(tableDiv.rows.length!=null)
+			{
+				if(tableDiv.rows.length >=2)
+				{
+					tableDiv.deleteRow(1);
+					tableDiv.deleteRow(0); 
+				}
+			} 
+		}
+}
+
 function change(evt,hinKB)
 {      
 	var txtarea=document.getElementById(hinKB.elemID);
 	var displace = 0;
 	var text='';
 	var previousValue = "";
-	//var e = evt; //(evt)? e: ((window.event)? event : null);
+	
 	var e = window.event? event : evt;
 	if( e.altKey || e.ctrlKey)
 	{
@@ -829,13 +850,25 @@ function change(evt,hinKB)
 		key=evt.keyCode?evt.keyCode:evt.which;
 	}
 
-	if ((key <32) || (key >=33 && key <=47) ||(key>=59 && key <=64)||(key>=91 && key<=96 && key!=94)||(key>=123 && key<=127 && key!=126) || key >255 )
+	if ((key <32 && key!=8) || (key >=33 && key <=47) ||(key>=59 && key <=64)||(key>=91 && key<=96 && key!=94)||(key>=123 && key<=127 && key!=126) || key >255 )
 	{
 		ClearAllParameters(hinKB);
 		return true;
 	}
-
+	
+    if(key == 8)
+    {
+		charArray.splice(charArray.length-1,1);
+		key = charArray[charArray.length-1];
+		keychar = String.fromCharCode(key);
+		displayRelatedWords(keychar,hinKB.awTableId);
+		ClearAllParameters(hinKB);
+		if(txtarea.value.length==1)
+		  resetTableDiv(hinKB.awTableId);
+		return true;
+	}
 	keychar = String.fromCharCode(key);
+	charArray.push(key);
 	if(hinKB.posChanged)
 	{
 		hinKB.prevkey = 32;
@@ -1083,7 +1116,6 @@ function change(evt,hinKB)
 			ClearAllParameters(hinKB);
 			hinKB.pppC=hinKB.previouspreviousConsonant;
 			hinKB.previouspreviousConsonant = false;
-			//previouspreviousConsonant = previousConsonant;
 			hinKB.previousConsonant = true;
 		}
 		else if(typeof(Consonant[key])!='undefined')
@@ -1188,6 +1220,7 @@ function TextAreaInput()
 	//Logo
 	//UseGoogle
 }
+
 function CreateHindiTextArea(elementId)
 {
 	//alert("CreateHindiTextArea");

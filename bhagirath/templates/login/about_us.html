@@ -8,8 +8,7 @@
 
 {% block status_message %}
 	{% if logged_in %}
-		<p  class="account">Welcome, <a>{{username}}<a>
-		&nbsp;&nbsp;
+		<p class="account">Welcome, <a>{{username}}</a>
 		<a style="color:#707070" href="/logout/"><u>Logout</u></a></li></p>
 	{% else %}
 		<p class="account">Already have an account? <a href="/sign_in/">Sign in</a></p>
@@ -21,11 +20,8 @@
 		<ul>
 			<li title="Your home page"><a href="/account/">Home</a></li>
 			<li title="Read about us"><a href="/account/about_us/">About Us</a></li>
-			<li title="Upload file for translation (This feature is coming soon.)"><a href="/account/evaluate/">Contribute</a></li>
 			<li title="Translate content"><a href="/account/translate/{{uid}}/">Translate</a></li>
-			<li title="Evaluate translations (This feature is coming soon.)"><a href="/account/evaluate/">Evaluate</a></li>
 			<li title="Change your account settings"><a href="/account/{{uid}}/settings/">Profile</a></li>
-			<li title="Blog"><a href="">Blog</a></li>
 			<li title="Contact Us"><a href="/account/contact_us/">Contact Us</a></li>
 		</ul>
 	{% else %}
@@ -34,7 +30,6 @@
 		<li title="Read about us"><a href="/about_us/">About Us</a></li>
 		<li title="Contact Us"><a href="/contact_us/" class="active">Contact Us</a></li>
 		<li title="Create an account"><a href="/sign_up/">SignUp</a></li>
-		<li title="Blog"><a href="">Blog</a></li>	
 	</ul>
 	{% endif %}
 {% endblock %}
