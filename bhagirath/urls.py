@@ -33,13 +33,13 @@ urlpatterns = patterns('translation.views',
     #loads user account template showing his contribution in bhagirath
     url(r'^account/$','account',name="account"),
     #provides user upload file facility and asks him to enter specified info about file
-    url(r'^account/upload/$','upload',name="upload"),
+    #url(r'^account/upload/$','upload',name="upload"),
     #stores file and info entered by user when user presses submit button on upload page
-    url(r'^account/upload/done/$','process_upload',name="process_upload"),
+    #url(r'^account/upload/done/$','process_upload',name="process_upload"),
     #provide users sentences to evaluate
-    url(r'^account/evaluate/$','evaluate',name="evaluate"),
+    #url(r'^account/evaluate/$','evaluate',name="evaluate"),
     #stores the sentence evaluated by user
-    url(r'^account/evaluate/done/$','process_evaluate',name="process_evaluate"),
+    #url(r'^account/evaluate/done/$','process_evaluate',name="process_evaluate"),
     #give sentence to user for translation
     url(r'^account/translate/(?P<uid>\d+)/$','translate',name="translate"),
     #stores user entered translation when user hits submit on translate form
@@ -69,9 +69,6 @@ urlpatterns += patterns('',
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-
-    url(r'^feedback/', include('django_basic_feedback.urls')),
-
 )
 
 handler404 = 'translation.views.bhagirath_404_view'

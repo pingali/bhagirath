@@ -24,16 +24,12 @@ def bhagirath_error_view(request):
 
 def home(request):
     """
-    This function displays some information about bhagirath project, current statistics, 
+    This function displays some information about bhagirath project,  
     weekly and overall top users and provides login facility to the user. 
     """
-    (u,a,s) = stats()
     overall_leaderboard = get_overall_leaderboard()
     weekly_leaderboard = get_weekly_leaderboard()
     data = {
-            'registered_users':u,
-            'translated_sentences':s,
-            'published_articles':a,
             'overall_leaderboard':overall_leaderboard,
             'weekly_leaderboard':weekly_leaderboard,
         }
@@ -163,10 +159,7 @@ def sign_up(request):
     """
     This function loads sign up form for new user's registration. 
     """
-    l = find()
-    data = { 'form': SignUpForm(),
-             'list':l
-           }
+    data = { 'form': SignUpForm() }
     return render_to_response('login/sign_up.html',data,context_instance=RequestContext(request))
     
 def process_sign_up(request):
@@ -235,14 +228,11 @@ def sign_in(request):
     """
     This function loads sign form for user's login. 
     """
-    (u,a,s) = stats()
+
     overall_leaderboard = get_overall_leaderboard()
     weekly_leaderboard = get_weekly_leaderboard()
     data = {
             'form': LoginForm(),
-            'registered_users':u,
-            'translated_sentences':s,
-            'published_articles':a,
             'overall_leaderboard':overall_leaderboard,
             'weekly_leaderboard':weekly_leaderboard,
         }
@@ -302,7 +292,6 @@ def account(request):
     uid = user.pk
 
     if user.is_authenticated():
-        (u,a,s) = stats()   
         overall_leaderboard = get_overall_leaderboard()
         weekly_leaderboard = get_weekly_leaderboard()       
         user_pro = User.objects.get(pk = uid)
@@ -314,9 +303,6 @@ def account(request):
                 'no_of_perfect_translations': user_profile.no_of_perfect_translations,
                 'total_uploaded_tasks':user_profile.total_uploaded_tasks,
                 'total_evaluated_sentences':user_profile.total_evaluated_sentences,
-                'registered_users':u,
-                'translated_sentences':s,
-                'published_articles':a,
                 'username':user,
                 'overall_leaderboard':overall_leaderboard,
                 'weekly_leaderboard':weekly_leaderboard,
@@ -331,11 +317,8 @@ def account(request):
             
     else:
         data = {
-        'form': LoginForm(),
-        'uid':uid,
-        'registered_users':u,
-        'translated_sentences':s,
-        'published_articles':a,
+                'form': LoginForm(),
+                'uid':uid
         } 
         messages.error(request,"You're not logged in!!!")
         log.error("%s made request before login."%(user))
@@ -365,13 +348,9 @@ def upload(request):
         log.info("%s visited upload form."%(user))
         return render_to_response('translation/upload.html',data,context_instance=RequestContext(request))
     else:
-        (u,a,s) = stats()
         data = {
-        'form': LoginForm(),
-        'username':user,
-        'registered_users':u,
-        'translated_sentences':s,
-        'published_articles':a
+            'form': LoginForm(),
+            'username':user,
         } 
     messages.error(request,"You're not logged in!!!")
     log.error("%s made request before login."%(user))
@@ -475,6 +454,8 @@ def translate(request,uid):
     """
     This function provides sentences for translation to user.
     """
+    log.info("Entered translate function - ") 
+    log.info(datetime.datetime.now())
     user = request.user
     if user.is_authenticated():
         try:
@@ -483,6 +464,8 @@ def translate(request,uid):
             c = 0
             hindi = " "
             # check for sentences previously done by user
+            log.info("Search for available microtask STARTS - ") 
+            log.info(datetime.datetime.now())
             
             available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
             available_microtasks = Microtask.objects.filter(assigned = 0)
@@ -491,6 +474,9 @@ def translate(request,uid):
             for j in available_sentences_done_by_user:
                 available_microtasks = available_microtasks.exclude(original_sentence = available_sentences_done_by_user[i]).order_by('id')
                 i +=1
+            
+            log.info("Search for available microtask ENDS - ") 
+            log.info(datetime.datetime.now())
             
             for j in available_microtasks:
                 c += 1
@@ -502,6 +488,9 @@ def translate(request,uid):
                     'username':user,
                 }
                 
+                log.info("Make entry into TransactionAction if no microtask is available STARTS- ") 
+                log.info(datetime.datetime.now())
+                
                 ta = TransactionAction()
                 ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
                 ta.user = user
@@ -509,10 +498,20 @@ def translate(request,uid):
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
                 
+                log.info("Make entry into TransactionAction if no microtask is available ENDS- ") 
+                log.info(datetime.datetime.now())
+                
                 messages.error(request,"No sentence available for translation!!")
                 log.error("No sentence available for translation.")
+                
+                log.info("Entries made to log- ") 
+                log.info(datetime.datetime.now())
+                
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
+                
+                log.info("Bit array verification for experiment STARTS- ") 
+                log.info(datetime.datetime.now())
                 #get bit_array value for that sentence from static microtask table
                 available_microtask = available_microtasks[0]
                 s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
@@ -523,14 +522,25 @@ def translate(request,uid):
                 auto_correct =  int(z[10],2)
                 reference_translation = int(z[11],2)
                 
+                log.info("Bit array verification for experiment ENDS- ") 
+                log.info(datetime.datetime.now())
                 #decide which features to be provided to user for a particular sentence
+                
+                log.info("Context loading STARTS- ") 
+                log.info(datetime.datetime.now())
+                
                 prev_context = load_context(parent_static_microtask.id,prev_context_size)
+                
+                log.info("Context loading ENDS- ") 
+                log.info(datetime.datetime.now())
                 
                 if auto_correct==0:
                     auto_correction = False
                 else:
                     auto_correction = True
                 
+                log.info("Loading reference translations STARTS- ") 
+                log.info(datetime.datetime.now())
                 #get translations done by other users for that sentence
                 if reference_translation == 1:
                     microtask_translation = parent_static_microtask.translated_sentence
@@ -552,8 +562,14 @@ def translate(request,uid):
                     microtask_translation = " "
                     machine_translation = " "
                     other_translations = " "
-                                  
-                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.  
+                
+                log.info("Loading reference translation ENDS- ") 
+                log.info(datetime.datetime.now())
+                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.
+                
+                log.info("Create record in UserHistory STARTS- ") 
+                log.info(datetime.datetime.now())  
+                
                 h = UserHistory()
                 h.task = available_microtask.task
                 h.subtask = available_microtask.subtask
@@ -566,12 +582,28 @@ def translate(request,uid):
                 h.correction_episode = [{}]
                 h.save()
                 
+                log.info("Create record in UserHistory ENDS- ") 
+                log.info(datetime.datetime.now())  
+                
+                
+                log.info("Increase hop_count in StaticMicrotask STARTS- ") 
+                log.info(datetime.datetime.now())  
+                
                 s = StaticMicrotask.objects.get(id=s)
                 s.hop_count = s.hop_count + 1
                 s.save()               
                                 
+                log.info("Increase hop_count in StaticMicrotask ENDS- ") 
+                log.info(datetime.datetime.now())
+                
+                log.info("Call to dictionary- ")
+                log.info(datetime.datetime.now())  
+                
                 (word,hindi_dictionary) = dict(h.original_sentence,prev_context)               
                                 
+                log.info("Dictionary function returns- ") 
+                log.info(datetime.datetime.now())  
+                
                 data = {
                         'form': TranslateForm(),
                         'curr_id':available_microtask,
@@ -587,28 +619,42 @@ def translate(request,uid):
                         'auto_correction':auto_correction
                 }
                                 
+                log.info("Update Microtask STARTS- ") 
+                log.info(datetime.datetime.now())  
+                                                
                 #marking microtask entry as assigned  
                 available_microtask.assigned=True
                 available_microtask.save()
+                
+                log.info("Update Microtask ENDS- ") 
+                log.info(datetime.datetime.now())  
+                
+                log.info("Create record in TransactionAction STARTS- ") 
+                log.info(datetime.datetime.now())  
+                
                 ta = TransactionAction()
                 ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
                 ta.user = user
                 ta.action = Master_Action.objects.filter(action="Translate")[0]
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
+                
+                log.info("Create record in TransactionAction ENDS- ") 
+                log.info(datetime.datetime.now())
+                
                 log.info("Microtask loaded for translation.")
+            
+                log.info("Template loading...- ")
+                log.info(datetime.datetime.now())  
+            
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
         except:
             log.exception("Load microtask for translation failed.")
             traceback.print_exc() 
     #if user is not logged in
     else:
-        (u,a,s) = stats()
         data = {
-            'form': LoginForm(),
-            'registered_users':u,
-            'translated_sentences':s,
-            'published_articles':a
+            'form': LoginForm()
         } 
         messages.error(request,"Please login.You're not logged in!!!")
         log.error("%s made request before login."%(user))
@@ -631,10 +677,17 @@ def process_translate(request,id,uid):
                 
                 engl = Microtask.objects.filter(pk=id)
                 eng = engl[0]
+                
                 #search for english sentence and store in userHistory
+                log.info("Search for record in UserHistory STARTS- ") 
+                log.info(datetime.datetime.now())
+                
                 hist = UserHistory.objects.filter(microtask=eng)
                 h = hist[0]
+               
                 if h.translated_sentence:
+                    log.info("User has translated it previously so return back- ") 
+                    log.info(datetime.datetime.now())
                     data = {
                         'form': TranslateForm(),
                         'uid': uid,
@@ -645,7 +698,10 @@ def process_translate(request,id,uid):
                     }
                     messages.success(request,"You have already translated that sentence!!!")
                     return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
-                else:
+                else:     
+                    log.info("Update UserHistory record STARTS-") 
+                    log.info(datetime.datetime.now())
+                
                     h.translated_sentence = request.POST['translated_sentence']
                     h.submission_timestamp = datetime.datetime.now()
                     h.stability = 0.0
@@ -658,10 +714,15 @@ def process_translate(request,id,uid):
                     dat = serializers.serialize('json', UserHistory.objects.filter(pk=h.id), fields=('correction_episode'), ensure_ascii=False)
                     h.correction_episode = dat
                     h.save()
-                
+                    
+                    log.info("Update UserHistory record ENDS-") 
+                    log.info(datetime.datetime.now())
                 #micro = Microtask.objects.get (id=engl)
                 #micro.delete()
               
+                log.info("Make entry into TransactionAction STARTS-") 
+                log.info(datetime.datetime.now())
+                
                 ta = TransactionAction.objects.filter(session = Session.objects.filter(user=user,logout_timestamp=None))[0]
                 ta.task = h.task
                 ta.subtask = h.subtask
@@ -669,9 +730,16 @@ def process_translate(request,id,uid):
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
              
+                log.info("Make entry into TransactionAction ENDS-") 
+                log.info(datetime.datetime.now())
+                
                 messages.success(request,"Record saved sucessfully!!!")
                 log.info("Microtask (id:%s) saved successfully after translation."%(id))
                 next = "/account/translate/" + uid + "/"
+                
+                log.info("Calling translate()...")
+                log.info(datetime.datetime.now())
+                
                 return HttpResponseRedirect(next) 
                 
             except:
@@ -915,6 +983,9 @@ def load_context(sid,prev_context_count):
     This function returns sentences before the sentence
     to be translated for giving context to user.
     """
+    log.info("Entered load_context function")
+    log.info(datetime.datetime.now())
+    
     if int(sid)==1:
         prev_context = ""
     else:
@@ -925,6 +996,10 @@ def load_context(sid,prev_context_count):
             if st:
                 prev_context = prev_context + st.original_sentence + ". "
             a += 1
+    
+    log.info("Exited load_context function")
+    log.info(datetime.datetime.now())
+    
     return prev_context
 
 
@@ -932,6 +1007,9 @@ def dict(orig,prev):
     """
     This function returns the hindi meaning of all the words in english sentence.
     """
+    log.info("Entered dictionary function")
+    log.info(datetime.datetime.now())
+    
     h = orig + " " + prev
     a = h.split(' ')
 
@@ -960,11 +1038,19 @@ def dict(orig,prev):
             b = stem(b)
         dict.append(b)
         i += 1
+    
+    log.info("Removed punctuations from english sentence")
+    log.info(datetime.datetime.now())
+    
     count = len(dict)
     k = 0
     word = ''
     hindi_dictionary = ''
     meaning = ''
+    
+    log.info("Search for meanings STARTS-")
+    log.info(datetime.datetime.now())
+    
     while k < count:
         mean = Master_English2Hindi.objects.filter(english_word = dict[k])            
 
@@ -981,6 +1067,10 @@ def dict(orig,prev):
                 word = word + '+' + a[k]   
 
         k += 1
+    
+    log.info("Search for meanings ENDS-")
+    log.info(datetime.datetime.now())
+    
     return (word,hindi_dictionary)
 
 def stats():
