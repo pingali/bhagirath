@@ -298,6 +298,12 @@
 			return true;
 		}
 		
+		function OnReset() {
+			document.getElementById('hindi').style.display = "none";
+			document.getElementById('translated_sentence').style.display = 'block';
+			document.getElementById('translated_sentence').value = ' ';
+		}
+		
 		$(document).ajaxSend(function(event, xhr, settings) {
 			function getCookie(name) {
 				var cookieValue = null;
@@ -437,7 +443,7 @@
 			<tr>
 				<td>
 					<button name="submit" id="submit" class="google_translate" onclick="return OnSubmit();">Save Translation</button><img src="/static/images/save.png"/>
-					<button type="button" name="reset" id="reset" class="google_translate" value="reset" onclick="translated_sentence.value=' '">Reset</button>
+					<button type="button" name="reset" id="reset" class="google_translate" value="reset" onclick="OnReset();">Reset</button>
 					<button name="next" id="next" value="next" class="google_translate" onclick="return OnNext();" >Next</button>
 					<button type="button" name="display_help" id="display_help" class="google_translate" onclick="helpClicked(this);">View Help</button><img src="/static/images/help.png"/>
 					<button type="button" name="prev_translations" id="prev_translations" class="google_translate" onclick="previous_TranslationsClicked(this);">View Alternate Translations</button>
