@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 from bhagirath.translation.forms import *
 from bhagirath.translation.models import *
+from bhagirath.centoid_score.SSDistance import SSDistance
 from stemming.porter2 import stem
 import jellyfish
 import traceback
@@ -962,12 +963,12 @@ def autocomplete(request,uid,prefix_val):
 
 def autocorrect(request,word):
     auto = []
-    prefix_val = word[:5]
+    prefix_val = word[:3]
     li = Master_HindiWords.objects.filter(original__startswith=prefix_val).values()
     for i in li:
         l = i['original']
-        a = jellyfish.jaro_distance(word,str(l))
-        if a > 0.85:
+        a = SSDistance.getSimilarity(word, l)
+        if a > 0.5:
             auto.append(l)
     return HttpResponse(auto)
 
