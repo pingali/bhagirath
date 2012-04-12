@@ -390,6 +390,7 @@ class StaticMicrotask(models.Model):
     scoring_done = models.BooleanField(default=False)
     hop_count = models.IntegerField(default=0)
     bit_array = models.ForeignKey(Master_Experiment,null=True)
+    meaning = jsonfield.JSONField()
     
     def __unicode__(self):
         return u"%s" %(self.id)

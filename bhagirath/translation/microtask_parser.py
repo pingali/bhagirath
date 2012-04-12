@@ -1,5 +1,7 @@
 # coding: utf-8
-from bhagirath.translation.models import Task,Subtask,StaticMicrotask,Master_Experiment
+from bhagirath.translation.models import Task,Subtask,StaticMicrotask,Master_Experiment, Master_English2Hindi
+from stemming.porter2 import stem
+from django.core import serializers
 import re
 
 splitlist = []
@@ -73,8 +75,11 @@ def microtaskParser():
                                     micro.task = task
                                     micro.original_sentence = each
                                     micro.bit_array = a
+				    micro.meaning = dictionary(each)
                                     micro.save()
                                     micro.machine_translation = itd[k]
+				    dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
+                                    micro.meaning = dat
                                     micro.save()
                                     i += 1
                                     k += 1
@@ -85,6 +90,47 @@ def microtaskParser():
             msg = "No subtask available for parsing"
             
         return msg 
+
+
+def dictionary(sentence):
+    words = sentence.split(' ')
+    cnt = len(words)
+    x = 0
+    
+    dict = []
+    o = [".",",",";","?","!",":","'",")","]","}",'"']
+    r = ["'","(","[","{",'"']
+    
+    while x < cnt:
+        s = words[x]
+        if s:
+            while s[-1] in o or s[0] in r:
+                if s[-1] in o:
+                    s = s[:-1]
+                if s:
+                    if s[0] in r:
+                        s = s[1:]
+                if s:
+                    pass    
+                else:
+                    break
+        
+        y = s.lower()
+        
+        mean = Master_English2Hindi.objects.filter(english_word = y)
+        if not mean:
+            z = stem(y)
+            mean = Master_English2Hindi.objects.filter(english_word = z)
+        
+        for p in mean:
+            w =  Master_English2Hindi.objects.get(pk=p.pk)
+            mean_dict = {}
+            mean_dict['word'] = y
+            mean_dict['pos'] = w.pos
+            mean_dict['mean'] = w.hindi_word.split("--") 
+            dict.append(mean_dict)
+        x += 1
+    return dict   
 
 def tempMicrotaskParser():
         data = ''
@@ -114,9 +160,12 @@ def tempMicrotaskParser():
                 micro.task = task
                 micro.original_sentence = each
                 micro.bit_array = b
+		micro.meaning = dictionary(each)
                 micro.save()
                 micro.machine_translation = itd[k]
-                micro.save()
+		dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
+                micro.meaning = dat                
+		micro.save()
                 k += 1
                                  
             sub.save()

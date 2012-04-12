@@ -108,13 +108,13 @@ button.google_translate{
 
  .meaning
 {
-  background-color:#555252;
-  color:#d7ccac;
+  background-color:#ffffff;
+  color:#000000;
   top: 225px;
   left: 225px;
   width:100px;
   font-size:10pt;
-  border-color: #000033;  
+  border-color: #000000;  
   border-width: 1px;  
 }
 

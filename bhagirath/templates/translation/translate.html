@@ -156,46 +156,32 @@
 		}
 		
 		function getWord(find){
-            var max = 0;
-            var top = 225;
-            var left = 225;
-            var numLines=0;
-            var dictionary = $('#dict').text().split('+');
-            var lines = ''; //will contain each line in text as array.
-            var word = $('#word').text().split('+');
-                        
-            $(function() {
-                for (i = 0; i < word.length; i++) {
-                    if (word[i]==find)
-                    {
-                        mean = dictionary[i].split('--');
-                        for (j = 0; j < mean.length; j++) {
-                            lines = lines + mean[j];
-                            if ((mean[j].length) > max)
-                                max = (mean[j].length);
-                            k = j+1;
-                            if (k == mean.length){
-                            	lines = lines + '';
-                            }
-                            else {
-                            	lines = lines + '</br>';
-                            }
-                        }
-                        break;
-                    }
-                }               
-            });
-            max = max*9;
-            dict = document.createElement("div");
-            dict.setAttribute('id','meaning');
-            dict.style.width = max + "px";
-            dict.style.top = top + "px";
-            dict.style.left = left + "px";
-            dict.setAttribute('class','meaning');
-            dict.innerHTML = lines;
-            $('.meaning').hide();
-            document.getElementById("suggest").appendChild(dict);
-        }
+        	    var max = 0;
+        	    var top = 225;
+        	    var left = 225;
+	            var numLines=0;
+        	    var x = 0;
+        	    var lines = '';
+        	    var dictionary = new Array();
+	
+        	    dictionary = JSON.parse($('#dict').text())
+        	    for (x in dictionary) {
+        	    	if (dictionary[x].word == find) {
+        	    		lines = lines + (dictionary[x].pos) + "--" + (dictionary[x].mean) + '\n';	
+        	    	}
+        	    }
+       
+        	    max = max*9;
+        	    dict = document.createElement("div");
+        	    dict.setAttribute('id','meaning');
+        	    dict.style.width = max + "px";
+        	    dict.style.top = top + "px";
+        	    dict.style.left = left + "px";
+        	    dict.setAttribute('class','meaning');
+        	    dict.innerHTML = lines;
+        	    $('.meaning').hide();
+        	    document.getElementById("suggest").appendChild(dict);
+        	}
 		// CODE FOR DICTIONARY MEANING ON MOUSEOVER ENGLISH WORD ENDS HERE	
 		
 		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR STARTS HERE	
@@ -286,16 +272,14 @@
 		var fontSize = 1;
 		
 		function zoomOut() {
-			if (fontSize<1.5) {
-				fontSize += 0.1;
-			}
-			else {
-				fontSize += 0.0;
-			}
+			fontSize += 0.1;
 			document.getElementById("original_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
 		}
 		
 		function zoomIn() {
@@ -304,6 +288,9 @@
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
+			document.getElementById("hindi").style.fontSize = fontSize + "em";
 		}
 		
 		function OnNext() {
@@ -769,8 +756,7 @@
 	<input id="cmd" name="cmd" type="text"></input>
 	<pre id="output1"></pre>
 </div>
-<div id="dict" style="visibility:hidden">{{dictionary}}</div>
-<div id="word" style="visibility:hidden">{{word}}</div>
+<div id="dict" style="visibility:hidden">{{eng2hin_dict}}</div>
 </form>
 {% endblock %}
 
