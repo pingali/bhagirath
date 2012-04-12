@@ -588,7 +588,10 @@ def translate(request,uid):
                 hindi_dictionary = []
                 for i in meaning_list:
                     x = i[0]['fields']['meaning']
-                    for z in x:
+                    w = simplejson.loads(x)
+                    for z in w:
+                        log.info("Single Record")
+                        log.info(z)
                         hindi_dictionary.append(z)
                         
                 
