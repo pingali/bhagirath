@@ -596,7 +596,9 @@ def translate(request,uid):
                         
                 
                 x = parent_static_microtask.meaning[0]['fields']['meaning']
-                for z in x:
+                w = simplejson.loads(x)
+                for z in w:
+		    log.info(z)
                     hindi_dictionary.append(z)               
                     
                 y = simplejson.dumps(hindi_dictionary)                     
