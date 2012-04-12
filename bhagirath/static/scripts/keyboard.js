@@ -1360,7 +1360,7 @@ function getOption(find){
 		req_url = '/account/translate/autocorrect/'+find;
 		$.get(req_url, function(data){
 			var lines = new Array();
-			lines = data.split('      ');	
+			lines = data.split(' ');	
 			lists = lines;
 			
 			for(i in lines) {

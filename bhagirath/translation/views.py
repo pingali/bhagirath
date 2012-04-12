@@ -588,7 +588,10 @@ def translate(request,uid):
                 hindi_dictionary = []
                 for i in meaning_list:
                     x = i[0]['fields']['meaning']
-                    for z in x:
+                    w = simplejson.loads(x)
+                    for z in w:
+                        log.info("Single Record")
+                        log.info(z)
                         hindi_dictionary.append(z)
                         
                 
@@ -598,6 +601,7 @@ def translate(request,uid):
                     
                 y = simplejson.dumps(hindi_dictionary)                     
                 log.info("Dictionary loaded- ") 
+                log.info(y)
                 
                 data = {
                         'form': TranslateForm(),
@@ -953,12 +957,14 @@ def autocomplete(request,uid,prefix_val):
 
 def autocorrect(request,word):
     auto = []
-    prefix_val = word[:3]
+    prefix_val = word[:1]
     li = Master_HindiWords.objects.filter(original__startswith=prefix_val).values()
     for i in li:
         l = i['original']
+        l = l.rstrip()
         a = SSDistance.getSimilarity(word, l)
-        if a > 0.5:
+        if a > 0.8:
+            l = l + ' '
             auto.append(l)
     return HttpResponse(auto)
 

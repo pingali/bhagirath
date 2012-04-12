@@ -165,9 +165,12 @@
         	    var dictionary = new Array();
 	
         	    dictionary = JSON.parse($('#dict').text())
+        	    alert(dictionary);
         	    for (x in dictionary) {
         	    	if (dictionary[x].word == find) {
+ 				alert(dictionary[x]);
         	    		lines = lines + (dictionary[x].pos) + "--" + (dictionary[x].mean) + '\n';	
+        	    		alert(lines);
         	    	}
         	    }
        
