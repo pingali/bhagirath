@@ -1324,26 +1324,30 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 }
 
 //autocorrect
-
 function OnmouseOver(){
-	$(function() {
-		var hin_words = $('textarea#translated_sentence').val().split(' ');
-	    var newHtml1 = '';
-	    for (i = 0; i < hin_words.length; i++) {
-	        	newHtml1 += '<span id="hin">' + hin_words[i] + '</span> ';
-	    }   
-		$('#hindi').html(newHtml1);
-		document.getElementById('translated_sentence').style.display = 'none';
-		document.getElementById('hindi').style.display = 'block';
-		$(this).find("span").attr("id", "hin").mouseover( function() {
-	       find = $(this).text();
-	       getOption(find); 
-	    });
-	    $(this).find("span").attr("id", "hin").mouseout( function() {
-	        $(this).removeClass('hlight');
-	     
-	    });
-	});
+    $(function() {
+        var hin_words = $('textarea#translated_sentence').val().split(' ');
+        var newHtml1 = '';
+        for (i = 0; i < hin_words.length; i++) {
+                newHtml1 += '<span id="hin">' + hin_words[i] + '</span> ';
+        }  
+        $('#hindi').html(newHtml1);
+        document.getElementById('translated_sentence').style.display = 'none';
+        document.getElementById('hindi').style.display = 'block';
+        $(this).find("span").attr("id", "hin").mouseover( function() {
+             $(this).addClass('hlight');
+         });
+        $(this).find("span").attr("id", "hin").click( function() {
+           find = $(this).text();
+           if (document.getElementById('autocorrect') != null) {
+               $('#autocorrect').remove();   
+           }
+           getOption(find);
+        });
+          $(this).find("span").attr("id", "hin").mouseout( function() {
+            $(this).removeClass('hlight');
+        });
+    });
 }
 
 function getOption(find){

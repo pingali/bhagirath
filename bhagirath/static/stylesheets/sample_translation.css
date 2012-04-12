@@ -12,12 +12,12 @@
 	font-weight:bold;
 	font-size:25px;
 	font-family:times,sans-serif;
-	color:#595959;
+	color:#404040;
 	padding-left:20px;
 }
 
 div.original {
-           color:#595959;		
+           color:#404040;		
 	   width:278px;
 	   height:120px;
 	   padding:6px;
@@ -28,7 +28,7 @@ div.original {
 	}
 
 div.translation {
-           color:#595959;		
+           color:#404040;		
 	   width:278px;
 	   height:120px;
 	   padding:8px;

@@ -19,7 +19,7 @@ button.change_password{
 	padding-left:20px;
 	font-weight: normal;
 	font-size: 25px;
-	color:#595959;
+	color:#404040;
 }
 
 #signup { 
@@ -30,7 +30,7 @@ button.change_password{
 	margin: 0 10px 10px 20px;
 	font-weight: normal;
 	font-size: 18px;
-	color: #595959;
+	color: #404040;
 }
 
 #signup label {

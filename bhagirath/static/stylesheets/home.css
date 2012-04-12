@@ -29,7 +29,7 @@
 	padding-bottom: 10px;
 	font-weight: normal;
 	font-size: 25px;
-	color:#595959;
+	color:#404040;
 }
 
 button.signin{
@@ -44,12 +44,12 @@ button.signin{
 
 table.overall_leaderboard_table{
    border: 1;
-    color: #595959;
+    color: #404040;
     width:250px;
 }
 
 .overall_leaderboard_table caption {
-	color:#595959;
+	color:#404040;
 }
 .overall_leaderboard_table th{
     padding: 0.2em;

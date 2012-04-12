@@ -6,7 +6,7 @@
 
 {% block head %}
 	<link rel="stylesheet" href="/static/stylesheets/keyboard.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="/static/stylesheets/translate.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="/static/stylesheets/translate.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/transliterator-autocomplete.css" type="text/css" media="screen, projection" />
 		
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>	
 			
 	<script src="/static/scripts/animate.js" type="text/javascript"></script>
-    <script src="/static/scripts/keyboard.js" type="text/javascript"></script>
+        <script src="/static/scripts/keyboard.js" type="text/javascript"></script>
 	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
 	<script src="/static/scripts/jquery-selection.js" type="text/javascript"></script>
 	<script src="/static/scripts/predict.js" type="text/javascript"></script>
@@ -404,7 +404,7 @@
 	<div class="trans">
 	<p><table>
 		<tr>
-			<td><label style="color:#707070">Use these buttons to zoom-in and zoom-out text : </label></td>
+			<td><label style="color:#404040">Use these buttons to zoom-in and zoom-out text : </label></td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td><button type="button" name="zoomin" id="zoomin" class="zoomin" value="+" onclick="zoomOut();">+</button></td>
@@ -432,9 +432,9 @@
 				</td>
 			</tr>	
 			<tr>
-				<td><label style=" color: #707070;font-size:15px;">Hover on the english word above for its meaning in Hindi. </label></td>
+				<td><label style=" color: #707070;font-size:15px;">Hover on the english word above to view its meaning in Hindi. </label></td>
 				{% if auto_correction %}
-				<td><label style=" color: #707070;font-size:15px;">Double click on above area each time to enable auto-correction. </label></td>
+				<td><label style=" color: #707070;font-size:15px;">Double click on above area each time to enable auto-correction. Click on the word to view possible options.</label></td>
 				{% endif %}
 			</tr>
 		</table>
@@ -472,7 +472,7 @@
 						<td align=center>For&nbsp;&nbsp;</td>
 						<td align=center>Type&nbsp;&nbsp;</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0915;</td>
 						<td align=center>ka</td>
 						<td align=center>&#x0916;</td>
@@ -484,7 +484,7 @@
 						<td align=center>&#x0919;</td>
 						<td align=center>NG</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x091A;</td>
 						<td align=center>cha</td>
 						<td align=center>&#x091B;</td>
@@ -496,7 +496,7 @@
 						<td align=center>&#x091E;</td>
 						<td align=center>Nya</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x091F;</td>
 						<td align=center>Ta</td>
 						<td align=center>&#x0920;</td>
@@ -508,7 +508,7 @@
 						<td align=center>&#x0923;</td>
 						<td align=center>Na</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0924;</td>
 						<td align=center>ta</td>
 						<td align=center>&#x0925;</td>
@@ -520,7 +520,7 @@
 						<td align=center>&#x0928;</td>
 						<td align=center>na</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x092A;</td>
 						<td align=center>pa</td>
 						<td align=center>&#x092B;</td>
@@ -532,7 +532,7 @@
 						<td align=center>&#x092E;</td>
 						<td align=center>ma</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x092F;</td>
 						<td align=center>ya</td>
 						<td align=center>&#x0930;</td>
@@ -544,7 +544,7 @@
 						<td align=center>&#x0936;</td>
 						<td align=center>sha</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0937;</td>
 						<td align=center>Sha</td>
 						<td align=center>&#x0938;</td>
@@ -556,7 +556,7 @@
 						<td align=center>&#x091C;&#x094D;&#x091E;</td>
 						<td align=center>Jha</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>श्र</td>
 						<td align=center>shra</td>
 						<td align=center>त्र</td>
@@ -570,7 +570,7 @@
 					</tr>
 					</table>
 				</td>
-				<td align=center width=20% colspan=4>
+				<td align=center width=20% colspan=4 >
 				<table width=100% style="color:#7b7575; border-right:dashed 1px;" cellspacing="0">
 				<tr>
 					<td colspan=4 valign="top" align=center style="color:#000000; font-variant:small-caps; font-size:1.2em;">
@@ -582,59 +582,59 @@
 					<td align=center>For&nbsp;&nbsp;</td>
 					<td align=center>Type&nbsp;&nbsp;</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0958;</td>
 					<td align=center>Ka</td>
 					<td align=center>&#x0959;</td>
 					<td align=center>Kha</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x095A;</td>
 					<td align=center>Ga</td>
 					<td align=center>&#x095B;</td>
 					<td align=center>Za</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x095E;</td>
 					<td align=center>Fa</td>
 					<td align=center>&#x095C;</td>
 					<td align=center>DD</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x095D;</td>
 					<td align=center>DH</td>
 					<td align=center>&#x095F;</td>
 					<td align=center>Y</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0934;</td>
 					<td align=center>LL</td>
 					<td align=center>&#x0929;</td>
 					<td align=center>NN</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
+				<tr style="color: #404040; font-size:15px;">
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 				</tr>
 				</table>
 				</td>
@@ -650,49 +650,49 @@
 						<td align=center>For&nbsp;&nbsp;</td>
 						<td align=center>Type&nbsp;&nbsp;</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0905;</td>
 						<td align=center>a</td>
 						<td align=center>&#x0906;</td>
 						<td align=center>A/aa</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0907;</td>
 						<td align=center>i</td>
 						<td align=center>&#x0908;</td>
 						<td align=center>I/ee</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0909;</td>
 						<td align=center>u</td>
 						<td align=center>&#x090A;</td>
 						<td align=center>U</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0909;</td>
 						<td align=center>e</td>
 						<td align=center>&#x0910;</td>
 						<td align=center>ai</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0913;</td>
 						<td align=center>o</td>
 						<td align=center>&#x0914;</td>
 						<td align=center>au</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x090B;</td>
 						<td align=center>R</td>
 						<td align=center>&#x0902;</td>
 						<td align=center>M</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">
 						<td align=center>&#x0903;</td>
 						<td align=center>:</td>
 						<td align=center>ँ</td>
 						<td align=center>~M</td>
 					</tr>
-					<tr>
+					<tr style="color: #404040; font-size:15px;">s
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
@@ -707,38 +707,38 @@
 					</br>&nbsp;<b>Specials</b></br>&nbsp;</td>
 				</tr>
 				<tr style="color: #990099;">
-					<td align=center>&nbsp;For</td>
+					<td align=center>For</td>
 					<td align=center>Type</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0943;</td>
 					<td align=center>VR</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x090D;</td>
 					<td align=center>E</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0945;</td>
 					<td align=center>E</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0964;</td>
 					<td align=center>|</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td align=center>&#x0965;</td>
 					<td align=center>||</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<tr style="color: #404040; font-size:15px;">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
@@ -751,7 +751,7 @@
 		<table width="100%">
 			<tr>
 				<td valign="top" align="left"><label style="color: #990099;"></br>Other Translations:</label>
-				<div class="prev_div" name="prev_trans" id="prev_trans" style="background-color:#ffffff; color:#595959;" readonly="readonly">
+				<div class="prev_div" name="prev_trans" id="prev_trans" style="background-color:#ffffff; color:#404040;" readonly="readonly">
 				{{machine_translation}}{{other_translations}}</div></td>
 			</tr>	
 		</table>

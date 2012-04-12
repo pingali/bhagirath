@@ -654,7 +654,7 @@ def translate(request,uid):
         log.error("%s made request before login."%(user))
         next = "/home/"
         return HttpResponseRedirect(next) 
-    return HttpResponse("Error!!!")
+    return HttpResponse("Error!!!Please try reloading the page.")
 
 def process_translate(request,id,uid):
     """

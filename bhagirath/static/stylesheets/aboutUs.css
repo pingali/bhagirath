@@ -1,5 +1,5 @@
 #content {
-	height:1600px;
+	height:1450px;
 }
 
 .about {
@@ -14,11 +14,11 @@
 	padding-bottom: 10px;
 	font-weight: normal;
 	font-size: 25px;
-	color:#595959;
+	color:#404040;
 }
 
 .about .info {
-	color:#595959;
+	color:#404040;
 	font-size:18px;
 }
 
