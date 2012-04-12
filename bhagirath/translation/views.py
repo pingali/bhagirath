@@ -598,6 +598,7 @@ def translate(request,uid):
                     
                 y = simplejson.dumps(hindi_dictionary)                     
                 log.info("Dictionary loaded- ") 
+                print y
                 
                 data = {
                         'form': TranslateForm(),
