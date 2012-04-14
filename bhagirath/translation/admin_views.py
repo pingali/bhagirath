@@ -448,6 +448,7 @@ def reputation_score(request):
         while k < i:
             user = UserHistory.objects.filter(static_microtask = static[k].id)
             l = UserHistory.objects.filter(static_microtask = static[k].id).count()
+
             j = 0
             while j < l:
                 u = user[j]
@@ -468,7 +469,7 @@ def reputation_score(request):
                     pass
                 n += 1
             if n == 11: 
-                break
+                pass
             else:
                 p = 0
                 input1 = []
@@ -502,7 +503,7 @@ def reputation_score(request):
                     st.assigned = 0
                     st.hop_count += 1
                     st.save()
-                    
+            k += 1        
         data = {'msg':''}
         messages.success(request, "User's reputation score updated successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request)) 
