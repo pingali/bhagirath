@@ -586,37 +586,3 @@ def assign_rank(request):
         data = {'msg':msg}
         messages.error(request, "Update user's reputation score failed.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))   
-
-def temp_update_code(request):
-    try:
-        "Unassign all microtasks which have null translation."
-        a = UserHistory.objects.filter(translated_sentence=None)
-        for i in a:
-            print i.microtask
-            b = Microtask.objects.get(id=str(i.microtask))
-            b.assigned = False
-            b.save()
-            
-        "Update no_of_translated_sentences attribute of UserProfile"
-        user = User.objects.all()
-        for i in user:
-            count = 0
-            sentences = UserHistory.objects.filter(user = i)
-            for k in sentences:
-                if k.translated_sentence:
-                    count += 1
-            try:
-                user_profile = UserProfile.objects.get(user=i.pk)
-                if user_profile:
-                    user_profile.total_translated_sentences = count
-                    user_profile.save()
-            except:
-                pass
-        data = {'msg':''}
-        messages.success(request, "Unassign microtask and update user profile successfully.")
-        return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
-    except: 
-        msg = traceback.format_exc()
-        data = {'msg':msg}
-        messages.error(request, "Unassign microtask and update user profile failed.")
-        return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))   

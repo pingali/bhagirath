@@ -58,8 +58,7 @@ class CustomMenu(Menu):
                     items.MenuItem('Update Statistics Counter', '/background_task/update_statistics_counter/'),
                     items.MenuItem('Document Stability', '/background_task/document_stability/'),
                     items.MenuItem('Reputation Score', '/background_task/reputation_score/'),
-                    items.MenuItem('Assign Rank', '/background_task/assign_rank/'),
-                    items.MenuItem('Temp code', '/background_task/temp_update_code/')
+                    items.MenuItem('Assign Rank', '/background_task/assign_rank/')
                 ]
             ),
         ]
