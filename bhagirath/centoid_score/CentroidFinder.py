@@ -245,7 +245,7 @@ class CentroidFinder(object):
     @classmethod
     def isIterationNeeded(self):
         closeneighbourcount = 0
-        normalscore = int(0.95 * self.normalizer)
+        normalscore = int(0.9 * self.normalizer)
         i = 0
         while i < len(self.reputation):
             if self.normalizedreputation[i]>=(normalscore):
