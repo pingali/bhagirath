@@ -599,8 +599,8 @@ def temp_update_code(request):
             
         "Update no_of_translated_sentences attribute of UserProfile"
         user = User.objects.all()
-        count = 0
         for i in user:
+            count = 0
             sentences = UserHistory.objects.filter(user = i)
             for k in sentences:
                 if k.translated_sentence:
