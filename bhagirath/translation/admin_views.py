@@ -252,6 +252,7 @@ def unassign_microtask(request):
         userhist = UserHistory.objects.all()
         i = UserHistory.objects.all().count()
         j = 0
+        count = 0
         while j < i:
             u = userhist[j]
             if u.translated_sentence:
@@ -260,9 +261,11 @@ def unassign_microtask(request):
                 m = u.microtask
                 m.assigned = 0
                 m.save()
+                count += 1
             j += 1 
-    
-        data = {'msg':''}
+        
+        msg = str(count) + " microtasks are unassigned successfully." 
+        data = {'msg':msg}
         messages.success(request, "Microtasks unassigned successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
     except: 
