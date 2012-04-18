@@ -450,18 +450,22 @@ def reputation_score(request):
         while k < i:
             user = UserHistory.objects.filter(static_microtask = static[k].id)
             l = UserHistory.objects.filter(static_microtask = static[k].id).count()
-
+            #UserHistory.objects.filter(static_microtask = static[k].id,translated_sentence=None).delete()            
+            user_responses = []
             j = 0
             while j < l:
                 u = user[j]
                 if u.translated_sentence:
-                    pass
+                    user_responses.append(u)
                 else:
-                    u.delete()
+                    pass
                 j += 1
+            
             count = 0
-            for a in user:
+            
+            for a in user_responses:
                 count += 1
+                
             n = 1
             while n <= 10:
                 m = 3 * n
@@ -479,32 +483,29 @@ def reputation_score(request):
                     input1.append(user[p].translated_sentence)
                     p += 1
                 centroid = CentroidFinder.getCentroid(input1)
+                scores = [int() for __idx0 in range(count)]
+                scores = CentroidFinder.getReputationscores()
+                st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
+                st.translated_sentence = centroid
+                z = 0
+                while z < count:
+                    user[z].reputation_score = scores[z]
+                    u = UserProfile.objects.get(user = user[z].user)
+                    u.prev_week_score += scores[z]
+                    u.overall_score += scores[z]
+                    if user[z].translated_sentence == centroid:
+                        u.no_of_perfect_translations += 1
+                        st.user = user[z].user
+                    u.save()
+                    user[z].save()
+                    z += 1
                 isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
                 if not isAnotherRunNeeded:
-                            #print "No need for another Iteration"
-                    st = StaticMicrotask.objects.get(id = user[0].static_microtask)
-                    st.translated_sentence = centroid
-                    scores = [int() for __idx0 in range(count)]
-                    scores = CentroidFinder.getReputationscores()
-                    z = 0
-                    while z < count:
-                        user[z].reputation_score = scores[z]
-                        u = UserProfile.objects.get(user = user[z].user)
-                        u.prev_week_score += scores[z]
-                        u.overall_score += scores[z]
-                        if user[z].translated_sentence == centroid:
-                            u.no_of_perfect_translations += 1
-                            st.user = user[z].user
-                        u.save()
-                        user[z].save()
-                        z += 1
                     st.scoring_done = 1
-                    st.save()
                 else:
-                    st = StaticMicrotask.objects.get(id = user[0].static_microtask)
                     st.assigned = 0
                     st.hop_count += 1
-                    st.save()
+                st.save()
             k += 1        
         data = {'msg':''}
         messages.success(request, "User's reputation score updated successfully.")

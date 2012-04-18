@@ -935,9 +935,9 @@ def find():
     return l
 
 def get_overall_leaderboard():
-    u = OverallLeaderboard.objects.all().order_by('overall_points_earned')[:10]
+    u = OverallLeaderboard.objects.all().order_by('-overall_points_earned')[:10]
     return u
 
 def get_weekly_leaderboard():
-    u = WeeklyLeaderboard.objects.all().order_by('points_earned_this_week')[:10]
+    u = WeeklyLeaderboard.objects.all().order_by('-points_earned_this_week')[:10]
     return u
