@@ -579,7 +579,7 @@ def translate(request,uid):
                         'eng2hin_dict': y,
                         'username':user,
                         'prev_context':prev_context,
-                        'auto_correction':auto_correction
+                        'auto_correct': auto_correction
                 }
                 
                 #marking microtask entry as assigned  
