@@ -205,7 +205,10 @@ are valid and all checks are passed it registers the user by creating a record i
                                 
                 p = UserProfile()
                 p.user = user
-                p.ip_address = request.META['HTTP_X_FORWARDED_FOR']
+                try:
+                    p.ip_address = request.META['HTTP_X_FORWARDED_FOR']
+                except:
+                    p.ip_address = request.META['REMOTE_ADDR']
                 p.save()
                                 
                 data = {'form': SignUpForm()}
