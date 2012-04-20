@@ -910,7 +910,7 @@ def load_context(sid,prev_context_count):
     to be translated for giving context to user.
     """
     meaning_list = []
-    
+    main = StaticMicrotask.objects.get(pk=sid)
     if int(sid)==1:
         prev_context = ""
     else:
@@ -919,7 +919,8 @@ def load_context(sid,prev_context_count):
         while int(a) < int(sid):
             st = StaticMicrotask.objects.get(id=a)
             if st:
-                prev_context = prev_context + st.original_sentence + ". "
+                if st.subtask==main.subtask:
+                    prev_context = prev_context + st.original_sentence + ". "
                 meaning_list.append(st.meaning)
             a += 1
     return prev_context, meaning_list
