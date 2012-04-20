@@ -1322,34 +1322,7 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 		inputBoxCount++;
 	}
 }
-
-//autocorrect
-function OnmouseOver(){
-    $(function() {
-        var hin_words = $('textarea#translated_sentence').val().split(' ');
-        var newHtml1 = '';
-        for (i = 0; i < hin_words.length; i++) {
-                newHtml1 += '<span id="hin">' + hin_words[i] + '</span> ';
-        }  
-        $('#hindi').html(newHtml1);
-        document.getElementById('translated_sentence').style.display = 'none';
-        document.getElementById('hindi').style.display = 'block';
-        $(this).find("span").attr("id", "hin").mouseover( function() {
-             $(this).addClass('hlight');
-         });
-        $(this).find("span").attr("id", "hin").click( function() {
-           find = $(this).text();
-           if (document.getElementById('autocorrect') != null) {
-               $('#autocorrect').remove();   
-           }
-           getOption(find);
-        });
-          $(this).find("span").attr("id", "hin").mouseout( function() {
-            $(this).removeClass('hlight');
-        });
-    });
-}
-
+// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR STARTS HERE
 function getOption(find){
 		var textnode ="";
 		var left = 60; //left coordinate of input box relative to its parent element.
@@ -1358,6 +1331,7 @@ function getOption(find){
 		var max = 0;
 		
 		req_url = '/account/translate/autocorrect/'+find;
+		
 		$.get(req_url, function(data){
 			var lines = new Array();
 			lines = data.split(' ');	
@@ -1384,8 +1358,8 @@ function getOption(find){
 			dict.style.top = top + "px";
 			dict.style.width = max + "px";
 		
-			document.getElementById("hindi").appendChild(dict);
-		
+			document.getElementById("translate").appendChild(dict);
+			
 			for(i in lines) {
 				divSuggestWrd = document.createElement('div');
 				divSuggestWrd.setAttribute('id', "div" + lines[i]);
@@ -1405,7 +1379,6 @@ function getOption(find){
 				aSuggestWrd.appendChild(textNode);
 				divSuggestWrd.appendChild(aSuggestWrd);
 				dict.appendChild(divSuggestWrd);
-				
 			}
 		});
 	}
@@ -1483,7 +1456,7 @@ function CompleteAutoCorrect(id, source) {
 	var text1 = "";
 	var text = "";
 
-	var word = $('#hindi').text().split(' ');
+	var word = $('#translated_sentence').text().split(' ');
 		$(function() {	
 			for (i = 0; i < word.length; i++) {
 				if (word[i]==source)
@@ -1494,7 +1467,7 @@ function CompleteAutoCorrect(id, source) {
 		        text = text + word[i] + ' ';
 			}
 		});
-	$('#hindi').html(text1);
+	$('#translated_sentence').html(text1);
 	$('textarea#translated_sentence').val(text);
 	$('#autocorrect').remove();
 	OnmouseOver(this);
@@ -1508,3 +1481,5 @@ function HighlightAutoCorrect(){
 	this.setAttribute('class', 'suggestWordHighlight');
 	document.getElementById("div" + this.id).setAttribute('class', 'divWordHighlight');
 }
+
+// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE

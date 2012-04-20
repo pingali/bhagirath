@@ -53,7 +53,12 @@
        			((typeof range['col'] != 'undefined') ? "caret col: " + range.col + "\n" : '') +
        			"selected text:\n<span class=\"txt\">" + (($('#ws').get(0).checked) ? range.text.whitespace() : range.text) + "</span>\n\n"
 			);
-			document.getElementById("print-output").innerHTML = document.getElementById("print-output").innerHTML + $('#output1').text(); 
+			{% if auto_correct %}
+				if((($('#ws').get(0).checked) ? range.text.whitespace() : range.text)){
+					getOption(range.text.whitespace());
+				}
+			{% endif %}
+			document.getElementById("print-output").innerHTML = document.getElementById("print-output").innerHTML + $('#output1').text();
 		}
 		
 		/**** this code block is not needed for jQuery fieldSelection
@@ -261,32 +266,7 @@
 				}
 		 	});
 		});
-		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR ENDS HERE
-		
-		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
-		
-		{% if auto_correction %}
-			$(document).ready(function() {
-				$('#translated_sentence').dblclick(function(event) {
-					OnmouseOver(this);
-				});
-			});
-		
-			function OnClick(){
-				$(function() {
-					$('#autocorrect').remove();
-				});
-			}
-	
-			$(document).keydown(function(event) {
-		 		document.getElementById('hindi').style.display = "none";
-				document.getElementById('translated_sentence').style.display = 'block';
-				var pos = GetCaretPosition(document.getElementById('translated_sentence'));
-				SetCaretPosition(document.getElementById('translated_sentence'), pos);
-			});
-		{% endif %}		
-		// CODE FOR AUTO-CORRECTION IN TRANSLITERATOR ENDS HERE
-		
+		// CODE FOR AUTO-COMPLETION IN TRANSLITERATOR ENDS HERE	
 				
 		var fontSize = 1;
 		
@@ -296,9 +276,6 @@
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
 		}
 		
 		function zoomIn() {
@@ -307,9 +284,6 @@
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
 			document.getElementById("translated_sentence").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
-			document.getElementById("hindi").style.fontSize = fontSize + "em";
 		}
 		
 		function OnNext() {
@@ -447,7 +421,6 @@
    			    </td>
 				<td>
 					<script>CreateCustomHindiTextArea("translated_sentence","",40,10,true);</script>
-					<div class="original_sentence" id="hindi" style="display:none;" onclick = "OnClick();"></div>
 				</td>
 			</tr>	
 			<tr>
