@@ -6,7 +6,7 @@
 
 {% block head %}
 	<link rel="stylesheet" href="/static/stylesheets/keyboard.css" type="text/css" media="screen, projection" />
-        <link rel="stylesheet" href="/static/stylesheets/translate.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="/static/stylesheets/translate.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="/static/stylesheets/transliterator-autocomplete.css" type="text/css" media="screen, projection" />
 		
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
@@ -14,10 +14,12 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>	
 			
 	<script src="/static/scripts/animate.js" type="text/javascript"></script>
-        <script src="/static/scripts/keyboard.js" type="text/javascript"></script>
-	<script src="/static/scripts/jquery-one.js" type="text/javascript"></script>	
-	<script src="/static/scripts/jquery-selection.js" type="text/javascript"></script>
+    <script src="/static/scripts/keyboard.js" type="text/javascript"></script>
 	<script src="/static/scripts/predict.js" type="text/javascript"></script>
+	
+	<script src="/static/scripts/jquery-fieldselection.js" type="text/javascript"></script>
+	<script src="/static/scripts/jquery-fieldselection.min.js" type="text/javascript"></script>
+	<script src="/static/scripts/jquery-latest.pack.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block script %}
@@ -30,64 +32,80 @@
 
 		// CODE FOR CORRECTION EPISODE STARTS HERE
 	
-		function getCaret(el) {
-			if (el.selectionStart) {
-				return el.selectionStart;
-			} else if (document.selection) {
-				el.focus();
-				var r = document.selection.createRange();
-				if (r == null) {
-					return 0;
-				}
-				var re = el.createTextRange(),
-				rc = re.duplicate();
-				re.moveToBookmark(r.getBookmark());
-				rc.setEndPoint('EndToStart', re);
-				return rc.text.length;
-			}
-			return 0;
-		}
-
-		(function($) {
-			$.print = function(id, message, insertType) {
-				var el = document.getElementById("translated_sentence");
-				insertType = insertType || "append";
-				if (typeof (message) == "object") {
-					var string = "{<br>", values = [], counter = 0;
-					$.each(message, function(key, value) {
-						if(key == 'charCode' || key == 'which' || key == 'altKey' || key == 'timeStamp' || key == 'key' || key == 'shiftKey' || key == 'ctrlKey' || key == 'metaKey'){
-							if (value && value.nodeName) {
-								var domnode = "&lt;" + value.nodeName.toLowerCase();
-								domnode += value.className ? " class='" + value.className + "'" : "";
-								domnode += value.id ? " id='" + value.id + "'" : "";
-								domnode += "&gt;";
-								value = domnode;
-							}
-							values[counter++] = key + ": " + value;
-						}
-					});
-					values[counter++] = "pos: " + getCaret(el) ;
-					values[counter++] = "selectedText: " + $('#translated_sentence').getSelection().text;
-					string += values.join(",<br>");
-					string += "<br>} here";
-					message = string;
-				}
-				var $output = $("#print-output");
-				if (!$output.length) {
-					$output = $("<div id='print-output' style='visibility:hidden' />").appendTo("body");
-				}
-				document.getElementById("print-output").innerHTML = message;
-			};
-		})(jQuery);
-
-		var xTriggered = 0;
-			$(document).ready(function() {
-			$('#translated_sentence').keypress(function(event) {
-				$.print("translated_sentence",event);
-				document.getElementById('print').innerHTML = document.getElementById('print').innerHTML + document.getElementById('print-output').innerHTML
-				$('#output1').html(""+document.getElementById('print-output').innerHTML);
-			});
+		$(document).ready(function(){
+			$('#translated_sentence').keyup(update).mousedown(update).mouseup(update);
 		});
+		
+		/****this function handles #debug #output****/
+
+		function update(e) {
+			// here we fetch our text range object
+			var range = $(this).getSelection();
+
+			// just dump the values
+			$('#output1').html(
+			    "hexdump:\n" + hexdump(this.value, range.start, (range.end != range.start) ? range.end - 1 : range.end) + "\n\n" +
+				"id: " + this.id + "\n" +
+				"start: " + range.start + "\n" +
+				"length: " + range.length + "\n" +
+        		"end: " + range.end + "\n" +
+        		((typeof range['row'] != 'undefined') ? "caret row: " + range.row + "\n" : '') +
+       			((typeof range['col'] != 'undefined') ? "caret col: " + range.col + "\n" : '') +
+       			"selected text:\n<span class=\"txt\">" + (($('#ws').get(0).checked) ? range.text.whitespace() : range.text) + "</span>\n\n"
+			);
+			document.getElementById("print-output").innerHTML = document.getElementById("print-output").innerHTML + $('#output1').text(); 
+		}
+		
+		/**** this code block is not needed for jQuery fieldSelection
+			  this is just to visualize white space in #debug #output ****/
+
+		String.prototype.whitespace = (function() {
+			if (!RegExp.escape) { 
+			  RegExp.escape = (function() { // RegExp.escape by Simon Wilson & Mark Wubben
+			    var specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ];
+			    var sRE = new RegExp( '(\\' + specials.join('|\\') + ')', 'g' );
+			    return function(text) { return text.replace(sRE, '\\$1') }
+			  })();
+			}
+			
+			var ws = { "\r\n": "¶", "\n": "¶", "\r": "¶", "\t": "&raquo;", " ": "&middot;" };
+			
+			return ($.browser.msie) ? function() {
+				// &#8203; to break up our whitespaces doesn't work in IE (it prints a block)
+				// but nevertheless he doesn't need it, because he has "word-wrap:break-word;"
+				// and therefore he gets his own function
+				var s = this;
+				$.each(ws, function(i){ s = s.replace(new RegExp(RegExp.escape(i), 'g'), this) });
+				return s;
+			} : function () {
+				var s = this;
+				$.each(ws, function(i){ s = s.replace(new RegExp(RegExp.escape(i), 'g'), this + "\u200b") });
+				return s;
+			}
+			
+		})();
+
+		function hexdump(txt, hi_f, hi_t) {
+			var hex = '', tmp;
+			if (txt) {
+				for (var i = 0, j = txt.length; i <= j; i++) {
+					tmp = txt.charCodeAt(i).toString(16);
+					if (i == hi_f)
+						hex += '<span class="hi">';
+					if (i < txt.length)
+						hex += ( (tmp.length == 2) ? tmp : '0' + tmp );
+					else
+						hex += "&nbsp;&nbsp;";
+					if (i == hi_t)
+						hex += '</span>';
+					if ((i+1) % 16 == 0)
+						hex += "\n";
+					else
+						hex += ' ';
+				}
+			}
+			return hex;
+		}
 		// CODE FOR CORRECTION EPISODE ENDS HERE
 		
 		// CODE FOR DICTIONARY MEANING ON MOUSEOVER ENGLISH WORD STARTS HERE		
@@ -367,7 +385,7 @@
 		}
 		
 		function OnSubmit() {
-			x = $('#print').text();
+			x = $('#print-output').text();
 			$('#cmd').val(x);
 			var default_translation = "{{hindi}}"; 
 			var user_translation = document.getElementById("translated_sentence").value;
@@ -466,9 +484,11 @@
 	</div>
 </div>
 <div id="print" style="visibility:hidden">
-	<input id="cmd" name="cmd" type="text"></input>
+	<input id="ws" name="ws" type="checkbox" checked="checked"/>
+	<input id="cmd" name="cmd" type="text" value=""></input>
 	<pre id="output1"></pre>
 </div>
+<div id="print-output" style="visibility:hidden"></div>
 <div id="dict" style="visibility:hidden">{{eng2hin_dict}}</div>
 </form>
 {% endblock %}
