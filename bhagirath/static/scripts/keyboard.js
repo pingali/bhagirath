@@ -1323,13 +1323,14 @@ function CreateHindiTextAreaSelectedParam(textAreaParam)
 	}
 }
 // CODE FOR AUTO-CORRECTION IN TRANSLITERATOR STARTS HERE
+var find_word;
 function getOption(find){
 		var textnode ="";
 		var left = 60; //left coordinate of input box relative to its parent element.
 		var top = 35; //top coordinate of input box relative to its parent element.
 		var numLines=0;
 		var max = 0;
-		
+		find_word = find;
 		req_url = '/account/translate/autocorrect/'+find;
 		
 		$.get(req_url, function(data){
@@ -1345,18 +1346,24 @@ function getOption(find){
 			}
 			max = max*10;
 			numLines += lines.length;
+			
 			var element = document.getElementById("translated_sentence")
 			var pos = GetCaretPosition(element);
 			
-			left += (((lines[(lines.length) - 1]).length)%42)*10; //10 pixels horizontoly for one character
-			top += (numLines)*18; //approx height of line in pixels.
+			if (pos > 67) {
+				pos = pos/67;
+			}
+			left += 450; //8 pixels horizontoly for one character
+			top += (numLines*10) + 80; //approx height of line in pixels.
 			left += pos;
-			
+		
 			dict = document.createElement("div");
-			dict.setAttribute('id','autocorrect');
+			dict.setAttribute('id',"autocorrect");
+			dict.setAttribute('class',"autocorrectclass");
 			dict.style.left = left + "px";
 			dict.style.top = top + "px";
 			dict.style.width = max + "px";
+			 
 		
 			document.getElementById("translate").appendChild(dict);
 			
@@ -1387,7 +1394,7 @@ function HandleClickOnDivAutoCorrect(){
 	//id is divXYZ, we want XYZ which is the id of < a > element which is main for us.
 	var id = document.getElementById(((this.id).substring(3))).id;
 	//complete word when user clicks on it.
-	CompleteAutoCorrect(id, find);
+	CompleteAutoCorrect(id, find_word);
 	return false;
 }
 	
@@ -1411,7 +1418,7 @@ function SuggestionKeyDownAutoCorrect(event) {
 	if(keyCode == 27) { //27 = escape key
 		var divSuggestBox = document.getElementById("suggest");
 		if(divSuggestBox != null ) {
-			document.getElementById("main").removeChild(divSuggestBox);
+			document.getElementById("translate").removeChild(divSuggestBox);
 		}
 		document.getElementById("input").focus();
 		gEscapePressed = 1;
@@ -1453,24 +1460,24 @@ function SuggestionKeyDownAutoCorrect(event) {
 	
 function CompleteAutoCorrect(id, source) {
 	$('#autocorrect').remove();
-	var text1 = "";
+	var text1 = document.getElementById("translated_sentence").value;
 	var text = "";
+	
+	var word = text1.split(' ');
+	
+	$(function() {	
+		for (i = 0; i < word.length; i++) {
+			
+		    if (word[i]==source)
+		    {	
+		        word[i] = id;
+		    }
+		    text = text + word[i] + ' ';
+		}
+	});
 
-	var word = $('#translated_sentence').text().split(' ');
-		$(function() {	
-			for (i = 0; i < word.length; i++) {
-				if (word[i]==source)
-		        {	
-		        	word[i] = id;
-		        }
-		        text1 = text1 + '<span id= "hin">' + word[i] + '</span> '; 
-		        text = text + word[i] + ' ';
-			}
-		});
-	$('#translated_sentence').html(text1);
-	$('textarea#translated_sentence').val(text);
+	document.getElementById("translated_sentence").value = text;
 	$('#autocorrect').remove();
-	OnmouseOver(this);
 }
 
 function HighlightAutoCorrect(){

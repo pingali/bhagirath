@@ -122,3 +122,8 @@ button.google_translate{
 	display:none;
 	visibility:hidden;
 }
+
+.autocorrectclass {
+	margin-left:500px;
+	margin-top:100px;
+}
