@@ -75,10 +75,10 @@ def microtaskParser():
                                     micro.task = task
                                     micro.original_sentence = each
                                     micro.bit_array = a
-				    micro.meaning = dictionary(each)
+				                    micro.meaning = dictionary(each)
                                     micro.save()
                                     micro.machine_translation = itd[k]
-				    dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
+				                    dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
                                     micro.meaning = dat
                                     micro.save()
                                     i += 1
@@ -125,7 +125,7 @@ def dictionary(sentence):
         for p in mean:
             w =  Master_English2Hindi.objects.get(pk=p.pk)
             mean_dict = {}
-            mean_dict['word'] = y
+            mean_dict['word'] = s
             mean_dict['pos'] = w.pos
             mean_dict['mean'] = w.hindi_word.split("--") 
             dict.append(mean_dict)
