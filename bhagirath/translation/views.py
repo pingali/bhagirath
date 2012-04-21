@@ -466,8 +466,10 @@ def translate(request,uid):
             logged_in_user_id = uid
             i = 0
             c = 0
+            d = 0 
             hindi = " "
             # check for sentences previously done by user
+           
             available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
             available_microtasks = Microtask.objects.filter(assigned = 0)
                 
@@ -478,13 +480,28 @@ def translate(request,uid):
             
             for j in available_microtasks:
                 c += 1
-            #if no sentence available display message    
+                
             if c==0:
+                k = 0
+                more_available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id).exclude(translated_sentence=None)
+                available_microtasks = Microtask.objects.filter(assigned = 0)
+                #find sentences to be given                                    
+                for j in more_available_sentences_done_by_user:
+                    available_microtasks = available_microtasks.exclude(original_sentence = more_available_sentences_done_by_user[k]).order_by('-id')
+                    k +=1
+            
+                for j in available_microtasks:
+                    d += 1
+            
+            #if no sentence available display message    
+            if c==0 and d==0:
                 data = {
                     'form': TranslateForm(),
                     'uid':uid,
                     'username':user,
                 }
+                messages.error(request,"No sentence available for translation!!")
+                log.error("No sentence available for translation.")
                 
                 ta = TransactionAction()
                 ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
@@ -492,10 +509,6 @@ def translate(request,uid):
                 ta.action = Master_Action.objects.filter(action="Translate")[0]
                 ta.action_timestamp = datetime.datetime.now()
                 ta.save()
-               
-                messages.error(request,"No sentence available for translation!!")
-                log.error("No sentence available for translation.")
-                
                 return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
             else:
                 #get bit_array value for that sentence from static microtask table

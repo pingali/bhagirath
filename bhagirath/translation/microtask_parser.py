@@ -75,10 +75,10 @@ def microtaskParser():
                                     micro.task = task
                                     micro.original_sentence = each
                                     micro.bit_array = a
-				                    micro.meaning = dictionary(each)
+                                    micro.meaning = dictionary(each)
                                     micro.save()
                                     micro.machine_translation = itd[k]
-				                    dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
+                                    dat = serializers.serialize('json', StaticMicrotask.objects.filter(pk=micro.id), fields=('meaning'), ensure_ascii=False)
                                     micro.meaning = dat
                                     micro.save()
                                     i += 1

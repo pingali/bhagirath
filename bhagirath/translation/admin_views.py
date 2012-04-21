@@ -242,11 +242,10 @@ def populate_microtask(request):
 def unassign_microtask(request):
     """
     This function is used whenever user clicks translate and sentences are given 
-    to him for translation from microtask table. When sentence is given
-    its assigned flag is set to true but if user clicks next without
-    submitting translation its translated_sentence field is null
-    Sentences having such fields are unassigned from microtask table
-    so that it can be given to other users 
+    to him for translation from microtask table. When sentence is given its 
+    assigned flag is set to true but if user clicks next without submitting
+    translation its translated_sentence field is null. Sentences having such
+    fields are unassigned from microtask table so that it can be given to other users. 
     """
     try:
         userhist = UserHistory.objects.all()
@@ -259,9 +258,10 @@ def unassign_microtask(request):
                 pass
             else:
                 m = u.microtask
-                m.assigned = 0
-                m.save()
-                count += 1
+                if m.assigned == True:
+                    m.assigned = 0
+                    m.save()
+                    count += 1
             j += 1 
         
         msg = str(count) + " microtasks are unassigned successfully." 

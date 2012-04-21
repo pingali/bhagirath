@@ -370,7 +370,7 @@
 			} 					
 			else if (default_translation == user_translation) {
 				data = {cmd:x,translated_sentence:user_translation};
-				return myconfirm('Are you sure?','You are about to submit the same translation. Do you think this is the perfect translation for this sentence?','/account/translate/{{uid}}/{{curr_id}}/done/',data,"Record saved successfully!!!");
+				return myconfirm('Are you sure?','You are about to submit the same translation. Do you think this is the perfect translation for this sentence?','/account/translate/{{uid}}/{{curr_id}}/done/',data,"Translation saved successfully!!!");
 			}			
 			else {
 				document.translate_form.action = "/account/translate/{{uid}}/{{curr_id}}/done/";
