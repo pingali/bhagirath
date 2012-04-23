@@ -1331,6 +1331,7 @@ function getOption(find){
 		var numLines=0;
 		var max = 0;
 		find_word = find;
+	
 		req_url = '/account/translate/autocorrect/'+find;
 		
 		$.get(req_url, function(data){
