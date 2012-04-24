@@ -480,7 +480,8 @@ def translate(request,uid):
             
             for j in available_microtasks:
                 c += 1
-                
+            
+            #if no microtask available search for skipped ones  
             if c==0:
                 k = 0
                 more_available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id).exclude(translated_sentence=None)
@@ -493,7 +494,7 @@ def translate(request,uid):
                 for j in available_microtasks:
                     d += 1
             
-            #if no sentence available display message    
+            #still no sentence available then display message    
             if c==0 and d==0:
                 data = {
                     'form': TranslateForm(),

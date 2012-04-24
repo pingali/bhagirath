@@ -448,8 +448,9 @@ def reputation_score(request):
         i = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0).count()
         k = 0
         while k < i:
-            user = UserHistory.objects.filter(static_microtask = static[k].id)
-            l = UserHistory.objects.filter(static_microtask = static[k].id).count()
+            a = static[k]
+            user = UserHistory.objects.filter(static_microtask = a.id)
+            l = UserHistory.objects.filter(static_microtask = a.id).count()
             #UserHistory.objects.filter(static_microtask = static[k].id,translated_sentence=None).delete()            
             user_responses = []
             j = 0
@@ -463,7 +464,7 @@ def reputation_score(request):
             
             count = 0
             
-            for a in user_responses:
+            for b in user_responses:
                 count += 1
                 
             n = 1
