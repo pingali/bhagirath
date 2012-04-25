@@ -266,7 +266,7 @@ def unassign_microtask(request):
         UserHistory.objects.filter(translated_sentence=None).delete()
         msg = str(count) + " microtasks are unassigned successfully." 
         data = {'msg':msg}
-        messages.success(request, "Microtasks unassigned successfully.")
+        messages.success(request, msg)
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
     except: 
         msg = traceback.format_exc()
@@ -470,8 +470,6 @@ def reputation_score(request):
                     input1 = []
                     while p<count:
                         input1.append(user[p].translated_sentence)
-                        print user[p]
-                        print user[p].translated_sentence
                         p += 1
                     centroid = CentroidFinder.getCentroid(input1)
                     scores = [int() for __idx0 in range(count)]
@@ -480,7 +478,9 @@ def reputation_score(request):
                     st.translated_sentence = centroid
                     z = 0
                     while z < count:
-                        user[z].reputation_score = scores[z]
+                        a = user[z]
+                        a.reputation_score = scores[z]
+                        a.save()
                         u = UserProfile.objects.get(user = user[z].user)
                         u.prev_week_score += scores[z]
                         u.overall_score += scores[z]
@@ -493,10 +493,30 @@ def reputation_score(request):
                     isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
                     if not isAnotherRunNeeded:
                         st.scoring_done = 1
+                        st.save()
+                        """perform clean-up task : Delete related entries from Microtask table and 
+                        move related entries from UserHistory to RevisedUserHistory."""
+                        a = UserHistory.objects.filter(static_microtask = st.id)
+                        for m in a:
+                            r = RevisedUserHistory()
+                            r.task = m.task
+                            r.subtask = m.subtask
+                            r.static_microtask = m.static_microtask
+                            r.user = m.user
+                            r.original_sentence = m.original_sentence 
+                            r.translated_sentence = m.translated_sentence 
+                            r.assign_timestamp = m.assign_timestamp 
+                            r.submission_timestamp = m.submission_timestamp 
+                            r.reputation_score = m.reputation_score 
+                            r.correction_episode = m.correction_episode 
+                            r.save()
+                             
+                        UserHistory.objects.filter(static_microtask = st.id).delete()
+                        Microtask.objects.filter(static_microtask = st.id).delete()  
                     else:
                         st.assigned = 0
                         st.hop_count += 1
-                    st.save()
+                        st.save()
                 k += 1        
         data = {'msg':''}
         messages.success(request, "User's reputation score updated successfully.")

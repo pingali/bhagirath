@@ -442,6 +442,24 @@ class UserHistory(models.Model):
           
     def __unicode__(self):
         return u"%s" %(self.original_sentence)
+
+class RevisedUserHistory(models.Model):
+    """
+    It stores entries of UserHistory for every sentence whose perfect translation is obtained.
+    """
+    task = models.ForeignKey(Task,on_delete=models.PROTECT) 
+    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
+    static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
+    original_sentence = models.CharField(max_length=2000,null=False)
+    translated_sentence = models.CharField(max_length=2000,null=True)
+    assign_timestamp = models.DateTimeField(null=True)
+    submission_timestamp = models.DateTimeField(null=True)
+    reputation_score = models.IntegerField(default=0,null=True)
+    correction_episode = jsonfield.JSONField()
+          
+    def __unicode__(self):
+        return u"%s" %(self.original_sentence)
     
 class TransactionAction(models.Model):
     """
