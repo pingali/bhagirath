@@ -443,6 +443,7 @@ def reputation_score(request):
     If translations are not satisfactory they are given to other
     users for translation. 
     """
+    unassign_microtask(request)
     try:
         static = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0)
         i = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0).count()
