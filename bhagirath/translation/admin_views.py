@@ -601,3 +601,85 @@ def assign_rank(request):
         data = {'msg':msg}
         messages.error(request, "Update user's reputation score failed.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))   
+
+def temp_code(request):
+    try:
+        static = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 1)
+        i = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 1).count()
+        k = 0
+        while k < i:
+            a = static[k]
+            if a:
+                user = UserHistory.objects.filter(static_microtask = a.id)
+                l = UserHistory.objects.filter(static_microtask = a.id).count()
+                if l==0:
+                    pass
+                else:
+                    user_responses = []
+                    j = 0
+                    while j < l:
+                        u = user[j]
+                        if u.translated_sentence:
+                            user_responses.append(u)
+                        else:
+                            pass
+                        j += 1
+                    
+                    count = len(user_responses)                
+                    n = count  
+                    print n
+                    if (n % 3)==0 and n!=0:
+                        p = 0
+                        input1 = []
+                        while p<count:
+                            input1.append(user[p].translated_sentence)
+                            p += 1
+                        centroid = CentroidFinder.getCentroid(input1)
+                        scores = [int() for __idx0 in range(count)]
+                        scores = CentroidFinder.getReputationscores()
+                        st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
+                        st.translated_sentence = centroid
+                        z = 0
+                        while z < count:
+                            a = user[z]
+                            a.reputation_score = scores[z]
+                            a.save()
+                            u = UserProfile.objects.get(user = user[z].user)
+                            u.prev_week_score += scores[z]
+                            u.overall_score += scores[z]
+                            if user[z].translated_sentence == centroid:
+                                u.no_of_perfect_translations += 1
+                                st.user = user[z].user
+                            u.save()
+                            user[z].save()
+                            z += 1
+                    isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
+                    if not isAnotherRunNeeded:
+                        a = UserHistory.objects.filter(static_microtask = st.id)
+                        for m in a:
+                            if m.translated_sentence:
+                                r = RevisedUserHistory()
+                                r.task = m.task
+                                r.subtask = m.subtask
+                                r.static_microtask = m.static_microtask
+                                r.user = m.user
+                                r.original_sentence = m.original_sentence 
+                                r.translated_sentence = m.translated_sentence 
+                                r.assign_timestamp = m.assign_timestamp 
+                                r.submission_timestamp = m.submission_timestamp 
+                                r.reputation_score = m.reputation_score 
+                                r.correction_episode = m.correction_episode 
+                                r.save()
+                                     
+                        UserHistory.objects.filter(static_microtask = st.id).delete()
+                        Microtask.objects.filter(static_microtask = st.id).delete()
+            k += 1
+        data = {'msg':''}
+        messages.success(request, "Cleanup successful")
+        return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
+    except: 
+        msg = traceback.format_exc()
+        data = {'msg':msg}
+        messages.error(request, "Update user's reputation score failed.")
+        return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))   
+ 
