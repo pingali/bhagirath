@@ -263,7 +263,7 @@ def unassign_microtask(request):
                     m.save()
                     count += 1
             j += 1 
-        
+        UserHistory.objects.filter(translated_sentence=None).delete()
         msg = str(count) + " microtasks are unassigned successfully." 
         data = {'msg':msg}
         messages.success(request, "Microtasks unassigned successfully.")
