@@ -449,65 +449,54 @@ def reputation_score(request):
         k = 0
         while k < i:
             a = static[k]
-            user = UserHistory.objects.filter(static_microtask = a.id)
-            l = UserHistory.objects.filter(static_microtask = a.id).count()
-            #UserHistory.objects.filter(static_microtask = static[k].id,translated_sentence=None).delete()            
-            user_responses = []
-            j = 0
-            while j < l:
-                u = user[j]
-                if u.translated_sentence:
-                    user_responses.append(u)
-                else:
-                    pass
-                j += 1
-            
-            count = 0
-            
-            for b in user_responses:
-                count += 1
+            if a:
+                user = UserHistory.objects.filter(static_microtask = a.id)
+                l = UserHistory.objects.filter(static_microtask = a.id).count()
+                user_responses = []
+                j = 0
+                while j < l:
+                    u = user[j]
+                    if u.translated_sentence:
+                        user_responses.append(u)
+                    else:
+                        pass
+                    j += 1
                 
-            n = 1
-            while n <= 10:
-                m = 3 * n
-                if count == m:
-                    break
-                else:
-                    pass
-                n += 1
-            if n == 11: 
-                pass
-            else:
-                p = 0
-                input1 = []
-                while p<count:
-                    input1.append(user[p].translated_sentence)
-                    p += 1
-                centroid = CentroidFinder.getCentroid(input1)
-                scores = [int() for __idx0 in range(count)]
-                scores = CentroidFinder.getReputationscores()
-                st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
-                st.translated_sentence = centroid
-                z = 0
-                while z < count:
-                    user[z].reputation_score = scores[z]
-                    u = UserProfile.objects.get(user = user[z].user)
-                    u.prev_week_score += scores[z]
-                    u.overall_score += scores[z]
-                    if user[z].translated_sentence == centroid:
-                        u.no_of_perfect_translations += 1
-                        st.user = user[z].user
-                    u.save()
-                    user[z].save()
-                    z += 1
-                isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
-                if not isAnotherRunNeeded:
-                    st.scoring_done = 1
-                else:
-                    st.assigned = 0
-                    st.hop_count += 1
-                st.save()
-            k += 1        
+                count = len(user_responses)                
+                n = count  
+                if (n % 3)==0 and n!=0:
+                    p = 0
+                    input1 = []
+                    while p<count:
+                        input1.append(user[p].translated_sentence)
+                        print user[p]
+                        print user[p].translated_sentence
+                        p += 1
+                    centroid = CentroidFinder.getCentroid(input1)
+                    scores = [int() for __idx0 in range(count)]
+                    scores = CentroidFinder.getReputationscores()
+                    st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
+                    st.translated_sentence = centroid
+                    z = 0
+                    while z < count:
+                        user[z].reputation_score = scores[z]
+                        u = UserProfile.objects.get(user = user[z].user)
+                        u.prev_week_score += scores[z]
+                        u.overall_score += scores[z]
+                        if user[z].translated_sentence == centroid:
+                            u.no_of_perfect_translations += 1
+                            st.user = user[z].user
+                        u.save()
+                        user[z].save()
+                        z += 1
+                    isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
+                    if not isAnotherRunNeeded:
+                        st.scoring_done = 1
+                    else:
+                        st.assigned = 0
+                        st.hop_count += 1
+                    st.save()
+                k += 1        
         data = {'msg':''}
         messages.success(request, "User's reputation score updated successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request)) 
