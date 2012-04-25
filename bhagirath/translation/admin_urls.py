@@ -20,6 +20,5 @@ urlpatterns = patterns('bhagirath.translation.admin_views',
     url(r'^update_statistics_counter/','update_statistics_counter',name='update_statistics_counter'),
     url(r'^document_stability/','document_stability',name='document_stability'),
     url(r'^reputation_score/','reputation_score',name='reputation_score'),
-    url(r'^assign_rank/','assign_rank',name='assign_rank'),
-    url(r'^temp_code/','temp_code',name='temp_code')
+    url(r'^assign_rank/','assign_rank',name='assign_rank')
 )
