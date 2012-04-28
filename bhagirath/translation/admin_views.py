@@ -471,6 +471,8 @@ def reputation_score(request):
                     while p<count:
                         input1.append(user[p].translated_sentence)
                         p += 1
+                    v = StaticMicrotask.objects.get(pk=a.id)
+                    input1.append(v.machine_translation)
                     centroid = CentroidFinder.getCentroid(input1)
                     scores = [int() for __idx0 in range(count)]
                     scores = CentroidFinder.getReputationscores()
