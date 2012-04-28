@@ -260,7 +260,7 @@ function SuggestionKeyDown(event) {
 	else if(event) {
 		keyCode = event.which;
 	}
-	document.getElementById("suggestion");
+	
 	if(keyCode == 27) { //27 = escape key
 		var divSuggestBox = document.getElementById("suggestion");
 		if(divSuggestBox != null ) {
@@ -288,12 +288,12 @@ function SuggestionKeyDown(event) {
 		if(keyCode == 38) {
 			selected--;
 			if(selected == -1) {
-				selected = gSuggestions.length - 1;
+				selected = gSuggestions.length - 2;
 			}
 		}
 		else if(keyCode == 40) {
 			selected++;
-			if (selected == gSuggestions.length) {
+			if (selected == (gSuggestions.length - 1)) {
 					selected = 0;
 			}				
 		}
@@ -330,7 +330,7 @@ function TextAreaKeyDown(event) {
 			return false;
 		}
 		else if(keyCode == 38){
-			document.getElementById(gSuggestions[(gSuggestions.length)-1]).focus();
+			document.getElementById(gSuggestions[(gSuggestions.length)-2]).focus();
 			return false;
 		}
 		else if(keyCode == 40){
@@ -347,7 +347,7 @@ function TextAreaKeyDown(event) {
  */
 function Highlight(){
 	for(i in gSuggestions) {
-		document.getElementById("div" + gSuggestions[i]).setAttribute('class', 'suggestWord');
+		document.getElementById(gSuggestions[i]).setAttribute('class', 'suggestWord');
 		document.getElementById("div" + gSuggestions[i]).setAttribute('class', 'divWord');
 	}
 	this.setAttribute('class', 'suggestWordHighlight');
