@@ -110,7 +110,7 @@ function Predict(result) {
 
 function ShowSuggest(element) {
 	//show suggestions only if there are suggestions !!!
-	if(gSuggestions.length >=1) {
+	if(gSuggestions.length > 1) {
 		var i=0; //for iterating in array.
 		var left = 60; //left coordinate of input box relative to its parent element.
 		var top = 35; //top coordinate of input box relative to its parent element.
