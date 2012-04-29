@@ -233,7 +233,10 @@
 		$(document).ready(function() {
 			$("#translated_sentence").keyup(function(){
 				changeCursor(this);
-				
+				if (document.getElementById('autocorrect') != null)
+				{
+        			$('#autocorrect').remove();
+				}
 				var gDelimeters = new Array(' ', '\t', '\n', '-', '|', '(', ')', ',');
 				var input = document.getElementById("translated_sentence");
 				var caret = GetCaretPosition(input);

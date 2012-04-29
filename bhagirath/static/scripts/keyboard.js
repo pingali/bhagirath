@@ -1365,8 +1365,7 @@ function getOption(find){
 			dict.style.top = top + "px";
 			dict.style.width = max + "px";
 			 
-		
-			document.getElementById("translate").appendChild(dict);
+        	document.getElementById("suggest").appendChild(dict);
 			
 			for(i in lines) {
 				divSuggestWrd = document.createElement('div');
