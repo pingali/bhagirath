@@ -473,29 +473,36 @@ def reputation_score(request):
                         p += 1
                     v = StaticMicrotask.objects.get(pk=a.id)
                     input1.append(v.machine_translation)
+                    
                     centroid = CentroidFinder.getCentroid(input1)
-                    scores = [int() for __idx0 in range(count)]
-                    scores = CentroidFinder.getReputationscores()
+                    
                     st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
                     st.translated_sentence = centroid
-                    z = 0
-                    while z < count:
-                        a = user[z]
-                        a.reputation_score = scores[z]
-                        a.save()
-                        u = UserProfile.objects.get(user = user[z].user)
-                        u.prev_week_score += scores[z]
-                        u.overall_score += scores[z]
-                        if user[z].translated_sentence == centroid:
-                            u.no_of_perfect_translations += 1
-                            st.user = user[z].user
-                        u.save()
-                        user[z].save()
-                        z += 1
+                    
+                    scores = [int() for __idx0 in range(count)]
+                    scores = CentroidFinder.getReputationscores()
+                    
                     isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
+                    
                     if not isAnotherRunNeeded:
+                        z = 0
+                        while z < count:
+                            a = user[z]
+                            a.reputation_score = scores[z]
+                            a.save()
+                            u = UserProfile.objects.get(user = user[z].user)
+                            u.prev_week_score += scores[z]
+                            u.overall_score += scores[z]
+                            if user[z].translated_sentence == centroid:
+                                u.no_of_perfect_translations += 1
+                                st.user = user[z].user
+                            u.save()
+                            user[z].save()
+                            z += 1
+                            
                         st.scoring_done = 1
                         st.save()
+                        
                         """perform clean-up task : Delete related entries from Microtask table and 
                         move related entries from UserHistory to RevisedUserHistory."""
                         a = UserHistory.objects.filter(static_microtask = st.id)
