@@ -18,7 +18,7 @@ def complete_user_history(request):
     """
     unassign_microtask(request)
     complete_user_history = BhagirathUserHistory.objects.all()
-    for i in complete_user_history
+    for i in complete_user_history:
         dict = {}  
         dict['username'] = i.user
         dict['original_sentence'] = i.original_sentence
