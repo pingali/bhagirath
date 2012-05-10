@@ -4,6 +4,7 @@ from django.db.models import Avg, Max, Min
 from django.contrib import messages
 from django.contrib.auth.models import Permission
 from bhagirath.translation.models import Session as BhagirathSession
+from bhagirath.translation.models import UserHistory as BhagirathUserHistory
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import tempMicrotaskParser
