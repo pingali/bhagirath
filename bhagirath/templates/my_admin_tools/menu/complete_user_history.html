@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+	<div class="breadcrumbs">
+		<a href="/admin/">Home</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<label style="color: #666666;font-size: 12px;margin: 0 0 0.2em;padding: 0 6px 0 0;font-weight: bold;">The total translations attempted.</label>
+</br></br>
+<table id="result_list" cellspacing="0" width="80%">
+	<thead>
+		<tr>
+			<th style="font-size: 10px;">Username</th>
+			<th style="font-size: 10px;">Original Sentence</th>
+			<th style="font-size: 10px;">Translated Sentence</th>
+			<th style="font-size: 10px;">Assign Timestamp</th>
+			<th style="font-size: 10px;">Submission Timestamp</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for i in complete_user_history %}
+		<tr>
+			<td>{{i.username}}</td>
+			<td>{{i.original_sentence}}</td>
+			<td>{{i.translated_sentence}}</td>
+			<td>{{i.assign_timestamp}}</td>			
+			<td>{{i.submission_timestamp}}</td>			
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+		
+{% endblock %}
