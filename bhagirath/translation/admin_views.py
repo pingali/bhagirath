@@ -18,6 +18,7 @@ def complete_user_history(request):
     This function displays the complete content in the UserHistory table
     """
     unassign_microtask(request)
+    list = []
     complete_user_history = BhagirathUserHistory.objects.all()
     for i in complete_user_history:
         dict = {}  
