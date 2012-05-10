@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('bhagirath.translation.admin_views',                    
     url(r'^active_users/$', 'active_users', name='active_users'),
+    url(r'^complete_user_history/$', 'complete_user_history', name='complete_user_history'),
     url(r'^current_translations/$', 'current_translations', name='current_translations'),
     url(r'^translations_max_hops/$', 'translations_max_hops', name='translations_max_hops'),
     url(r'^translations_min_hops/$', 'translations_min_hops', name='translations_min_hops'),

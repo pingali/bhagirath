@@ -4,6 +4,7 @@ from django.db.models import Avg, Max, Min
 from django.contrib import messages
 from django.contrib.auth.models import Permission
 from bhagirath.translation.models import Session as BhagirathSession
+from bhagirath.translation.models import UserHistory as BhagirathUserHistory
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import tempMicrotaskParser
@@ -11,6 +12,24 @@ from bhagirath.centoid_score.CentroidFinder import CentroidFinder
 import traceback
 
 #############CURRENT ACTIVITY FUNCTIONS###############
+
+def complete_user_history(request):
+    """
+    This function displays the complete content in the UserHistory table
+    """
+    unassign_microtask(request)
+    complete_user_history = BhagirathUserHistory.objects.all()
+    for i in complete_user_history
+        dict = {}  
+        dict['username'] = i.user
+        dict['original_sentence'] = i.original_sentence
+        dict['translated_sentence'] = i.translated_sentence
+        dict['assign_timestamp'] = i.assign_timestamp
+        dict['submission_timestamp'] = i.submission_timestamp
+        list.append(dict)
+
+    data = {'complete_user_history':list} 
+    return render_to_response('my_admin_tools/menu/complete_user_history.html',data,context_instance=RequestContext(request))
 
 def active_users(request):
     """
@@ -263,10 +282,10 @@ def unassign_microtask(request):
                     m.save()
                     count += 1
             j += 1 
-        UserHistory.objects.filter(translated_sentence=None).delete()
+        
         msg = str(count) + " microtasks are unassigned successfully." 
         data = {'msg':msg}
-        messages.success(request, msg)
+        messages.success(request, "Microtasks unassigned successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request))  
     except: 
         msg = traceback.format_exc()
@@ -443,90 +462,70 @@ def reputation_score(request):
     If translations are not satisfactory they are given to other
     users for translation. 
     """
-    unassign_microtask(request)
     try:
         static = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0)
         i = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0).count()
         k = 0
         while k < i:
-            a = static[k]
-            if a:
-                user = UserHistory.objects.filter(static_microtask = a.id)
-                l = UserHistory.objects.filter(static_microtask = a.id).count()
-                user_responses = []
-                j = 0
-                while j < l:
-                    u = user[j]
-                    if u.translated_sentence:
-                        user_responses.append(u)
-                    else:
-                        pass
-                    j += 1
+            user = UserHistory.objects.filter(static_microtask = static[k].id)
+            l = UserHistory.objects.filter(static_microtask = static[k].id).count()
+            #UserHistory.objects.filter(static_microtask = static[k].id,translated_sentence=None).delete()            
+            user_responses = []
+            j = 0
+            while j < l:
+                u = user[j]
+                if u.translated_sentence:
+                    user_responses.append(u)
+                else:
+                    pass
+                j += 1
+            
+            count = 0
+            
+            for a in user_responses:
+                count += 1
                 
-                count = len(user_responses)                
-                n = count  
-                if (n % 3)==0 and n!=0:
-                    p = 0
-                    input1 = []
-                    while p<count:
-                        input1.append(user[p].translated_sentence)
-                        p += 1
-                    v = StaticMicrotask.objects.get(pk=a.id)
-                    input1.append(v.machine_translation)
-                    
-                    centroid = CentroidFinder.getCentroid(input1)
-                    
-                    st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
-                    st.translated_sentence = centroid
-                    
-                    scores = [int() for __idx0 in range(count)]
-                    scores = CentroidFinder.getReputationscores()
-                    
-                    isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
-                    
-                    if not isAnotherRunNeeded:
-                        z = 0
-                        while z < count:
-                            a = user[z]
-                            a.reputation_score = scores[z]
-                            a.save()
-                            u = UserProfile.objects.get(user = user[z].user)
-                            u.prev_week_score += scores[z]
-                            u.overall_score += scores[z]
-                            if user[z].translated_sentence == centroid:
-                                u.no_of_perfect_translations += 1
-                                st.user = user[z].user
-                            u.save()
-                            user[z].save()
-                            z += 1
-                            
-                        st.scoring_done = 1
-                        st.save()
-                        
-                        """perform clean-up task : Delete related entries from Microtask table and 
-                        move related entries from UserHistory to RevisedUserHistory."""
-                        a = UserHistory.objects.filter(static_microtask = st.id)
-                        for m in a:
-                            r = RevisedUserHistory()
-                            r.task = m.task
-                            r.subtask = m.subtask
-                            r.static_microtask = m.static_microtask
-                            r.user = m.user
-                            r.original_sentence = m.original_sentence 
-                            r.translated_sentence = m.translated_sentence 
-                            r.assign_timestamp = m.assign_timestamp 
-                            r.submission_timestamp = m.submission_timestamp 
-                            r.reputation_score = m.reputation_score 
-                            r.correction_episode = m.correction_episode 
-                            r.save()
-                             
-                        UserHistory.objects.filter(static_microtask = st.id).delete()
-                        Microtask.objects.filter(static_microtask = st.id).delete()  
-                    else:
-                        st.assigned = 0
-                        st.hop_count += 1
-                        st.save()
-                k += 1        
+            n = 1
+            while n <= 10:
+                m = 3 * n
+                if count == m:
+                    break
+                else:
+                    pass
+                n += 1
+            if n == 11: 
+                pass
+            else:
+                p = 0
+                input1 = []
+                while p<count:
+                    input1.append(user[p].translated_sentence)
+                    p += 1
+                centroid = CentroidFinder.getCentroid(input1)
+                scores = [int() for __idx0 in range(count)]
+                scores = CentroidFinder.getReputationscores()
+                st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
+                st.translated_sentence = centroid
+                z = 0
+                while z < count:
+                    user[z].reputation_score = scores[z]
+                    u = UserProfile.objects.get(user = user[z].user)
+                    u.prev_week_score += scores[z]
+                    u.overall_score += scores[z]
+                    if user[z].translated_sentence == centroid:
+                        u.no_of_perfect_translations += 1
+                        st.user = user[z].user
+                    u.save()
+                    user[z].save()
+                    z += 1
+                isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
+                if not isAnotherRunNeeded:
+                    st.scoring_done = 1
+                else:
+                    st.assigned = 0
+                    st.hop_count += 1
+                st.save()
+            k += 1        
         data = {'msg':''}
         messages.success(request, "User's reputation score updated successfully.")
         return render_to_response('my_admin_tools/menu/background_task.html',data,context_instance=RequestContext(request)) 

@@ -36,6 +36,7 @@ class CustomMenu(Menu):
             items.MenuItem('Current Activity',
                 children=[
                     items.MenuItem('Logged-in users', '/current_activity/active_users/'),
+                    items.MenuItem('Total translation attempts', '/current_activity/complete_user_history/'),
                     items.MenuItem('Current translations', '/current_activity/current_translations/'),
                     items.MenuItem('Translations with maximum hops', '/current_activity/translations_max_hops/'),
                     items.MenuItem('Translations with minimum hops', '/current_activity/translations_min_hops/'),
