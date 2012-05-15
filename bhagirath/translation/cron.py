@@ -2,7 +2,7 @@ from django_cron import CronJobBase, Schedule
 from django.contrib.auth.models import User, Permission
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
-from bhagirath.translation.microtask_parser import microtaskParser
+from bhagirath.translation.microtask_parser import tempMicrotaskParser
 from bhagirath.centoid_score.CentroidFinder import CentroidFinder 
 import datetime
 
@@ -16,14 +16,15 @@ class PopulateSubtaskCronJob(CronJobBase):
     RUN_EVERY_MINS = 1440 # run every day
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.populate_subtask_cron_job' # a unique code
-    
+
     def job(self):
         tasks = Task.objects.all().filter(parsed=False)
         i = Task.objects.all().filter(parsed=False).count()
         j = 0
-        while  j< i:
+        while  j < i:
             t = tasks[j]
-            subtaskParser(t.html_doc_name)
+            a = t.html_doc_content
+            subtaskParser(a.path,t.id)
             t.parsed = True
             t.save()
             j +=1
@@ -37,11 +38,11 @@ class PopulateStaticMicrotaskCronJob(CronJobBase):
     RUN_EVERY_MINS = 60 # run every 1 hr
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'bhagirath.translation.populate_staticmicrotask_cron_job' # a unique code
-    
+
     def job(self):
         i = 0
         while i < 5:
-            microtaskParser()
+            tempMicrotaskParser()
             i += 1
 
 #3.Populate Microtask - DONE
@@ -58,7 +59,7 @@ class PopulateMicrotaskCronJob(CronJobBase):
     def job(self):
         i = 0
         static = StaticMicrotask.objects.filter(assigned = 0)
-        while i < 50:
+        while i < 10:
             s = static[i]
             x = Master_Experiment.objects.get(bit_array = s.bit_array)
             z = x.bit_array
@@ -105,7 +106,8 @@ class UnassignMicrotaskCronJob(CronJobBase):
                 m.assigned = 0
                 m.save()
             j += 1 
-
+        UserHistory.objects.filter(translated_sentence=None).delete()
+        
 #5.Assign Upload priviledge - DONE
 class UploadPriviledgeCronJob(CronJobBase):
     """
@@ -138,7 +140,7 @@ class UploadPriviledgeCronJob(CronJobBase):
         while j < k:
             u = uncheck[j]
             usr = User.objects.get(username=u.user)
-            if  not usr.has_perm('translation.add_task'):
+            if not usr.has_perm('translation.add_task'):
                 pass
             else:
                 usr.user_permissions.remove(perm_id)        
@@ -265,69 +267,104 @@ class ReputationScoreCronJob(CronJobBase):
     code = 'bhagirath.translation.reputation_score_cron_job' # a unique code
     
     def job(self):
+        #unassign all microtasks first
+        userhist = UserHistory.objects.all()
+        i = UserHistory.objects.all().count()
+        j = 0
+        while j < i:
+            u = userhist[j]
+            if u.translated_sentence:
+                pass
+            else:
+                m = u.microtask
+                m.assigned = 0
+                m.save()
+            j += 1
+        UserHistory.objects.filter(translated_sentence=None).delete()
+        
+        #code for reputation score starts here
         static = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0)
         i = StaticMicrotask.objects.filter(assigned = 1, scoring_done = 0).count()
         k = 0
         while k < i:
-            user = UserHistory.objects.filter(static_microtask = static[k].id)
-            l = UserHistory.objects.filter(static_microtask = static[k].id).count()
-            j = 0
-            while j < l:
-                u = user[j]
-                if u.translation:
-                    pass
-                else:
-                    u.delete()
-                j += 1
-            count = 0
-            for a in user:
-                count += 1
-            n = 1
-            while n <= 10:
-                m = 3 * n
-                if count == m:
-                    break
-                else:
-                    pass
-                n += 1
-            if n == 11: 
-                break
-            else:
-                #count += 1
-                p = 0
-                input1 = []
-                while p<count:
-                    input1.append(user[p].translated_sentence)
-                    p += 1
-                centroid = CentroidFinder.getCentroid(input1)
-                    #print "centroid" 
-                    #print centroid
-                isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
-                if not isAnotherRunNeeded:
-                        #print "No need for another Iteration"
-                    st = StaticMicrotask.objects.get(id = user[0].static_microtask)
+            a = static[k]
+            if a:
+                user = UserHistory.objects.filter(static_microtask = a.id)
+                l = UserHistory.objects.filter(static_microtask = a.id).count()
+                user_responses = []
+                j = 0
+                while j < l:
+                    u = user[j]
+                    if u.translated_sentence:
+                        user_responses.append(u)
+                    else:
+                        pass
+                    j += 1
+                
+                count = len(user_responses)
+                n = count
+                if (n % 3)==0 and n!=0:
+                    p = 0
+                    input1 = []
+                    while p<count:
+                        input1.append(user[p].translated_sentence)
+                        p += 1
+                    v = StaticMicrotask.objects.get(pk=a.id)
+                    input1.append(v.machine_translation)
+                    
+                    centroid = CentroidFinder.getCentroid(input1)
+                    
+                    st = StaticMicrotask.objects.get(id = str(user[0].static_microtask))
                     st.translated_sentence = centroid
+                    
                     scores = [int() for __idx0 in range(count)]
                     scores = CentroidFinder.getReputationscores()
-                    z = 0
-                    while z < count:
-                        user[z].reputation_score = scores[z]
-                        u = UserProfile.objects.get(user = user[z].user)
-                        u.prev_week_score += scores[z]
-                        u.overall_score += scores[z]
-                        if user[z].translated_sentence == centroid:
-                            u.no_of_perfect_translations += 1
-                            st.user = user[z].user
-                        u.save()
-                        user[z].save()
-                        z += 1
-                    st.scoring_done = 1
-                    st.save()
-                else:
-                    st = StaticMicrotask.objects.get(id = user[0].static_microtask)
-                    st.assigned = 0
-                    st.hop_count += 1
-                    st.save()
+                    
+                    isAnotherRunNeeded = CentroidFinder.isIterationNeeded()
+                    
+                    if not isAnotherRunNeeded:
+                        z = 0
+                        while z < count:
+                            a = user[z]
+                            a.reputation_score = scores[z]
+                            a.save()
+                            u = UserProfile.objects.get(user = user[z].user)
+                            u.prev_week_score += scores[z]
+                            u.overall_score += scores[z]
+                            if user[z].translated_sentence == centroid:
+                                u.no_of_perfect_translations += 1
+                                st.user = user[z].user
+                            u.save()
+                            user[z].save()
+                            z += 1
+                            
+                        st.scoring_done = 1
+                        st.save()
+                        
+                        """perform clean-up task : Delete related entries from Microtask table 
+                        and move related entries from UserHistory to RevisedUserHistory."""
+                        a = UserHistory.objects.filter(static_microtask = st.id)
+                        for m in a:
+                            r = RevisedUserHistory()
+                            r.task = m.task
+                            r.subtask = m.subtask
+                            r.static_microtask = m.static_microtask
+                            r.user = m.user
+                            r.original_sentence = m.original_sentence
+                            r.translated_sentence = m.translated_sentence
+                            r.assign_timestamp = m.assign_timestamp
+                            r.submission_timestamp = m.submission_timestamp
+                            r.reputation_score = m.reputation_score
+                            r.correction_episode = m.correction_episode
+                            r.save()
+                             
+                        UserHistory.objects.filter(static_microtask = st.id).delete()
+                        Microtask.objects.filter(static_microtask = st.id).delete()
+                    else:
+                        st.assigned = 0
+                        st.hop_count += 1
+                        st.save()
+                k += 1
 
 #11.Assign Rank-Start from end take upper roundoff of percentage value n assign that rank to those users - DONE
 class AssignRankCronJob(CronJobBase):

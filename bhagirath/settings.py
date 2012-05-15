@@ -159,10 +159,12 @@ CRON_CLASSES = (
     'bhagirath.translation.cron.PopulateMicrotaskCronJob',
     'bhagirath.translation.cron.UnassignMicrotaskCronJob',
     'bhagirath.translation.cron.UploadPriviledgeCronJob',
-    'bhagirath.translation.cron.UpdateLeaderBoardCronJob',
+    'bhagirath.translation.cron.UpdateOverallLeaderBoardCronJob',
+    'bhagirath.translation.cron.UpdateWeeklyLeaderBoardCronJob',
     'bhagirath.translation.cron.UpdateStatisticsCounterCronJob',
     'bhagirath.translation.cron.DocumentStabilityCronJob',
-    'bhagirath.translation.cron.ReputationScoreCronJob'
+    'bhagirath.translation.cron.ReputationScoreCronJob',
+    'bhagirath.translation.cron.AssignRankCronJob'
 )
 
 ROOT_URLCONF = 'bhagirath.urls'
