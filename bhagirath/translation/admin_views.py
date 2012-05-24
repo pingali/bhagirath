@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import Permission
 from bhagirath.translation.models import Session as BhagirathSession
 from bhagirath.translation.models import UserHistory as BhagirathUserHistory
+from bhagirath.translation.models import RevisedUserHistory as RevisedBhagirathUserHistory
 from bhagirath.translation.models import *
 from bhagirath.translation.subtask_parser import subtaskParser
 from bhagirath.translation.microtask_parser import tempMicrotaskParser
@@ -21,6 +22,16 @@ def complete_user_history(request):
     list = []
     complete_user_history = BhagirathUserHistory.objects.all()
     for i in complete_user_history:
+        dict = {}  
+        dict['username'] = i.user
+        dict['original_sentence'] = i.original_sentence
+        dict['translated_sentence'] = i.translated_sentence
+        dict['assign_timestamp'] = i.assign_timestamp
+        dict['submission_timestamp'] = i.submission_timestamp
+        list.append(dict)
+
+    overall_user_history = RevisedBhagirathUserHistory.objects.all()
+    for i in overall_user_history:
         dict = {}  
         dict['username'] = i.user
         dict['original_sentence'] = i.original_sentence
