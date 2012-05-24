@@ -1,3 +1,14 @@
+#!/bin/sh 
+
+# Dumps the content of the db file using sqlite commands. dumpdata
+# command of manage.py is not working due to inconsistency in the 
+# translation.TransactionAction model. This will be useful until 
+# the latter is fixed. 
+#
+# sh dump-bhagirathdb-as-csv.sh
+# scp *.zip <target location>
+# rm *zip 
+
 DBFILE=$HOME/workspace/bhagirath/shared/bhagirath.db
 d=`date +"bhagirathdb-dump-%Y%m%d%H%M%S"`
 mkdir -p $d 
