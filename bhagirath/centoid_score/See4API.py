@@ -13,7 +13,7 @@ class See4API(object):
         total_inputs = 5
         inputs = ['' for __idx0 in range(total_inputs)]
         
-        dictionary_filpath = "/home/bhagyashree/Desktop/finalizedreputationsystemcode/abc1.txt"
+        dictionary_filpath = "C:/Students_HCOMP/abc1.txt"
         file1 = open(dictionary_filpath,'r')
         
         strval = ""

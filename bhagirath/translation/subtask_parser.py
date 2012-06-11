@@ -6,7 +6,7 @@ import re
 
 exclude = ['Bibliography', 'See also', 'Notes', 'References', 'Sources', 'Further reading', 'External links']
 
-def subtaskParser(filename,id):
+def subtaskParser(filename):
     import sys
     if filename is None:
         filename = sys.argv[1:]

@@ -49,16 +49,15 @@ class CustomMenu(Menu):
                            
             items.MenuItem('Background Tasks',
                 children=[
-                    items.MenuItem('Populate Subtask', '/background_task/populate_subtask/'),
-                    items.MenuItem('Populate StaticMicrotask', '/background_task/populate_staticmicrotask/'),
-                    items.MenuItem('Populate Microtask', '/background_task/populate_microtask/'),
-                    items.MenuItem('Unassign Microtask', '/background_task/unassign_microtask/'),
+                    items.MenuItem('Populate task', '/background_task/populate_task/'),
+#                    items.MenuItem('Populate Microtask', '/background_task/populate_microtask/'),
+#                    items.MenuItem('Unassign Microtask', '/background_task/unassign_microtask/'),
                     items.MenuItem('Upload Priviledge', '/background_task/upload_priviledge/'),
                     items.MenuItem('Update Weekly Leaderboard', '/background_task/update_weekly_leaderboard/'),
                     items.MenuItem('Update Overall Leaderboard', '/background_task/update_overall_leaderboard/'),
                     items.MenuItem('Update Statistics Counter', '/background_task/update_statistics_counter/'),
                     items.MenuItem('Document Stability', '/background_task/document_stability/'),
-                    items.MenuItem('Reputation Score', '/background_task/reputation_score/'),
+#                    items.MenuItem('Reputation Score', '/background_task/reputation_score/'),
                     items.MenuItem('Assign Rank', '/background_task/assign_rank/')
                 ]
             ),

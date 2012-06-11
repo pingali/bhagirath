@@ -34,11 +34,8 @@
 			<h2>Create your Account</h2>
 				<p><label>Email ID:</label>{{form.email}}</p>
 				<p><label>Username:</label>{{form.username}}</p>
-				<p><label>Password:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Confirm Password:</label>
-				{{form.password}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{form.confirm_password}}</p>
-				
+				<p><label>Password:</label>{{form.password}}</p>
+				<p><label>Confirm Password:</label>{{form.confirm_password}}</p>
 				<p><label>Please enter the text you see here:</label><div style="margin-left:20px;">{{form.captcha}}</div></p>
 				<button name="sign_up" id="sign_up" class="signup" onclick="OnSignUp();">Create Account</button>
 		</div>

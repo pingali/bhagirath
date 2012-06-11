@@ -356,7 +356,7 @@ def migrate():
     sudo('cd %(path)s; chmod -R a+w shared' % env)  # make the db readable
 
 def migrate_during_setup(): 
-   run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py loaddata bhagirath_data' % env, pty=True)
+   run('cd %(path)s/releases/current/%(project_name)s;  ../../../bin/python manage.py loaddata new_data' % env, pty=True)
         
 def restart_webserver():
     "Restart the web server"

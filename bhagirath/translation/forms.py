@@ -5,6 +5,7 @@ from captcha.fields import CaptchaField
 from django.forms.fields import ChoiceField
 from django.forms.widgets import RadioSelect
 from bhagirath.translation.models import *
+from bhagirath import common
 
 class SplitDateTimeJSField(forms.SplitDateTimeField):
     """
@@ -57,7 +58,8 @@ class SignUpForm(forms.models.ModelForm):
     username = forms.CharField(max_length=50)
     password = forms.CharField( widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)    
-    captcha = CaptchaField()
+    if common.get_prod_server_flag():
+        captcha = CaptchaField()
     
     def clean(self):
         email = self.cleaned_data.get('email')

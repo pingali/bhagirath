@@ -380,7 +380,7 @@ class StaticMicrotask(models.Model):
     sentences that are formed from html text are stored in this table
     """
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
-    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
+#    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
     translated_sentence = models.CharField(max_length=2000,null=True)
     machine_translation = models.CharField(max_length=2000,null=True)
@@ -391,7 +391,9 @@ class StaticMicrotask(models.Model):
     hop_count = models.IntegerField(default=0)
     bit_array = models.ForeignKey(Master_Experiment,null=True)
     meaning = jsonfield.JSONField()
-    
+    translations_received = models.IntegerField(default=0, null = True)
+    translation_requests_sent = models.IntegerField(default=0, null = True)
+
     def __unicode__(self):
         return u"%s" %(self.id)
     
@@ -402,7 +404,7 @@ class Microtask(models.Model):
     its assigned flag is set to true
     """
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
-    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
+#    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
     assign_timestamp = models.DateTimeField(null=False)
@@ -424,7 +426,7 @@ class UserHistory(models.Model):
     )
     
     task = models.ForeignKey(Task,on_delete=models.PROTECT) 
-    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
+#    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
     microtask = models.ForeignKey(Microtask,null=True,on_delete=models.SET_NULL,default=None)
     user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
@@ -448,7 +450,7 @@ class RevisedUserHistory(models.Model):
     It stores entries of UserHistory for every sentence whose perfect translation is obtained.
     """
     task = models.ForeignKey(Task,on_delete=models.PROTECT) 
-    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
+#    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
     user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     original_sentence = models.CharField(max_length=2000,null=False)
@@ -470,7 +472,7 @@ class TransactionAction(models.Model):
     user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     action = models.ForeignKey(Master_Action,on_delete=models.PROTECT)
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
-    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT,null=True)
+#    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT,null=True)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT,null=True)
     action_timestamp = models.DateTimeField()
     

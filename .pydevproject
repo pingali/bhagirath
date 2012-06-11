@@ -11,4 +11,7 @@
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/bhagirath</path>
 </pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>C:\Python27\Lib\site-packages\stemming-1.0.1-py2.7.egg</path>
+</pydev_pathproperty>
 </pydev_project>
