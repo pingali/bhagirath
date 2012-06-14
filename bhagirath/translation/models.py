@@ -379,13 +379,18 @@ class StaticMicrotask(models.Model):
     """
     sentences that are formed from html text are stored in this table
     """
+    STATUS_FLAG_CHOICES = (
+        (u'Circulate', u'Circulate'),
+        (u'Calculating', u'Calculating'),
+        (u'Done', u'Done'),
+    )
     task = models.ForeignKey(Task,on_delete=models.PROTECT)
 #    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     original_sentence = models.CharField(max_length=2000,null=False)
     translated_sentence = models.CharField(max_length=2000,null=True)
     machine_translation = models.CharField(max_length=2000,null=True)
     user = models.ForeignKey(User,null=True)
-    assigned = models.BooleanField(default=False)
+#    assigned = models.BooleanField(default=False)
     stability = models.FloatField(default=0.0,null=True)
     scoring_done = models.BooleanField(default=False)
     hop_count = models.IntegerField(default=0)
@@ -393,7 +398,7 @@ class StaticMicrotask(models.Model):
     meaning = jsonfield.JSONField()
     translations_received = models.IntegerField(default=0, null = True)
     translation_requests_sent = models.IntegerField(default=0, null = True)
-
+    status_flag = models.CharField(max_length=10,choices=STATUS_FLAG_CHOICES,default="Circulate")
     def __unicode__(self):
         return u"%s" %(self.id)
     
@@ -428,7 +433,7 @@ class UserHistory(models.Model):
     task = models.ForeignKey(Task,on_delete=models.PROTECT) 
 #    subtask = models.ForeignKey(Subtask,on_delete=models.PROTECT)
     static_microtask = models.ForeignKey(StaticMicrotask,on_delete=models.PROTECT)
-    microtask = models.ForeignKey(Microtask,null=True,on_delete=models.SET_NULL,default=None)
+#    microtask = models.ForeignKey(Microtask,null=True,on_delete=models.SET_NULL,default=None)
     user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     original_sentence = models.CharField(max_length=2000,null=False)
     translated_sentence = models.CharField(max_length=2000,null=True)

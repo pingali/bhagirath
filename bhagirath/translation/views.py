@@ -11,6 +11,7 @@ from bhagirath.centoid_score.SSDistance import SSDistance
 import simplejson
 import traceback
 import logging
+import random
 from bhagirath import common
 
 log = logging.getLogger("translation.views")
@@ -458,6 +459,105 @@ def process_upload(request):
         log.exception("Upload Failed!!!")
         traceback.print_exc() 
    
+def get_data(selected_microtask, uid, user):
+    data = {}
+    
+    # Reading experiment bits 
+    x = Master_Experiment.objects.get(bit_array = selected_microtask.bit_array)
+    z = x.bit_array
+    prev_context_size = int(z[0:3],2)
+    auto_correct =  int(z[10],2)
+    reference_translation = int(z[11],2)
+    
+    #decide which features to be provided to user for a particular sentence
+    (prev_context, meaning_list) = load_context(selected_microtask.id,prev_context_size)
+    # Auto correction
+    if auto_correct==0:
+        auto_correction = False
+    else:
+        auto_correction = True
+                
+    #Machine translation or Centroid
+    if reference_translation == 1:
+        microtask_translation = selected_microtask.translated_sentence
+        machine_translation = selected_microtask.machine_translation
+                
+        if microtask_translation == None:
+            reference = machine_translation
+        else:
+            reference = microtask_translation
+                          
+        """necessary for getting the translated for centroid sentence """        
+        other = UserHistory.objects.filter(original_sentence=selected_microtask.original_sentence)
+        other_translations = ""
+
+        for i in other:
+            text = i.translated_sentence
+            if text:
+                other_translations = other_translations + "-> " + text + '\n'
+    else:
+        microtask_translation = " "
+        machine_translation = " "
+        other_translations = " "
+                
+                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.                
+    h = UserHistory()
+    h.task = selected_microtask.task
+    h.static_microtask = selected_microtask
+    
+    h.user = user
+    h.original_sentence = selected_microtask.original_sentence 
+    h.assign_timestamp = datetime.datetime.now()
+    h.current_active_tag = 0
+    h.correction_episode = [{}]
+    h.save()
+    
+    selected_microtask.translation_requests_sent = selected_microtask.translation_requests_sent + 1             
+    selected_microtask.save()
+
+    #Load dictionary    
+    hindi_dictionary = []
+    for i in meaning_list:
+        x = i[0]['fields']['meaning']
+        if common.get_prod_server_flag():
+            x = simplejson.loads(x)
+        for z in x:
+            hindi_dictionary.append(z)
+                        
+                
+    x = selected_microtask.meaning[0]['fields']['meaning']
+    if common.get_prod_server_flag():
+        x = simplejson.loads(x)
+    for z in x:
+        hindi_dictionary.append(z)               
+                    
+    y = simplejson.dumps(hindi_dictionary)                     
+    data = {
+            'form': TranslateForm(),
+            'curr_id':selected_microtask,
+            'uid': uid,
+            'english': h.original_sentence,
+            'hindi': reference,
+            'machine_translation': machine_translation,
+            'other_translations':other_translations,
+            'eng2hin_dict': y,
+            'username':user,
+            'prev_context':prev_context,
+            'auto_correct': auto_correction
+           }
+               
+    ta = TransactionAction()
+    ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
+    ta.user = user
+    ta.task = selected_microtask.task
+    ta.static_microtask = selected_microtask 
+    ta.action = Master_Action.objects.filter(action="Translate")[0]
+    ta.action_timestamp = datetime.datetime.now()
+    ta.save()
+                               
+    log.info("Microtask loaded for translation.")    
+    return data
+
 def translate(request,uid):
     """
     This function provides sentences for translation to user.
@@ -465,159 +565,45 @@ def translate(request,uid):
     user = request.user
     if user.is_authenticated():
         try:
-            logged_in_user_id = uid
-            i = 0
-            c = 0
-            d = 0 
-            hindi = " "
-            # check for sentences previously done by user
-           
-            available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
-            available_microtasks = Microtask.objects.filter(assigned = 0)
-                
-            #find sentences to be given                                             
-            for j in available_sentences_done_by_user:
-                available_microtasks = available_microtasks.exclude(original_sentence = available_sentences_done_by_user[i]).order_by('id')
-                i +=1
-            
-            for j in available_microtasks:
-                c += 1
-            
-            #if no microtask available search for skipped ones  
-            if c==0:
-                k = 0
-                more_available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id).exclude(translated_sentence=None)
-                available_microtasks = Microtask.objects.filter(assigned = 0)
-                #find sentences to be given                                    
-                for j in more_available_sentences_done_by_user:
-                    available_microtasks = available_microtasks.exclude(original_sentence = more_available_sentences_done_by_user[k]).order_by('-id')
-                    k +=1
-            
-                for j in available_microtasks:
-                    d += 1
-            
-            #still no sentence available then display message    
-            if c==0 and d==0:
-                data = {
+            available_microtasks = StaticMicrotask.objects.filter(status_flag = 'Circulate').order_by("id")
+
+            count = {}
+            for selected_microtask in available_microtasks:
+                count = UserHistory.objects.filter(static_microtask=selected_microtask, user=uid)
+                if len(count) == 0:
+                    print 'give the new sentence to the user'
+                    data = get_data(selected_microtask, uid, user)
+                    return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
+
+            count = {}
+            lcount = []
+            for selected_microtask in available_microtasks:
+                count = UserHistory.objects.filter(static_microtask=selected_microtask, user=uid, translated_sentence=None)
+                if len(count) > 0:
+                    lcount.append(selected_microtask)
+            random_index = random.randint(0, (len(lcount)-1))
+            print random_index
+            data = get_data(lcount[random_index], uid, user)
+            return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))                
+
+            data = {
                     'form': TranslateForm(),
                     'uid':uid,
                     'username':user,
-                }
-                messages.error(request,"No sentence available for translation!!")
-                log.error("No sentence available for translation.")
-                
-                ta = TransactionAction()
-                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
-                ta.user = user
-                ta.action = Master_Action.objects.filter(action="Translate")[0]
-                ta.action_timestamp = datetime.datetime.now()
-                ta.save()
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
-            else:
-                #get bit_array value for that sentence from static microtask table
-                available_microtask = available_microtasks[0]
-                s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
-                parent_static_microtask = StaticMicrotask.objects.get(id=s)
-                x = Master_Experiment.objects.get(bit_array = parent_static_microtask.bit_array)
-                z = x.bit_array
-                prev_context_size = int(z[0:3],2)
-                auto_correct =  int(z[10],2)
-                reference_translation = int(z[11],2)
-                
-                #decide which features to be provided to user for a particular sentence
-                    
-                (prev_context, meaning_list) = load_context(parent_static_microtask.id,prev_context_size)
-                
-                if auto_correct==0:
-                    auto_correction = False
-                else:
-                    auto_correction = True
-                
-                #get translations done by other users for that sentence
-                if reference_translation == 1:
-                    microtask_translation = parent_static_microtask.translated_sentence
-                    machine_translation = parent_static_microtask.machine_translation
-                
-                    if microtask_translation == None:
-                        hindi = machine_translation
-                    else:
-                        hindi = microtask_translation  
-                        
-                    other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
-                    other_translations = ""
+            }
+            print 'no sentences present'
+            messages.error(request,"No sentence available for translation!!")
+            log.error("No sentence available for translation.")
+            ta = TransactionAction()
+            ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
+            ta.user = user
+            ta.action = Master_Action.objects.filter(action="Translate")[0]
+            ta.action_timestamp = datetime.datetime.now()
+            ta.save() 
+            return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
 
-                    for i in other:
-                        text = i.translated_sentence
-                        if text:
-                            other_translations = other_translations + "-> " + text + '\n'
-                else:
-                    microtask_translation = " "
-                    machine_translation = " "
-                    other_translations = " "
-                
-                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.                
-                h = UserHistory()
-                h.task = available_microtask.task
-                h.subtask = available_microtask.subtask
-                h.static_microtask = available_microtask.static_microtask
-                h.microtask =  available_microtask
-                h.user = user
-                h.original_sentence = available_microtask.original_sentence 
-                h.assign_timestamp = datetime.datetime.now()
-                h.current_active_tag = 0
-                h.correction_episode = [{}]
-                h.save()
-                
-                s = StaticMicrotask.objects.get(id=s)
-                s.hop_count = s.hop_count + 1
-                s.save()               
-                
-                hindi_dictionary = []
-                for i in meaning_list:
-                    x = i[0]['fields']['meaning']
-                    if common.get_prod_server_flag():
-                        x = simplejson.loads(x)
-                    for z in x:
-                        hindi_dictionary.append(z)
-                        
-                
-                x = parent_static_microtask.meaning[0]['fields']['meaning']
-                if common.get_prod_server_flag():
-                    x = simplejson.loads(x)
-                for z in x:
-                    hindi_dictionary.append(z)               
-                    
-                y = simplejson.dumps(hindi_dictionary)                     
-                           
-                data = {
-                        'form': TranslateForm(),
-                        'curr_id':available_microtask,
-                        'uid': uid,
-                        'english': h.original_sentence,
-                        'hindi': hindi,
-                        'machine_translation': machine_translation,
-                        'other_translations':other_translations,
-                        'eng2hin_dict': y,
-                        'username':user,
-                        'prev_context':prev_context,
-                        'auto_correct': auto_correction
-                }
-                
-                #marking microtask entry as assigned  
-                available_microtask.assigned=True
-                available_microtask.save()
-               
-                ta = TransactionAction()
-                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
-                ta.user = user
-                ta.action = Master_Action.objects.filter(action="Translate")[0]
-                ta.action_timestamp = datetime.datetime.now()
-                ta.save()
-                               
-                log.info("Microtask loaded for translation.")
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
         except:
-            log.exception("Load microtask for translation failed.")
+            log.exception("Loading sentences for translation failed.")
             traceback.print_exc() 
     #if user is not logged in
     else:
@@ -630,177 +616,6 @@ def translate(request,uid):
         return HttpResponseRedirect(next) 
     return HttpResponse("Some error occured!!!Please try reloading the page.")
 
-
-
-def translate1(request,uid):
-    """
-    This function provides sentences for translation to user.
-    """
-    user = request.user
-    if user.is_authenticated():
-        try:
-            logged_in_user_id = uid
-            i = 0
-            c = 0
-            d = 0 
-            hindi = " "
-            # check for sentences previously done by user
-           
-            available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id)
-            available_microtasks = Microtask.objects.filter(assigned = 0)
-                
-            #find sentences to be given                                             
-            for j in available_sentences_done_by_user:
-                available_microtasks = available_microtasks.exclude(original_sentence = available_sentences_done_by_user[i]).order_by('id')
-                i +=1
-            
-            for j in available_microtasks:
-                c += 1
-            
-            #if no microtask available search for skipped ones  
-            if c==0:
-                k = 0
-                more_available_sentences_done_by_user = UserHistory.objects.filter(user=logged_in_user_id).exclude(translated_sentence=None)
-                available_microtasks = Microtask.objects.filter(assigned = 0)
-                #find sentences to be given                                    
-                for j in more_available_sentences_done_by_user:
-                    available_microtasks = available_microtasks.exclude(original_sentence = more_available_sentences_done_by_user[k]).order_by('-id')
-                    k +=1
-            
-                for j in available_microtasks:
-                    d += 1
-            
-            #still no sentence available then display message    
-            if c==0 and d==0:
-                data = {
-                    'form': TranslateForm(),
-                    'uid':uid,
-                    'username':user,
-                }
-                messages.error(request,"No sentence available for translation!!")
-                log.error("No sentence available for translation.")
-                
-                ta = TransactionAction()
-                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
-                ta.user = user
-                ta.action = Master_Action.objects.filter(action="Translate")[0]
-                ta.action_timestamp = datetime.datetime.now()
-                ta.save()
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
-            else:
-                #get bit_array value for that sentence from static microtask table
-                available_microtask = available_microtasks[0]
-                s = StaticMicrotask.objects.filter(id=available_microtask.static_microtask_id)
-                parent_static_microtask = StaticMicrotask.objects.get(id=s)
-                x = Master_Experiment.objects.get(bit_array = parent_static_microtask.bit_array)
-                z = x.bit_array
-                prev_context_size = int(z[0:3],2)
-                auto_correct =  int(z[10],2)
-                reference_translation = int(z[11],2)
-                
-                #decide which features to be provided to user for a particular sentence
-                    
-                (prev_context, meaning_list) = load_context(parent_static_microtask.id,prev_context_size)
-                
-                if auto_correct==0:
-                    auto_correction = False
-                else:
-                    auto_correction = True
-                
-                #get translations done by other users for that sentence
-                if reference_translation == 1:
-                    microtask_translation = parent_static_microtask.translated_sentence
-                    machine_translation = parent_static_microtask.machine_translation
-                
-                    if microtask_translation == None:
-                        hindi = machine_translation
-                    else:
-                        hindi = microtask_translation  
-                        
-                    other = UserHistory.objects.filter(original_sentence=available_microtask.original_sentence)
-                    other_translations = ""
-
-                    for i in other:
-                        text = i.translated_sentence
-                        if text:
-                            other_translations = other_translations + "-> " + text + '\n'
-                else:
-                    microtask_translation = " "
-                    machine_translation = " "
-                    other_translations = " "
-                
-                #take sentence from microtask make its entry in UserHistory with user as the one to whom this sentence is being assigned.                
-                h = UserHistory()
-                h.task = available_microtask.task
-                h.subtask = available_microtask.subtask
-                h.static_microtask = available_microtask.static_microtask
-                h.microtask =  available_microtask
-                h.user = user
-                h.original_sentence = available_microtask.original_sentence 
-                h.assign_timestamp = datetime.datetime.now()
-                h.current_active_tag = 0
-                h.correction_episode = [{}]
-                h.save()
-                
-                s = StaticMicrotask.objects.get(id=s)
-                s.hop_count = s.hop_count + 1
-                s.save()               
-                
-                hindi_dictionary = []
-                for i in meaning_list:
-                    x = i[0]['fields']['meaning']
-                    w = simplejson.loads(x)
-                    for z in w:
-                        hindi_dictionary.append(z)
-                        
-                
-                x = parent_static_microtask.meaning[0]['fields']['meaning']
-                w = simplejson.loads(x)
-                for z in w:
-                    hindi_dictionary.append(z)               
-                    
-                y = simplejson.dumps(hindi_dictionary)                     
-                           
-                data = {
-                        'form': TranslateForm(),
-                        'curr_id':available_microtask,
-                        'uid': uid,
-                        'english': h.original_sentence,
-                        'hindi': hindi,
-                        'machine_translation': machine_translation,
-                        'other_translations':other_translations,
-                        'eng2hin_dict': y,
-                        'username':user,
-                        'prev_context':prev_context,
-                        'auto_correct': auto_correction
-                }
-                
-                #marking microtask entry as assigned  
-                available_microtask.assigned=True
-                available_microtask.save()
-               
-                ta = TransactionAction()
-                ta.session = Session.objects.filter(user=user,logout_timestamp=None)[0]
-                ta.user = user
-                ta.action = Master_Action.objects.filter(action="Translate")[0]
-                ta.action_timestamp = datetime.datetime.now()
-                ta.save()
-                               
-                log.info("Microtask loaded for translation.")
-                return render_to_response('translation/translate.html',data,context_instance=RequestContext(request))
-        except:
-            log.exception("Load microtask for translation failed.")
-            traceback.print_exc() 
-    #if user is not logged in
-    else:
-        data = {
-            'form': LoginForm()
-        } 
-        messages.error(request,"Please login.You're not logged in!!!")
-        log.error("%s made request before login."%(user))
-        next = "/home/"
-        return HttpResponseRedirect(next) 
-    return HttpResponse("Some error occured!!!Please try reloading the page.")
 
 def process_translate(request,id,uid):
     """
@@ -1109,7 +924,7 @@ def load_context(sid,prev_context_count):
         while int(a) < int(sid):
             st = StaticMicrotask.objects.get(id=a)
             if st:
-                if st.subtask==main.subtask:
+                if st.task==main.task:
                     prev_context = prev_context + st.original_sentence + ". "
                 meaning_list.append(st.meaning)
             a += 1
